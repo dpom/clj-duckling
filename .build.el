@@ -19,7 +19,7 @@
 
 (task 'api '() "build the API documentation" '(lambda (&optional x) "lein codox"))
 
-(task 'doc '(api org2md) "build the project documentation" '(lambda (&optional x) "ls docs"))
+(task 'doc '(org2md api) "build the project documentation" '(lambda (&optional x) "ls docs"))
 
 (task 'format '() "format the project" '(lambda (&optional x) "lein cljfmt fix"))
 

@@ -27,7 +27,7 @@
                               [:url "https://github.com/dpom/clj-duckling"]
                                [:email "dan.pomohaci@gmail.com"]
                                [:timezone "+3"]]]
-  :codox {:doc-paths ["docs"]
+  :codox {:doc-files []
           :output-path "docs/api"}
 
 )
