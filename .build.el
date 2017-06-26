@@ -15,7 +15,11 @@
 
 (load ent-init-file)
 
-(task 'doc '() "build the project documentation" '(lambda (&optional x) "lein codox"))
+(task 'org2md '() "convert org doc to md" '(lambda (&optional x) "cd docs; make all; cd .."))
+
+(task 'api '() "build the API documentation" '(lambda (&optional x) "lein codox"))
+
+(task 'doc '(api org2md) "build the project documentation" '(lambda (&optional x) "ls docs"))
 
 (task 'format '() "format the project" '(lambda (&optional x) "lein cljfmt fix"))
 
