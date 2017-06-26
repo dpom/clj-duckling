@@ -1,0 +1,6 @@
+#+TITLE: DeveloperGuide.org
+#+DESCRIPTION: developer guide for duckling
+#+AUTHOR: Dan Pomohaci
+#+EMAIL: dan.pomohaci@gmail.com
+#+STARTUP: overview
+

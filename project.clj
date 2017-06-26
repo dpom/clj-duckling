@@ -2,9 +2,9 @@
   :description "A Clojure library that parses text into structured data"
   :license {:url "https://github.com/wit-ai/duckling"
             :comments "see LICENSE"}
-  :url "https://github.com/wit-ai/duckling"
-  :plugins [[s3-wagon-private "1.1.2"]
-            [lein-midje "3.1.3"]
+  :url "https://dpom.github.io/clj-duckling/"
+  :plugins [[s3-wagon-private "1.1.2" :exclusions [commons-logging commons-codec]]
+            [lein-midje "3.2.1"]
             [lein-codox "0.10.3"]]
   :repl-options {:init-ns duckling.core}
   :dependencies [[org.clojure/clojure "1.8.0"]
@@ -12,6 +12,7 @@
                  [org.clojure/tools.logging "0.4.0"]
                  [clj-time "0.13.0"]
                  [prismatic/plumbing "0.5.4"]]
+  ;; :pedantic? :abort
   :deploy-repositories [["clojars" {:creds :gpg}]]
   :profiles {:dev {:dependencies [[org.clojure/tools.trace "0.7.9"]
                                   [midje "1.8.3"]

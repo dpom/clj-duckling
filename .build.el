@@ -29,6 +29,8 @@
 
 (task 'package '() "package the library" '(lambda (&optional x) "lein do clean, uberjar"))
 
+(task 'deploy '() "deploy to clojars" '(lambda (&optional x) "lein deploy clojars"))
+
 
 ;; Local Variables:
 ;; no-byte-compile: t

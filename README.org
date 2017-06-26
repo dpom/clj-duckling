@@ -1,0 +1,45 @@
+As of May 1st, 2017 the Duckling team deprecated the Clojure version in
+favor of [[https://github.com/facebookincubator/duckling][the new
+Duckling]]. See their
+[[https://wit.ai/blog/2017/05/01/new-duckling][blog post announcement]].
+
+My intention is to continue the clojure development of the Duckling
+project so I forked it in this new project.
+
+* Duckling
+
+[[https://clojars.org/clj-duckling][https://img.shields.io/clojars/v/clj-duckling.svg]]
+
+
+Duckling is a Clojure library that parses text into structured data:
+
+#+BEGIN_EXAMPLE
+    “the first Tuesday of October” => {:value "2014-10-07T00:00:00.000-07:00"
+                                       :grain :day}
+#+END_EXAMPLE
+
+
+
+** Getting started
+
+To use Duckling in your project, you just need two functions: =load!= to
+load the default configuration, and =parse= to parse a string.
+
+#+BEGIN_SRC clojure
+    (ns myproject.core
+      (:require [duckling.core :as p]))
+
+    (p/load!) ;; Load all languages
+
+    (p/parse :en$core ;; core configuration for English ; see also :fr$core, :es$core, :zh$core
+             "wake me up the last Monday of January 2015 at 6am"
+             [:time]) ;; We are interested in :time expressions only ; see also :duration, :temperature, etc.
+
+    ;; => [{:label :time
+    ;;        :start 15
+    ;;        :end 49
+    ;;        :value {:type "value", :value "2015-01-26T06:00:00.000-02:00", :grain :hour}
+    ;;        :body "last Monday of January 2015 at 6am"}]
+#+END_SRC
+
+See the [[https://dpom.github.io/clj-duckling/][documentation]] for more information.
