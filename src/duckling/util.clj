@@ -1,5 +1,4 @@
 (ns duckling.util
-  (:use [clojure.tools.logging :exclude [trace]])
   (:require [clojure.string  :as string]
             [clojure.set     :as sets]
             [clojure.java.io :as io]
@@ -7,6 +6,8 @@
             [clj-time.format :as tf]
             [clojure.repl :as repl]
             [clojure.pprint :as pprint]
+            [clojure.tools.logging :as log]
+            [clojure.test :refer :all]
             [clj-time.coerce :as tcoerce])
   (:import [java.io IOException OutputStream StringReader]
            [java.math BigInteger]
@@ -19,7 +20,7 @@
   WARNING THIS IS NOT RECURSIVE FOR THE MOMENT"
   [pattern input]
   (every? (fn [[key val]] (= val (key input)))
-    pattern))
+          pattern))
 
 (defn valid-limit?
   "Decide if two adjacent chars are reasonably separated
@@ -67,10 +68,10 @@
    cannot be compared.)"
   [partial-order-fn coll base-coll]
   (let [splitted (group-by
-                   (fn [x] (every? #(let [p (partial-order-fn x %)]
-                                      (or (nil? p) (>= p 0)))
-                                   base-coll))
-                   coll)]
+                  (fn [x] (every? #(let [p (partial-order-fn x %)]
+                                     (or (nil? p) (>= p 0)))
+                                  base-coll))
+                  coll)]
     [(splitted true) (splitted false)]))
 
 (defn merge-according-to

@@ -1,18 +1,17 @@
 (ns duckling.learn
-  (:use [clojure.tools.logging]
-        [clojure.pprint :only [pprint]])
   (:require
-    [duckling.engine :as engine]
-    [clj-time.core :as t]
-    [duckling.ml.naivebayes :as naive]
-    [duckling.util :as util]
-    [clojure.set :as sets])
-  (:use [clojure.tools.logging]))
+   [clojure.set :as sets]
+   [clojure.tools.logging :as log]
+   [clj-time.core :as t]
+   [clojure.pprint :refer [pprint]]
+   [duckling.engine :as engine]
+   [duckling.ml.naivebayes :as naive]
+   [duckling.util :as util]))
 
 (defn extract-route-features
   "Extracts names of previous routes used to produce this route token.
    This is the feature extractor we use."
-   ; FIXME the grain feature should be moved to the time module
+                                        ; FIXME the grain feature should be moved to the time module
   [token]
   (let [rules (reduce str (map #(get-in % [:rule :name]) (:route token)))
         time-tokens (filter #(= :time (:dim %)) (:route token))
@@ -35,13 +34,13 @@
             (sets/union prior-set (subtokens tok))) #{token} (:route token)))
 
 (defn sentence->dataset
-  "Takes a sentence, context, check (fn that determines if a winner is valid), 
+  "Takes a sentence, context, check (fn that determines if a winner is valid),
   feature extractor, and existing dataset.
   Returns an enriched dataset:
   [{<rule-name> [features, output]}]
   Output is true if the rule was contributing successfully, false otherwise"
   [s context check rules feature-extractor dataset]
-  (debugf "learning %s %s\n" s check)
+  (log/debugf "learning %s %s\n" s check)
   (let [fc-tokens (->> (engine/pass-all s rules nil)
                        (filter #(and (:pos %) (= (count s) (- (:end %) (:pos %)))))
                        (mapcat #(engine/resolve-token % context nil)) ; fully-covering tokens
@@ -68,9 +67,9 @@
                         #(conj % [(feature-extractor tok) false])))
         final-dataset (reduce f2 dataset-updated-with-positives tokens-ko)]
     #_(when (= s "de 9h30 jusqu'à 11h jeudi")
-      (prn (count fc-tokens-ok) (count fc-tokens-ko))
-      (doseq [t tokens-ok]
-        (prn (-> t :rule :name) (extract-route-features t))))
+        (prn (count fc-tokens-ok) (count fc-tokens-ko))
+        (doseq [t tokens-ok]
+          (prn (-> t :rule :name) (extract-route-features t))))
     final-dataset))
 
 (defn corpus->dataset
@@ -79,7 +78,7 @@
   (let [sentences-and-check
         (for [test tests
               text (:text test)]
-            [text (first (:checks test))])]
+          [text (first (:checks test))])]
     (reduce (fn [dataset [text check]]
               (sentence->dataset text context check rules feature-extractor dataset))
             {} ;; initial dataset
@@ -127,7 +126,7 @@
 (defn train-classifiers
   "Given a corpus and a set of rules, train a classifier per rule"
   [corpus rules fextractor]
-  (debugf "training with %d tests and %d rules" (count (:tests corpus)) (count rules))
+  (log/debugf "training with %d tests and %d rules" (count (:tests corpus)) (count rules))
   (let [dataset (corpus->dataset corpus rules fextractor)]
     (into {} (for [[name examples :as example] dataset]
                [name (train-rule example)]))))

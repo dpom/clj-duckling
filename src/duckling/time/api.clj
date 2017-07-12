@@ -18,23 +18,23 @@
   [{:keys [start end grain] :as value} direction date-fn]
   (cond
     (#{:before :after} direction)
-      (case direction
-        :before {:type "interval"
-                 :to   {:value (date-fn start)
-                        :grain grain}}
-        :after  {:type "interval"
-                 :from {:value (date-fn start)
-                        :grain grain}})
+    (case direction
+      :before {:type "interval"
+               :to   {:value (date-fn start)
+                      :grain grain}}
+      :after  {:type "interval"
+               :from {:value (date-fn start)
+                      :grain grain}})
     end
-      {:type "interval"
-       :from {:value (date-fn start)
-              :grain grain}
-       :to   {:value (date-fn end)
-              :grain grain}}
+    {:type "interval"
+     :from {:value (date-fn start)
+            :grain grain}
+     :to   {:value (date-fn end)
+            :grain grain}}
     :else
-      {:type "value"
-       :value (date-fn start)
-       :grain grain}))
+    {:type "value"
+     :value (date-fn start)
+     :grain grain}))
 
 (defn export-value
   "Given a token, returns its value for the outside world.
@@ -43,27 +43,27 @@
   [{:keys [dim value direction values] :as token} {:keys [date-fn] :as opts}]
   (let [date-fn (or date-fn str)]
     (when value
-  	  (case dim
+      (case dim
         :time     (assoc
-                    (export-time-value value direction date-fn)
-                    :values
-                    (map #(export-time-value % direction date-fn) values))
+                   (export-time-value value direction date-fn)
+                   :values
+                   (map #(export-time-value % direction date-fn) values))
         :duration ; if there is only one field, we can set :value and :unit
                   ; otherwise just keep the fields
-                  (let [[[unit val] & more] (seq value)
-                        add-fields (when-not more {:value val
-                                                   :unit unit})]
-                    (merge value
-                           add-fields
-                           {:normalized {:value (try
-                                                  (t/period->duration value)
-                                                (catch ArithmeticException e (.getMessage e)))
-                                         :unit "second"}}))
+        (let [[[unit val] & more] (seq value)
+              add-fields (when-not more {:value val
+                                         :unit unit})]
+          (merge value
+                 add-fields
+                 {:normalized {:value (try
+                                        (t/period->duration value)
+                                        (catch ArithmeticException e (.getMessage e)))
+                               :unit "second"}}))
 
         (:temperature :distance :amount-of-money :number :volume)
-                  (merge {:type "value" :value value}
-                         (select-keys token [:unit]))
+        (merge {:type "value" :value value}
+               (select-keys token [:unit]))
 
         :quantity (select-keys token [:value :unit :product])
 
-  	    {:value value})))) ; nest value for other dims
+        {:value value})))) ; nest value for other dims

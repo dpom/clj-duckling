@@ -57,10 +57,10 @@
         grain2 (-> tok2 :pred meta :grain)
         incl (or (= :day grain1 grain2) to-inclusive?)]
   ;(prn "interval called")
-  (if true;(=  )
-    (ti (p/intervals (:pred tok1) (:pred tok2) incl)
-        {:timezone (or (:timezone tok1) (:timezone tok2))})
-    {:dim :invalid})))
+    (if true;(=  )
+      (ti (p/intervals (:pred tok1) (:pred tok2) incl)
+          {:timezone (or (:timezone tok1) (:timezone tok2))})
+      {:dim :invalid})))
 
 ;; if we say "Monday" and today is Monday, we mean next Monday
 ;; hence the :not-immediate that modifies resolution
@@ -183,7 +183,6 @@
   (ti (p/shift-duration (p/take-the-nth (p/cycle :second) 0)
                         (t/negative-period duration))))
 
-
 (defn duration-after
   "Shifts the pred to pred+duration and changes the grain, typically to
   the one just below the duration grain. See pred.clj for conversion."
@@ -234,9 +233,7 @@
     {:dim :amount-of-money
      :value amount
      :unit (:unit m1)
-     :fields {(:unit m1) (:value amount)}
-   })
-  )
+     :fields {(:unit m1) (:value amount)}}))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Patterns (may be moved to their own ns)

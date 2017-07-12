@@ -1,20 +1,32 @@
 (ns duckling.core
-  (:use [clojure.tools.logging :exclude [trace]]
-        [plumbing.core])
-  (:require [clojure.java.io :as io]
-            [clojure.set :as set]
-            [clojure.string :as string]
-            [duckling.corpus :as corpus]
-            [duckling.engine :as engine]
-            [duckling.learn :as learn]
-            [duckling.resource :as res]
-            [duckling.time.api :as api]
-            [duckling.time.obj :as time]
-            [duckling.util :as util]))
+  "The main module with public API."
+  (:require
+   [clojure.java.io :as io]
+   [clojure.set :as set]
+   [clojure.string :as string]
+   [plumbing.core :as p]
+   [clojure.tools.logging :as log]
+   [clojure.test :refer :all]
+   [duckling.corpus :as corpus]
+   [duckling.engine :as engine]
+   [duckling.learn :as learn]
+   [duckling.resource :as res]
+   [duckling.time.api :as api]
+   [duckling.time.obj :as time]
+   [duckling.util :as util]))
 
 (defonce rules-map (atom {}))
 (defonce corpus-map (atom {}))
 (defonce classifiers-map (atom {}))
+
+;; for tests
+(declare load!)
+(use-fixtures :once
+  (fn [tests]
+    (println "============== start core tests")
+    (load!)
+    (tests)
+    (println "============== stop core tests")))
 
 (defn default-context
   "Build a default context for testing. opt can be either :corpus or :now"
@@ -24,14 +36,37 @@
                      :now (time/now))})
 
 (defn- get-classifier
+  "Get module's classifiers.
+
+  Args:
+  id (string): module name
+
+  Returns:
+  (list): a classifiers list."
+
   [id]
   (when id
     (get @classifiers-map (keyword id))))
 
+(deftest get-classifier-test
+  (is (= ["<number> product" {:classes {true {:n 1, :unk-proba -1.0986122886681098, :class-proba 0.0, :feat-probas {"integer (0..19)carne" 0.0}}}}]
+         (first (get-classifier "ro$core")))))
+
 (defn- get-rules
+  "Get module's rules.
+
+  Args:
+  id (string): module name
+
+  Returns:
+  (list): a rules map list."
   [id]
   (when id
     (get @rules-map (keyword id))))
+
+(deftest get-rules-test
+  (is (=  [:name :pattern :production]
+          (keys (first (get-rules "ro$core"))))))
 
 (defn- compare-tokens
   "Compares two candidate tokens a and b for runtime selection.
@@ -44,17 +79,17 @@
         wanted-a (get wanted-dims (:dim a))
         wanted-b (get wanted-dims (:dim b))
         cmp-interval (util/compare-intervals
-                       [(:pos a) (:end a)]
-                       [(:pos b) (:end b)])] ; +1 0 -1 nil
-  ;(printf "Comparing %d and %d \n" (:index a) (:index b))
-  (if-not same-dim
-    ; unless a is wanted and covers b, or the contrary, they are not comparable
-    (cond (and wanted-a (= 1 cmp-interval)) 1
-          (and wanted-b (= -1 cmp-interval)) -1
-          :else nil)
-    (if (not= 0 cmp-interval)
-      cmp-interval ; one interval recovers the other
-      (compare (:log-prob a) (:log-prob b))))))
+                      [(:pos a) (:end a)]
+                      [(:pos b) (:end b)])] ; +1 0 -1 nil
+    ;;(printf "Comparing %d and %d \n" (:index a) (:index b))
+    (if-not same-dim
+      ;; unless a is wanted and covers b, or the contrary, they are not comparable
+      (cond (and wanted-a (= 1 cmp-interval)) 1
+            (and wanted-b (= -1 cmp-interval)) -1
+            :else nil)
+      (if (not= 0 cmp-interval)
+        cmp-interval ; one interval recovers the other
+        (compare (:log-prob a) (:log-prob b))))))
 
 (defn- select-winners*
   [compare-fn resolve-fn already-selected candidates]
@@ -82,47 +117,56 @@
 
 (defn analyze
   "Parse a sentence, returns the stash and a curated list of winners.
-   Targets is a coll of {:dim dim :label label} : only winners of these dims are
-   kept, and they receive a :label key = the label provided.
-   If no targets specified, all winners are returned."
+
+  Args:
+  s (string):
+  context (map):
+  module (keyword): language module
+  targets (coll): a coll of {:dim dim :label label} : only winners of these dims are
+                  kept, and they receive a :label key = the label provided.
+                  If no targets specified, all winners are returned.
+  base-stash ():
+
+  Returns:
+  ():
+  "
   [s context module targets base-stash]
   {:pre [s context module]}
   (let [classifiers (get-classifier module)
         _ (when-not (map? classifiers)
-            (errorf "[duckling] Module %s is not loaded. Did you (load!)?" module))
+            (log/errorf "[duckling] Module %s is not loaded. Did you (load!)?" module))
         rules (get-rules module)
         stash (engine/pass-all s rules base-stash)
-        ; add an index to tokens in the stash
+        ;; add an index to tokens in the stash
         stash (map #(if (map? %1) (assoc %1 :index %2) %1)
                    stash
                    (iterate inc 0))
         dim-label (when (seq targets) (into {} (for [{:keys [dim label]} targets]
-                                           [(keyword dim) label])))
+                                                 [(keyword dim) label])))
         winners (->> stash
                      (filter :pos)
-                     ; just keep the dims we want, and add the label key
-                     (?>> dim-label (keep #(when-let [label (get dim-label (:dim %))]
-                                             (assoc % :label label))))
+                     ;; just keep the dims we want, and add the label key
+                     (p/?>> dim-label (keep #(when-let [label (get dim-label (:dim %))]
+                                               (assoc % :label label))))
 
                      (select-winners
-                       #(compare-tokens %1 %2 classifiers dim-label)
-                       #(learn/route-prob % classifiers)
-                       #(engine/resolve-token % context module))
+                      #(compare-tokens %1 %2 classifiers dim-label)
+                      #(learn/route-prob % classifiers)
+                      #(engine/resolve-token % context module))
 
-                     ; add a confidence key
-                     ; low confidence for numbers covered by datetime
+                     ;; add a confidence key
+                     ;; low confidence for numbers covered by datetime
                      (engine/estimate-confidence context module)
-                     ; adapt the keys for the outside world
+                     ;; adapt the keys for the outside world
                      (map (fn [{:keys [pos end text] :as token}]
                             (merge token {:start pos
                                           :end end
                                           :body text}))))]
     {:stash stash :winners winners}))
 
-
-;--------------------------------------------------------------------------
-; REPL utilities
-;--------------------------------------------------------------------------
+;;--------------------------------------------------------------------------
+;; REPL utilities
+;;--------------------------------------------------------------------------
 
 (defn- print-stash
   "Print stash to STDOUT"
@@ -148,36 +192,36 @@
 (defn- print-tokens
   "Recursively prints a tree representing a route"
   ([tokens classifiers]
-    {:pre [(coll? tokens)]}
-    (let [tokens (if (vector? tokens)
-                   tokens
-                   [tokens])
-          tokens (if (= 1 (count tokens))
-                   tokens
-                   [{:route tokens :rule {:name "root"}}])]
-      (print-tokens tokens classifiers 0)))
+   {:pre [(coll? tokens)]}
+   (let [tokens (if (vector? tokens)
+                  tokens
+                  [tokens])
+         tokens (if (= 1 (count tokens))
+                  tokens
+                  [{:route tokens :rule {:name "root"}}])]
+     (print-tokens tokens classifiers 0)))
   ([tokens classifiers depth]
-    (print-tokens tokens classifiers depth ""))
+   (print-tokens tokens classifiers depth ""))
   ([tokens classifiers depth prefix]
-    (doseq [[token i] (map vector tokens (iterate inc 1))]
-      (let [;; determine name to display
-            name (if-let [name (get-in token [:rule :name ])]
-                   name
-                   (str "text: " (:text token)))
-            p (learn/route-prob token classifiers)
-            ;; prepare children prefix
-            last? (= i (count tokens))
-            new-prefix (if last? \space \|)
-            new-prefix (str prefix new-prefix \space \space \space)]
-        (when (pos? depth)
-          (print (format "%s%s-- "
-                   prefix
-                   (if last? \` \|))))
-        (println (format "%s (%s)" name p))
-        (print-tokens (:route token)
-          classifiers
-          (inc depth)
-          (if (pos? depth) new-prefix ""))))))
+   (doseq [[token i] (map vector tokens (iterate inc 1))]
+     (let [;; determine name to display
+           name (if-let [name (get-in token [:rule :name])]
+                  name
+                  (str "text: " (:text token)))
+           p (learn/route-prob token classifiers)
+           ;; prepare children prefix
+           last? (= i (count tokens))
+           new-prefix (if last? \space \|)
+           new-prefix (str prefix new-prefix \space \space \space)]
+       (when (pos? depth)
+         (print (format "%s%s-- "
+                        prefix
+                        (if last? \` \|))))
+       (println (format "%s (%s)" name p))
+       (print-tokens (:route token)
+                     classifiers
+                     (inc depth)
+                     (if (pos? depth) new-prefix ""))))))
 
 (defn play
   "Show processing details for one sentence. Defines a 'details' function."
@@ -197,10 +241,10 @@
      (printf "\n%d winners:\n" (count winners))
      (doseq [winner winners]
        (printf "%-25s %s %s\n" (str (name (:dim winner))
-                                     (if (:latent winner) " (latent)" ""))
-                               (engine/export-value winner {:date-fn str})
-                               (dissoc winner :value :route :rule :pos :text :end :index
-                                               :dim :start :latent :body :pred :timezone :values)))
+                                    (if (:latent winner) " (latent)" ""))
+               (engine/export-value winner {:date-fn str})
+               (dissoc winner :value :route :rule :pos :text :end :index
+                       :dim :start :latent :body :pred :timezone :values)))
 
      ;; 3. ask for details
      (printf "For further info: (details idx) where 1 <= idx <= %d\n" (dec (count stash)))
@@ -209,9 +253,9 @@
      (def token (fn [n]
                   (nth stash n))))))
 
-;--------------------------------------------------------------------------
-; Configuration loading
-;--------------------------------------------------------------------------
+;;--------------------------------------------------------------------------
+;; Configuration loading
+;;--------------------------------------------------------------------------
 
 (defn- gen-config-for-lang
   "Generates the full config for a language from directory structure."
@@ -227,12 +271,36 @@
        (into {})))
 
 (defn- gen-config-for-langs
-  "Generates the full config for langs from directory structure."
+  "Generates the full config for langs from directory structure.
+
+  Args:
+  langs (vector): ISO language names
+
+  Returns:
+  (map): the config map"
   [langs]
   (->> langs
        (map (fn [lang]
               [(keyword (format "%s$core" lang)) (gen-config-for-lang lang)]))
        (into {})))
+
+(deftest gen-config-for-langs-test
+  (is (=  {:ro$core {:corpus ["finance"
+                              "time"
+                              "communication"
+                              "temperature"
+                              "numbers"
+                              "measure"],
+                     :rules ["finance"
+                             "cycles"
+                             "time"
+                             "communication"
+                             "temperature"
+                             "numbers"
+                             "duration"
+                             "measure"]},
+           :tr$core {:corpus ["numbers"], :rules ["numbers"]}}
+          (gen-config-for-langs ["ro" "tr"]))))
 
 (defn- read-rules
   [lang new-file]
@@ -249,16 +317,41 @@
       corpus/read-corpus))
 
 (defn- make-corpus
+  "Make a corpus map
+
+  Args:
+  lang (string): ISO language name
+  corpus-file (vector): filenames (dimensions) names
+
+  Returns:
+  (map): the corpus map {:context :tests}"
   [lang corpus-files]
   (->> corpus-files
        (pmap (partial read-corpus lang))
        (reduce (partial util/merge-according-to {:tests concat :context merge}))))
 
+(deftest make-corpus-test
+  (let [c (make-corpus "ro" ["temperature"])]
+    (is (= [:context :tests] (keys c)))
+    (is (= [:text :checks] (keys (first (:tests c)))))))
+
 (defn- make-rules
+  "Make a rules vector
+
+  Args:
+  lang (string): ISO language name
+  rules-file (vector): filenames (dimensions) names
+
+  Returns:
+  (vector): the rules map {:name :pattern :production} vector"
   [lang rules-files]
   (->> rules-files
        (pmap (partial read-rules lang))
        (apply concat)))
+
+(deftest make-rules-test
+  (is (= [:name :pattern :production]
+         (keys (first (make-rules "ro" ["temperature"]))))))
 
 (defn- get-dims-for-test
   [context module {:keys [text]}]
@@ -268,8 +361,8 @@
                    :stash
                    (keep :dim))
               (catch Exception e
-                (warnf "Error while analyzing module=%s context=%s text=%s"
-                       module context text)
+                (log/warnf "Error while analyzing module=%s context=%s text=%s"
+                           module context text)
                 [])))
           text))
 
@@ -283,8 +376,14 @@
 
 (defn load!
   "(Re)loads rules and classifiers for languages or/and config.
-   If no language list nor config provided, loads all languages.
-   Returns a map of loaded modules with available dimensions."
+
+   Args:
+   langsconfig (map): (optional) languages map with 2 keywords (:languages :config).
+                      If no language list nor config provided, loads all languages.
+
+   Returns:
+   (map): loaded modules with available dimensions.
+  "
   ([] (load! nil))
   ([{:keys [languages config]}]
    (let [langs (seq languages)
@@ -312,10 +411,67 @@
                   [module (get-dims module corpus)]))
           (into {})))))
 
+(deftest load!-test
+  (is (= {:sv$core [:unit :number :ordinal :amount-of-money :time
+                    :unit-of-duration :duration :cycle :timezone],
+          :pt$core [:unit :number :amount-of-money :time :temperature
+                    :distance :volume :leven-unit :quantity :timezone
+                    :ordinal :unit-of-duration :phone-number :cycle
+                    :duration :url :email],
+          :ko$core [:unit :cycle :number :unit-of-duration :amount-of-money
+                    :time :temperature :duration :distance :volume :leven-unit
+                    :quantity :phone-number :ordinal :timezone :url :email
+                    :leven-product],
+          :id$core [:unit :number :amount-of-money :ordinal],
+          :nl$core [:time :cycle :number :unit-of-duration :duration :distance
+                    :volume :ordinal :timezone],
+          :pl$core [:time :cycle :unit-of-duration :duration :number :ordinal
+                    :timezone],
+          :tr$core [:number :ordinal],
+          :hr$core [:unit :number :amount-of-money :time :temperature :distance
+                    :volume :ordinal :leven-unit :quantity :timezone
+                    :phone-number :cycle :unit-of-duration :duration :url :email
+                    :leven-product],
+          :nb$core [:unit :number :amount-of-money :time :ordinal :cycle
+                    :unit-of-duration :duration :timezone],
+          :my$core [:number],
+          :ru$core [:number :ordinal],
+          :ja$core [:number :temperature :ordinal],
+          :fr$core [:unit :number :amount-of-money :time :temperature :distance
+                    :volume :url :cycle :unit-of-duration :duration :ordinal
+                    :phone-number :timezone :email :leven-unit :leven-product
+                    :quantity],
+          :es$core [:unit :number :amount-of-money :time :temperature :distance
+                    :volume :url :timezone :phone-number :cycle
+                    :unit-of-duration :duration :ordinal :email],
+          :da$core [:time :cycle :unit-of-duration :number :ordinal :duration
+                    :timezone],
+          :zh$core [:time :cycle :unit-of-duration :number :temperature
+                    :duration :ordinal],
+          :ar$core [:number :ordinal],
+          :ga$core [:unit :number :amount-of-money :time :temperature :distance
+                    :volume],
+          :it$core [:time :cycle :unit-of-duration :number :temperature :ordinal
+                    :phone-number :duration :timezone :url :email],
+          :de$core [:time :number :ordinal :cycle :unit-of-duration :duration
+                    :timezone],
+          :ro$core [:unit :number :amount-of-money :time :temperature :distance
+                    :volume :url :cycle :unit-of-duration :phone-number :timezone
+                    :email :ordinal :leven-unit :leven-product :quantity],
+          :vi$core [:unit :number :amount-of-money :time :cycle :ordinal
+                    :timezone],
+          :he$core [:time :cycle :unit-of-duration :ordinal :number :duration],
+          :uk$core [:number :ordinal],
+          :et$core [:number :ordinal],
+          :en$core [:unit :number :amount-of-money :time :temperature :distance
+                    :volume :leven-unit :quantity :ordinal :phone-number :cycle
+                    :unit-of-duration :duration :timezone :url :email
+                    :leven-product]}
+         (load!))))
 
-;--------------------------------------------------------------------------
-; Corpus running
-;--------------------------------------------------------------------------
+;;--------------------------------------------------------------------------
+;; Corpus running
+;;--------------------------------------------------------------------------
 
 (defn run-corpus
   "Run the corpus given in parameter for the given module.
@@ -356,16 +512,22 @@
            (printf "(play %s \"%s\")\n" mod text)
            (play mod text)))))))
 
-
-;--------------------------------------------------------------------------
-; Public API
-;--------------------------------------------------------------------------
+;;--------------------------------------------------------------------------
+;; Public API
+;;--------------------------------------------------------------------------
 
 (defn parse
-  "Public API. Parses text using given module. If dims are provided as a list of
-  keywords referencing token dimensions, only these dimensions are extracted.
-  Context is a map with a :reference-time key. If not provided, the system
-  current date and time is used."
+  "Public API. Parses text using given module.
+
+  Args:
+  module (string): the language module (ex en$core)
+  text (string): the text to parse
+  dims (list): (optional)  list of keywords referencing token dimensions to be extracted (default [] all dimensions)
+  context (map): (optional) a map with a :reference-time key. If not provided, the system current date and time is used.
+
+  Returns:
+  (map): the tokens
+  "
   ([module text]
    (parse module text []))
   ([module text dims]
@@ -376,18 +538,17 @@
         (map #(assoc % :value (engine/export-value % {})))
         (map #(select-keys % [:dim :body :value :start :end :latent])))))
 
-
-;--------------------------------------------------------------------------
-; The stuff below is specific to Wit.ai and will be moved out of Duckling
-;--------------------------------------------------------------------------
+;;--------------------------------------------------------------------------
+;; The stuff below is specific to Wit.ai and will be moved out of Duckling
+;;--------------------------------------------------------------------------
 
 (defn- generate-context
   "Wit.ai internal. Will move to Wit."
   [base-context]
   (-> base-context
-      (?> (instance? org.joda.time.DateTime (:reference-time base-context))
-          (assoc :reference-time {:start (:reference-time base-context)
-                                  :grain :second}))))
+      (p/?> (instance? org.joda.time.DateTime (:reference-time base-context))
+            (assoc :reference-time {:start (:reference-time base-context)
+                                    :grain :second}))))
 
 (defn extract
   "API used by Wit.ai (will be moved to Wit)
@@ -400,7 +561,7 @@
          (:reference-time context)
          (vector? targets)]}
   (try
-    (infof "Extracting from '%s' with targets %s" sentence targets)
+    (log/infof "Extracting from '%s' with targets %s" sentence targets)
     (letfn [(extract'
               [module targets] ; targets specify all the dims we should extract
               (let [module (keyword module)
@@ -421,5 +582,20 @@
                  :context context
                  :leven-stash leven-stash
                  :targets targets}]
-         (errorf e "duckling error err=%s" (pr-str err))
-         []))))
+        (log/errorf e "duckling error err=%s" (pr-str err))
+        []))))
+
+;; for tests
+;; (def corpus (make-corpus "ro" ["finance"
+;;                                "time"
+;;                                "communication"
+;;                                "temperature"
+;;                                "numbers"
+;;                                "measure"]))
+;; (def rules (make-rules "ro"  ["finance"
+;;                               "time"
+;;                               "communication"
+;;                               "temperature"
+;;                               "numbers"
+;;                               "measure"]))
+;; (learn/train-classifiers corpus rules learn/extract-route-features)
