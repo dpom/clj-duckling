@@ -1,9 +1,11 @@
 (ns duckling.time.prod
-  (:use [clojure.tools.logging])
-  (:require [duckling.time.pred :as p]
-            [duckling.time.obj :as t])
-  (:import [java.text NumberFormat]
-           [java.util Locale]))
+  (:require
+   [taoensso.timbre :as log]
+   [duckling.time.pred :as p]
+   [duckling.time.obj :as t])
+  (:import
+   [java.text NumberFormat]
+   [java.util Locale]))
 
 ;; Production helpers, called from the rules
 

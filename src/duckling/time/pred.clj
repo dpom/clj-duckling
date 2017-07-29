@@ -1,8 +1,10 @@
 (ns duckling.time.pred
   (:refer-clojure :exclude [cycle resolve])
-  (:use [clojure.tools.logging]
+  (:use
         [plumbing.core])
-  (:require [duckling.time.obj :as t]))
+  (:require
+   [taoensso.timbre :as log]
+   [duckling.time.obj :as t]))
 
 ;; Contains the time semantics.
 ;; Knows nothing  about tokens, morphology, syntax, forms.
@@ -390,7 +392,7 @@
 
       [token]) ; default for other dims
     (catch Throwable e
-      (errorf e "Error while resolving %s" (dissoc token :route))
+      (log/errorf e "Error while resolving %s" (dissoc token :route))
       (print-token token)
       (throw (ex-info (format "Error while resolving %s" (dissoc token :route)) {})))))
 

@@ -6,7 +6,7 @@
             [clj-time.format :as tf]
             [clojure.repl :as repl]
             [clojure.pprint :as pprint]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [clojure.test :refer :all]
             [clj-time.coerce :as tcoerce])
   (:import [java.io IOException OutputStream StringReader]
