@@ -19,11 +19,8 @@
              :dev {:test-paths ["src"]
                    :env {:timbre-level "trace"}
                    :dependencies [[org.clojure/tools.trace "0.7.9"]
-                                  [pjstadig/humane-test-output "0.8.0"]
-                                  [cheshire "5.7.1"]]
-                   :injections [(require 'pjstadig.humane-test-output)
-                                (pjstadig.humane-test-output/activate!)]
-                   }
+                                  [cheshire "5.7.1"]]}
+             :test {:env {:timbre-level "info"}}
              :uberjar {:aot [duckling.core]}}
   :test-selectors {:default (complement :benchmark)
                    :benchmark :benchmark}

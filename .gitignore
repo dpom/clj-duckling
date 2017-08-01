@@ -10,3 +10,7 @@ target
 resources/export.json
 /.lein-codeindex
 /TAGS
+/GPATH
+/GRTAGS
+/GSYMS
+/GTAGS
