@@ -6,6 +6,7 @@
    [clojure.string :as string]
    [plumbing.core :as p]
    [taoensso.timbre :as log]
+   [environ.core :refer [env]]
    [clojure.test :refer :all]
    [duckling.corpus :as corpus]
    [duckling.engine :as engine]
@@ -24,7 +25,7 @@
 (use-fixtures :once
   (fn [tests]
     (println "============== start core tests")
-    (load!)
+    (load! {:languages ["ro" "en"] })
     (tests)
     (println "============== stop core tests")))
 
@@ -386,6 +387,7 @@
   "
   ([] (load! nil))
   ([{:keys [languages config]}]
+   (log/set-level! (keyword (env :timbre-level)))
    (let [langs (seq languages)
          lang-config (when (or langs (empty? config))
                        (cond-> (set (res/get-subdirs "languages"))
@@ -412,62 +414,15 @@
           (into {})))))
 
 (deftest load!-test
-  (is (= {:sv$core [:unit :number :ordinal :amount-of-money :time
-                    :unit-of-duration :duration :cycle :timezone],
-          :pt$core [:unit :number :amount-of-money :time :temperature
-                    :distance :volume :leven-unit :quantity :timezone
-                    :ordinal :unit-of-duration :phone-number :cycle
-                    :duration :url :email],
-          :ko$core [:unit :cycle :number :unit-of-duration :amount-of-money
-                    :time :temperature :duration :distance :volume :leven-unit
-                    :quantity :phone-number :ordinal :timezone :url :email
-                    :leven-product],
-          :id$core [:unit :number :amount-of-money :ordinal],
-          :nl$core [:time :cycle :number :unit-of-duration :duration :distance
-                    :volume :ordinal :timezone],
-          :pl$core [:time :cycle :unit-of-duration :duration :number :ordinal
-                    :timezone],
-          :tr$core [:number :ordinal],
-          :hr$core [:unit :number :amount-of-money :time :temperature :distance
-                    :volume :ordinal :leven-unit :quantity :timezone
-                    :phone-number :cycle :unit-of-duration :duration :url :email
-                    :leven-product],
-          :nb$core [:unit :number :amount-of-money :time :ordinal :cycle
-                    :unit-of-duration :duration :timezone],
-          :my$core [:number],
-          :ru$core [:number :ordinal],
-          :ja$core [:number :temperature :ordinal],
-          :fr$core [:unit :number :amount-of-money :time :temperature :distance
-                    :volume :url :cycle :unit-of-duration :duration :ordinal
-                    :phone-number :timezone :email :leven-unit :leven-product
-                    :quantity],
-          :es$core [:unit :number :amount-of-money :time :temperature :distance
-                    :volume :url :timezone :phone-number :cycle
-                    :unit-of-duration :duration :ordinal :email],
-          :da$core [:time :cycle :unit-of-duration :number :ordinal :duration
-                    :timezone],
-          :zh$core [:time :cycle :unit-of-duration :number :temperature
-                    :duration :ordinal],
-          :ar$core [:number :ordinal],
-          :ga$core [:unit :number :amount-of-money :time :temperature :distance
-                    :volume],
-          :it$core [:time :cycle :unit-of-duration :number :temperature :ordinal
-                    :phone-number :duration :timezone :url :email],
-          :de$core [:time :number :ordinal :cycle :unit-of-duration :duration
-                    :timezone],
-          :ro$core [:unit :number :amount-of-money :time :temperature :distance
-                    :volume :url :cycle :unit-of-duration :phone-number :timezone
-                    :email :ordinal :leven-unit :leven-product :quantity],
-          :vi$core [:unit :number :amount-of-money :time :cycle :ordinal
-                    :timezone],
-          :he$core [:time :cycle :unit-of-duration :ordinal :number :duration],
-          :uk$core [:number :ordinal],
-          :et$core [:number :ordinal],
-          :en$core [:unit :number :amount-of-money :time :temperature :distance
-                    :volume :leven-unit :quantity :ordinal :phone-number :cycle
-                    :unit-of-duration :duration :timezone :url :email
-                    :leven-product]}
-         (load!))))
+  (is (= {:en$core '(:unit :number :amount-of-money :temperature :distance
+                           :volume :time :leven-unit :quantity :phone-number
+                           :ordinal :url :email :timezone :leven-product
+                           :unit-of-duration :cycle :duration),
+          :ro$core '(:unit :number :amount-of-money :temperature :distance
+                           :volume :time :url :ordinal :phone-number :email
+                           :timezone :leven-unit :leven-product :quantity
+                           :unit-of-duration :cycle)}
+         (load! {:languages ["ro" "en"] }))))
 
 ;;--------------------------------------------------------------------------
 ;; Corpus running

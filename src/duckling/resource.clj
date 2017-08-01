@@ -83,6 +83,12 @@
   [^String path]
   (->> (ls path) (filter dir?) (map rm-trailing-slash)))
 
+(deftest function-test
+  (is (=  ["pt" "hr" "uk" "it" "da" "id" "sv" "zh" "tr" "ga" "pl" "vi" "ko" "my" "nb" "en" "de" "he" "ja" "ro" "ar" "ru" "es" "fr" "nl" "et"]
+          (get-subdirs "languages"))))
+
+
+
 (defn get-files
   "Lists files of resource path."
   [^String path]
