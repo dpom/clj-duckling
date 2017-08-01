@@ -1,7 +1,7 @@
 (ns duckling.learn
   (:require
    [clojure.set :as sets]
-   [clojure.tools.logging :as log]
+   [taoensso.timbre :as log]
    [clj-time.core :as t]
    [clojure.pprint :refer [pprint]]
    [duckling.engine :as engine]

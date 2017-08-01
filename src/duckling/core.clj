@@ -5,7 +5,7 @@
    [clojure.set :as set]
    [clojure.string :as string]
    [plumbing.core :as p]
-   [clojure.tools.logging :as log]
+   [taoensso.timbre :as log]
    [clojure.test :refer :all]
    [duckling.corpus :as corpus]
    [duckling.engine :as engine]
@@ -533,6 +533,7 @@
   ([module text dims]
    (parse module text dims (default-context :now)))
   ([module text dims context]
+   (log/debugf "parse: module = %s, dims = %s, text = |%s|" module dims text)
    (->> (analyze text context module (map (fn [dim] {:dim dim :label dim}) dims) nil)
         :winners
         (map #(assoc % :value (engine/export-value % {})))

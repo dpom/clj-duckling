@@ -2,7 +2,8 @@
   "This namespace contains the common helpers used in rules"
   (:require
    [clj-time.core :as t]
-   [duckling.util :as util]))
+   [duckling.util :as util]
+))
 
 (defmacro fn& [dim & args-body]
   (let [meta-map (when (-> args-body first map?)
