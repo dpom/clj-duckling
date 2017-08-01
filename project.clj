@@ -5,7 +5,6 @@
   :url "https://dpom.github.io/clj-duckling/"
   :plugins [[s3-wagon-private "1.1.2" :exclusions [commons-logging commons-codec]]
             [lein-ancient "0.6.10" :exclusions [commons-logging org.clojure/clojure]]
-            [lein-codeindex "0.1.0" :exclusions [org.clojure/clojure]]
             [lein-checkall "0.1.1" :exclusions [org.clojure/tools.namespace org.clojure/clojure]]
             [lein-cljfmt "0.5.6" :exclusions [org.clojure/clojure]]
             [lein-codox "0.10.3" :exclusions [org.clojure/clojure]]]
