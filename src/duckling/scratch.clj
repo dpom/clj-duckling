@@ -16,3 +16,6 @@
 
 (learn/train-classifiers corpus rules learn/extract-route-features)
 
+(def sentences-and-check (for [test (:tests corpus)
+      text (:text test)]
+  [text (first (:checks test))]))

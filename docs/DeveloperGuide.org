@@ -8,6 +8,46 @@
 
 ---
 
+* Probabilistic parsing
+
+** Learn
+
+*** Build dataset
+
+The goal of this phase is to build a proper Machine Learning dataset from a
+corpus of sentences with expected result (interval of time). There is one
+separate ML model per rule: each rule is seen as a boolean classifier who has to
+decide, given a 'route' of tokens filling its slots, the probability that it's a
+good idea for the rule to fire.
+
+The global dataset is a map ='rule name' => dataset= for the rule
+
+The local dataset for a rule is a vector of samples. A general sample is just a vector =[features output]=
+- features  :: could be anything "seen" by the rule (more on that later). For
+               the moment, it's just the text filling the slots of the rule.
+- output  :: is a boolean, =true= if the rule has matched "successfully" (ie,
+             leading to the right result at the top of the parse tree) for this
+             sample).
+
+*** Train model
+
+Once the dataset has been built, different ML techniques can try to build the best ML model for it. It should be clearly separated.
+
+** Run
+
+At runtime, the model predicts the local probability of each token by running
+the model of the rule who built the token on its /route/. The global probability
+of the token is the product of its local prob by the local probs of the tokens
+of its route.
+
+** Features
+
+Feature extraction is used both during learning and runtime. It must be done by
+a separate function. The same dataset building strategy can be tried with
+different features approaches.
+
+
+
 * Extending Duckling's Coverage
 
   Workflow:
