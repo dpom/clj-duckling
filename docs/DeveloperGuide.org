@@ -58,14 +58,17 @@ different features approaches.
 
 ** Loading Modules
 
-   Each module has a name (en$core), with which it is referred to when you want to use it at runtime, or reload it.
+   Each module has a name (en$core), with which it is referred to when you want
+   to use it at runtime, or reload it.
 
-   Each module refers to a set of corpus files and rules files (more on this in the following sections).
+   Each module refers to a set of corpus files and rules files (more on this in
+   the following sections).
 
-   Each module is run by Duckling in a separate "sandbox", so for example, rules in module A cannot expect to match
-   tokens created by rules in module B.
-   There’s typically one module per language, but nothing prevents you to use several modules for a given language,
-   as long as these modules don’t need to interact with each other.
+   Each module is run by Duckling in a separate "sandbox", so for example, rules
+   in module A cannot expect to match tokens created by rules in module B.
+   There’s typically one module per language, but nothing prevents you to use
+   several modules for a given language, as long as these modules don’t need to
+   interact with each other.
 
    Loading module:
    #+BEGIN_SRC clojure
@@ -76,8 +79,9 @@ different features approaches.
 
 ** Corpus
 
-   Corpus files are located in =resources/languages/<lang>/corpus=. You can either edit existing files or create new files.
-   *Once you’ve modified corpus files, you must reload to take the changes into account*.
+   Corpus files are located in =resources/languages/<lang>/corpus=. You can
+   either edit existing files or create new files. *Once you’ve modified corpus
+   files, you must reload to take the changes into account*.
 
    Here is an example corpus file with two test groups:
    #+BEGIN_SRC clojure
@@ -95,9 +99,13 @@ different features approaches.
 )
    #+END_SRC
 
-   Each test group is described by one or more strings and a function. To run the group Duckling will take each string one by one, analyze it, a call the function on the output. The test passes if the function returns true (or a truthy value).
+   Each test group is described by one or more strings and a function. To run
+   the group Duckling will take each string one by one, analyze it, a call the
+   function on the output. The test passes if the function returns true (or a
+   truthy value).
 
-   For instance, to test that "0", "naught" and "zero" will all produce the output {:dim :number :value 0}, we can use:
+   For instance, to test that "0", "naught" and "zero" will all produce the
+   output {:dim :number :value 0}, we can use:
    #+BEGIN_SRC clojure
 "0"
 "naught"
@@ -105,12 +113,14 @@ different features approaches.
 (fn [token context] (and (= :number (:dim token)) (= 0 (:value token))))
    #+END_SRC
 
-   For now, the context is just used for date and times, in order to solve relative dates like "tomorrow".
-   You can provide a context map at the beginning of your corpus file, and this map will be provided to the test function.
-   In most cases, you shouldn’t need to use context.
+   For now, the context is just used for date and times, in order to solve
+   relative dates like "tomorrow". You can provide a context map at the
+   beginning of your corpus file, and this map will be provided to the test
+   function. In most cases, you shouldn’t need to use context.
 
-   In practice, we use helpers to generate easy to read test functions.
-   In the previous example, we use a helper number defined in =src/duckling/corpus.clj=:
+   In practice, we use helpers to generate easy to read test functions. In the
+   previous example, we use a helper number defined in
+   =src/duckling/corpus.clj=:
    #+BEGIN_SRC clojure
 (defn number
   "check if the token is a number equal to value.
@@ -127,8 +137,8 @@ different features approaches.
    So that the test becomes just (number 0), which is easy to read and reusable.
 
    Duckling will frequently generate several possible results for a given input.
-   In this case, each result is tested by the test function.
-   If the function returns true for at least one result, then the test passes.
+   In this case, each result is tested by the test function. If the function
+   returns true for at least one result, then the test passes.
 
    Once you’ve added your tests, reload your module (see above) and run the corpus:
    #+BEGIN_SRC clojure
@@ -139,13 +149,15 @@ O0 FAIL "nil"
 #'duckling.core/c
    #+END_SRC
 
-   Make sure the tests don’t pass anymore (if they do, either you’re very lucky and the existing rules actually
-   cover your new tests, or you did not reload the corpus – usually it’s the latter!). Now you’re ready to write rules.
+   Make sure the tests don’t pass anymore (if they do, either you’re very lucky
+   and the existing rules actually cover your new tests, or you did not reload
+   the corpus – usually it’s the latter!). Now you’re ready to write rules.
 
 ** Rules
 
-   Rules files are located in =resources/languages/<lang>/rules=. You can either edit existing files or create new files.
-   Once you’ve modified rules files, you must reload to take the changes into account.
+   Rules files are located in =resources/languages/<lang>/rules=. You can either
+   edit existing files or create new files. Once you’ve modified rules files,
+   you must reload to take the changes into account.
 
    Here is an example file with just one rule:
    #+BEGIN_SRC clojure
@@ -154,9 +166,11 @@ O0 FAIL "nil"
  {:dim number :integer true :value 0})   ; _production_ token, it can be any map
    #+END_SRC
 
-   When the pattern is matched, the production token is produced. Duckling adds this new token to its collection of tokens,
-   which is called the "stash". Then other rules can try to match this token and produce other tokens that are added
-   to the stash, and so on. All rules are tried again and again until no more token is produced.
+   When the pattern is matched, the production token is produced. Duckling adds
+   this new token to its collection of tokens, which is called the "stash". Then
+   other rules can try to match this token and produce other tokens that are
+   added to the stash, and so on. All rules are tried again and again until no
+   more token is produced.
 
    Here is an illustration of this process, with a stash containing 11 tokens:
    #+BEGIN_SRC clojure
@@ -184,8 +198,8 @@ W    ---         1 | number    | integer (0..19)           | P = -0.1866 |
      - regular expressions that try to match the input text
      - functions that try to match tokens in the stash
 
-     Any function accepting one token as argument (a Clojure map) can work as a pattern.
-     It must return true when the token matches. For example:
+     Any function accepting one token as argument (a Clojure map) can work as a
+     pattern. It must return true when the token matches. For example:
      #+BEGIN_SRC clojure
 ; this pattern will match a token with :dim :number whose :val is 0
 (fn [token] (and (= :number (:dim token)) (= 0 (:value token))))
@@ -193,21 +207,26 @@ W    ---         1 | number    | integer (0..19)           | P = -0.1866 |
 
      Protip: These patterns are very close, but should not be confused with Corpus test patterns.
      We might merge them later.
+
 **** Helpers
 
-     Like for corpus test functions, you’ll find yourself using the same patterns again and again.
-     We use helpers that produce pattern functions. For instance:
+     Like for corpus test functions, you’ll find yourself using the same
+     patterns again and again. We use helpers that produce pattern functions.
+     For instance:
      #+BEGIN_SRC clojure
 (number 3) ; => (fn [token] (and (= :number (:dim token)) (= 3 (:value token))))
 
 (dim :number) ; => (fn [token] (= :number (:dim token)))
      #+END_SRC
 
-     ou should reuse existing helpers or define your own as much as possible, as it makes the rules much easier to read.
+     ou should reuse existing helpers or define your own as much as possible, as
+     it makes the rules much easier to read.
 
-     Protip: Using =(dim :number)= is better than a regex like =#"\d+"=,
-     because if will match any number even "twenty", "minus six", "2M", etc.
-     You actually leverage other Duckling rules that are just responsible to recognize numbers.
+     Protip: Using =(dim :number)= is better than a regex like =#"\d+"=, because
+     if will match any number even "twenty", "minus six", "2M", etc. You
+     actually leverage other Duckling rules that are just responsible to
+     recognize numbers.
+
 **** Slots
 
      Let’s say you want to parse something like "10 degrees", "twenty degrees", and "30°".
@@ -218,10 +237,10 @@ W    ---         1 | number    | integer (0..19)           | P = -0.1866 |
  #"degrees?|°"]  ; second slot is the string "degree", "degrees" or "°" in the input string
      #+END_SRC
 
-
 *** Production
 
-    Once a rule’s pattern matches, Duckling creates a token and adds it to the stash.
+    Once a rule’s pattern matches, Duckling creates a token and adds it to the
+    stash.
 
     In its simplest form, the production is just the token to produce:
     #+BEGIN_SRC clojure
@@ -239,15 +258,17 @@ W    ---         1 | number    | integer (0..19)           | P = -0.1866 |
  :degrees (:value %1)}
     #+END_SRC
 
-    *Protip*: Internally, the production form is expanded with #(...).
-    It becomes a function, which is called with the matching tokens as arguments.
+    *Protip*: Internally, the production form is expanded with #(...). It
+    becomes a function, which is called with the matching tokens as arguments.
 
-    *Warning*: If the pattern has S slots, you MUST use %S (even if you don’t need it) if you need any %i.
-    That will set the right arity to the production function.
+    *Warning*: If the pattern has S slots, you MUST use %S (even if you don’t
+    need it) if you need any %i. That will set the right arity to the production
+    function.
 
 **** Special case of regex patterns
 
-     If the base pattern is a regex and you need to use the groups matched by the regex in the production, you use the =:groups= key:
+     If the base pattern is a regex and you need to use the groups matched by
+     the regex in the production, you use the =:groups= key:
      #+BEGIN_SRC clojure
  "international phone numbeer"
  #"\+(\d+) (\de+)" ; regex capturing two groups
@@ -258,7 +279,8 @@ W    ---         1 | number    | integer (0..19)           | P = -0.1866 |
 
 ** Debugging
 
-   When a corpus test doesn’t pass and you don’t understand why, you can have a closer look at what happens with play:
+   When a corpus test doesn’t pass and you don’t understand why, you can have a
+   closer look at what happens with play:
    #+BEGIN_SRC clojure
 duckling.core=> (play :en$core "45 degrees")
 W ----------   7 | temperature | <latent temp> degrees     | P = -1.9331 | number as temp +
@@ -279,11 +301,14 @@ W --           1 | number    | integer (numeric)         | P = -0.1665 |
    2. The -- represent the span in the text input
    3. Token index (starting at 1, since the input string itself is token 0)
    4. :dim
-   5. Label of the rule that produced the token (that’s why labeling your rules clearly is important)
-   6. Probability (the higher the most probable – and it’s actually the log of the probabily, hence the negative value)
+   5. Label of the rule that produced the token (that’s why labeling your rules
+      clearly is important)
+   6. Probability (the higher the most probable – and it’s actually the log of
+      the probabily, hence the negative value)
    7. Labels of the rules that produced the tokens in the slots below
 
-   If you need more information about a specific token, call the details function with the token index:
+   If you need more information about a specific token, call the details
+   function with the token index:
    #+BEGIN_SRC clojure
 duckling.core=> (details 7)
 <latent temp> degrees (-1.9331200116060705)
@@ -294,7 +319,8 @@ duckling.core=> (details 7)
 nil
    #+END_SRC
 
-   If you really need to examine token 7 in depth, you can get the full map with =(token 7)=.
+   If you really need to examine token 7 in depth, you can get the full map with
+   =(token 7)=.
 
 
 * Architecture

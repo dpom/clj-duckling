@@ -34,11 +34,20 @@
             (sets/union prior-set (subtokens tok))) #{token} (:route token)))
 
 (defn sentence->dataset
-  "Takes a sentence, context, check (fn that determines if a winner is valid),
-  feature extractor, and existing dataset.
-  Returns an enriched dataset:
-  [{<rule-name> [features, output]}]
-  Output is true if the rule was contributing successfully, false otherwise"
+  "Enriches the dataset
+
+  Args:
+    s (string): a sentence
+    context (map): the context
+    check (func): fn that determines if a winner is valid
+    rules (map):
+    feature-extractor (func):
+    dataset (vector): the existing dataset
+
+  Returns:
+    vector: an enriched dataset [{<rule-name> [features, output]}]
+          Output is true if the rule was contributing
+          successfully, false otherwise"
   [s context check rules feature-extractor dataset]
   (log/debugf "learning %s %s\n" s check)
   (let [fc-tokens (->> (engine/pass-all s rules nil)
