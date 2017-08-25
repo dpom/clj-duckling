@@ -38,23 +38,19 @@
   (datetime 2013 2 19)
 
   "joi"
-  "jo"
+  "joia"
   (datetime 2013 2 14)
 
   "vineri"
-  "vi"
   (datetime 2013 2 15)
 
   "sambata"
   "sâmbătă"
   "sam"
-  "sa"
   (datetime 2013 2 16)
 
   "duminica"
   "duminică"
-  "du"
-  "dum"
   (datetime 2013 2 17)
 
   "1 martie"

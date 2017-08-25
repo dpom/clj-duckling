@@ -1,12 +1,12 @@
 (ns duckling.corpus
-  (:use   
+  (:use
    [plumbing.core :except [millis]])
   (:require
    [taoensso.timbre :as log]
    [duckling.time.obj :as time]
    [duckling.util :as util]))
 
-; Checker functions return *nil* when OK, or [expected actual] when not OK
+                                        ; Checker functions return *nil* when OK, or [expected actual] when not OK
 
 (defn- vec->date-and-map
   "Turns a vector of args into a date and a map of extra fields"
@@ -24,11 +24,11 @@
   (let [[date token-fields] (vec->date-and-map args)]
     (fn [context token]
       (when-not
-       (and
-        (= :time (:dim token))
-        (util/hash-match (select-keys token-fields [:direction :precision])
-                         token)
-        (= (-> token :value) date))
+          (and
+           (= :time (:dim token))
+           (util/hash-match (select-keys token-fields [:direction :precision])
+                            token)
+           (= (-> token :value) date))
         [date (:value token)]))))
 
 (defn datetime-interval
@@ -39,9 +39,9 @@
         date (time/interval start end)]
     (fn [context {:keys [value dim] :as token}]
       (when-not
-       (and
-        (= :time dim)
-        (= value date))
+          (and
+           (= :time dim)
+           (= value date))
         [date value]))))
 
 (defn number
@@ -49,18 +49,18 @@
   If value is integer, it also checks :integer true"
   [value]
   (fn [_ token] (when-not
-                 (and
-                  (= :number (:dim token))
-                  (or (not (integer? value)) (:integer token))
-                  (= (:value token) value))
+                    (and
+                     (= :number (:dim token))
+                     (or (not (integer? value)) (:integer token))
+                     (= (:value token) value))
                   [value (:value token)])))
 
 (defn ordinal
   [value]
   (fn [_ token] (when-not
-                 (and
-                  (= :ordinal (:dim token))
-                  (= (:value token) value))
+                    (and
+                     (= :ordinal (:dim token))
+                     (= (:value token) value))
                   [value (:value token)])))
 
 (defn temperature
@@ -93,6 +93,16 @@
           (= value' value)
           (= unit' unit)
           (= precision' precision)))))
+
+(defn budget
+  "Create a budget condition"
+  [value' & [unit' level']]
+  (fn [_ {:keys [dim value unit level] :as token}]
+    (not (and
+          (= :budget dim)
+          (= value' value)
+          (= unit' unit)
+          (= level' level)))))
 
 (defn place
   "Create a place checker"
