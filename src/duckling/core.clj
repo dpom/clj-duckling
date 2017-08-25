@@ -4,6 +4,7 @@
    [clojure.java.io :as io]
    [clojure.set :as set]
    [clojure.string :as string]
+   [integrant.core :as ig]
    [plumbing.core :as p]
    [taoensso.timbre :as log]
    [environ.core :refer [env]]
@@ -466,6 +467,10 @@
          (let [[mod text] (nth acc n)]
            (printf "(play %s \"%s\")\n" mod text)
            (play mod text)))))))
+
+
+(defmethod ig/init-key :duckling/core [_ params]
+  (load! params))
 
 ;;--------------------------------------------------------------------------
 ;; Public API

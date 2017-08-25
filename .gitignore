@@ -15,3 +15,5 @@ resources/export.json
 /GSYMS
 /GTAGS
 /.lein-env
+dev/resources/local.edn
+dev/src/local.clj

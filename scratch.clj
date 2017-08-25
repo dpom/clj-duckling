@@ -35,10 +35,13 @@
 
 (load! {:languages ["ro"]})
 
-(run :ro$core)
+(go)
 
-(play :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei")
+(d/run :ro$core)
+
+(d/play :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei")
 
 
-(parse :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei" [:gender :amount-of-money :unit-of-duration])
+(d/parse :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei" [:gender :amount-of-money :unit-of-duration])
 
+(reset)
