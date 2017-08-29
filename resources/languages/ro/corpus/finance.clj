@@ -3,11 +3,13 @@
  {}
 
  "10 lei"
+ "10 de lei"
  "10 ron"
  "10 RON"
  (money 10 "RON")
 
  "50 bani"
+ "50 de bani"
  "50 BANI"
  (money 50 "ban")
 
@@ -16,24 +18,16 @@
  "10 lei si 50 bani"
  (money 10.5 "RON")
 
- "$10"
  "10$"
  "zece dolari"
- (money 10 "$")
+ (money 10 "USD")
 
  "zece centi"
  "zece cenți"
  (money 10 "cent")
 
- "$10.000"
- "$10000"
- (money 10000 "$")
-
- "USD1,23"
- (money 1.23 "USD")
-
  "2 dolari"
- (money 2 "$")
+ (money 2 "USD")
 
  "2 centi"
  (money 2 "cent")
@@ -46,39 +40,20 @@
  "2 dolari și 23 cenți"
  "doi dolari si douăzeci si trei centi"
  "doi dolari și douăzeci și trei cenți"
- "2 dolari 23 centi"
- "doi dolari si 23"
- "doi dolari și 23"
- (money 2.23 "$")
+ (money 2.23 "USD")
 
  "20€"
  "20 euro"
  "20 Euro"
- "EUR 20"
  (money 20 "EUR")
 
- "EUR29,99"
- (money 29.99 "EUR")
 
- "£9"
  "noua lire"
  "nouă lire"
- (money 9 "£")
-
- "GBP3,01"
- "GBP 3,01"
- (money 3.01 "GBP")
+ (money 9 "GBP")
 
  "aprox 50 lei"
+ "aprox 50 de lei"
  (money 50 "RON" "approximate")
- 
- "sub 300 lei"
- "maxim 300 lei"
- (budget 300 "RON" "max")
-
- "peste 100 lei"
- "minim 100 lei"
- (budget 100 "RON" "min")
-
 
   )

@@ -164,6 +164,8 @@
                             (merge token {:start pos
                                           :end end
                                           :body text}))))]
+    ;; (log/debugf "stash: %s" (with-out-str (clojure.pprint/pprint stash)))
+    (log/debugf "winners: %s" (with-out-str (clojure.pprint/pprint winners)))
     {:stash stash :winners winners}))
 
 ;;--------------------------------------------------------------------------
