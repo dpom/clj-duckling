@@ -13,8 +13,8 @@
    [duckling.engine :as engine]
    [duckling.learn :as learn]
    [duckling.resource :as res]
-   [duckling.time.api :as api]
-   [duckling.time.obj :as time]
+   [duckling.dims.time.api :as api]
+   [duckling.dims.time.obj :as time]
    [duckling.util :as util]))
 
 (defonce rules-map (atom {}))

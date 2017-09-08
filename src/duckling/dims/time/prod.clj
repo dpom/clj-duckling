@@ -1,8 +1,8 @@
-(ns duckling.time.prod
+(ns duckling.dims.time.prod
   (:require
    [taoensso.timbre :as log]
-   [duckling.time.pred :as p]
-   [duckling.time.obj :as t])
+   [duckling.dims.time.pred :as p]
+   [duckling.dims.time.obj :as t])
   (:import
    [java.text NumberFormat]
    [java.util Locale]))

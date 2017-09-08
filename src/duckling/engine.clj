@@ -8,8 +8,8 @@
             [clojure.stacktrace]
             [taoensso.timbre :as log]
             [clojure.test :refer :all]
-            [duckling.time.prod]
-            [duckling.time.api :as time]
+            [duckling.dims.time.prod]
+            [duckling.dims.time.api :as time]
             [duckling.util :as util]))
 
 ;;
@@ -87,7 +87,7 @@
   "Builds a new rule"
   [name pattern production]
   (if (not (string? name)) (throw (Exception. "Can't accept rule without name.")))
-  (let [duckling-helper-ns (the-ns 'duckling.time.prod) ; could split time.patterns and time.prod helpers
+  (let [duckling-helper-ns (the-ns 'duckling.dims.time.prod) ; could split time.patterns and time.prod helpers
         pattern (binding [*ns* duckling-helper-ns] (eval pattern))
         pattern-vec (if (vector? pattern) pattern [pattern])]
     {:name name

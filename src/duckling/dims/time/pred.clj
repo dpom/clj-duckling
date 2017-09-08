@@ -1,10 +1,10 @@
-(ns duckling.time.pred
+(ns duckling.dims.time.pred
   (:refer-clojure :exclude [cycle resolve])
   (:use
         [plumbing.core])
   (:require
    [taoensso.timbre :as log]
-   [duckling.time.obj :as t]))
+   [duckling.dims.time.obj :as t]))
 
 ;; Contains the time semantics.
 ;; Knows nothing  about tokens, morphology, syntax, forms.
