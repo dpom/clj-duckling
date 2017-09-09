@@ -9,6 +9,7 @@
    [taoensso.timbre :as log]
    [environ.core :refer [env]]
    [clojure.test :refer :all]
+   [duckling.system :as sys]
    [duckling.corpus :as corpus]
    [duckling.engine :as engine]
    [duckling.learn :as learn]
@@ -22,12 +23,14 @@
 (defonce classifiers-map (atom {}))
 
 ;; for tests
-(declare load!)
 (use-fixtures :once
   (fn [tests]
     (println "============== start core tests")
-    (load! {:languages ["ro" "en"] })
+    (alter-var-root #'sys/system (fn [_] (ig/init (-> "test.edn"
+                                                      sys/read-config
+                                                      sys/prep))))
     (tests)
+    (ig/halt! sys/system)
     (println "============== stop core tests")))
 
 (defn default-context
@@ -270,6 +273,7 @@
                                res/get-files
                                (remove #(clojure.string/starts-with? % "_"))
                                (map #(subs % 0 (- (count %) 4)))
+                               sort
                                vec)]
                 [(keyword dir) files])))
        (into {})))
@@ -289,21 +293,25 @@
        (into {})))
 
 (deftest gen-config-for-langs-test
-  (is (=  {:ro$core {:corpus ["finance"
-                              "time"
-                              "communication"
-                              "temperature"
-                              "numbers"
-                              "measure"],
-                     :rules ["finance"
-                             "cycles"
-                             "time"
+  (is (= {:ro$core {:corpus ["budget"
                              "communication"
-                             "temperature"
+                             "finance"
+                             "gender"
+                             "measure"
                              "numbers"
-                             "duration"
-                             "measure"]},
-           :tr$core {:corpus ["numbers"], :rules ["numbers"]}}
+                             "temperature"
+                             "time"],
+                    :rules ["budget"
+                            "communication"
+                            "cycles"
+                            "duration"
+                            "finance"
+                            "gender"
+                            "measure"
+                            "numbers"
+                            "temperature"
+                            "time"]}
+          :tr$core {:corpus ["numbers"], :rules ["numbers"]}}
           (gen-config-for-langs ["ro" "tr"]))))
 
 (defn- read-rules
@@ -376,7 +384,8 @@
   (->> tests
        (pmap (partial get-dims-for-test context module))
        (apply concat)
-       distinct))
+       distinct
+       sort))
 
 (defn load!
   "(Re)loads rules and classifiers for languages or/and config.
@@ -390,7 +399,6 @@
   "
   ([] (load! nil))
   ([{:keys [languages config]}]
-   (log/set-level! (keyword (env :timbre-level)))
    (let [langs (seq languages)
          lang-config (when (or langs (empty? config))
                        (cond-> (set (res/get-subdirs "languages"))
@@ -417,14 +425,32 @@
           (into {})))))
 
 (deftest load!-test
-  (is (= {:en$core '(:unit :number :amount-of-money :temperature :distance
-                           :volume :time :leven-unit :quantity :phone-number
-                           :ordinal :url :email :timezone :leven-product
-                           :unit-of-duration :cycle :duration),
-          :ro$core '(:unit :number :amount-of-money :temperature :distance
-                           :volume :time :url :ordinal :phone-number :email
-                           :timezone :leven-unit :leven-product :quantity
-                           :unit-of-duration :cycle)}
+  (is (= {:en$core '(:amount-of-money
+                    :cycle
+                    :distance :duration
+                    :email
+                    :leven-product :leven-unit
+                    :number
+                    :ordinal
+                    :phone-number
+                    :quantity
+                    :temperature :time :timezone
+                    :unit :unit-of-duration :url
+                    :volume),
+          :ro$core '(:amount-of-money
+                    :budget
+                    :cycle
+                    :distance
+                    :email
+                    :gender
+                    :leven-product :leven-unit
+                    :number
+                    :ordinal
+                    :phone-number
+                    :quantity
+                    :temperature :time :timezone
+                    :unit :unit-of-duration :url
+                    :volume)}
          (load! {:languages ["ro" "en"] }))))
 
 ;;--------------------------------------------------------------------------

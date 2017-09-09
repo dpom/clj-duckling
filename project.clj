@@ -17,7 +17,6 @@
             [lein-kibit "0.1.6-beta2" :exclusions [org.clojure/clojure]]
             [lein-cljfmt "0.5.6" :exclusions [org.clojure/clojure]]
             [lein-environ "1.1.0"]
-            [lein-eftest "0.3.1"]
             [lein-codox "0.10.3" :exclusions [org.clojure/clojure]]]
   :repl-options {:init-ns user}
   :deploy-repositories [["clojars" {:creds :gpg}]]
@@ -25,10 +24,7 @@
              :dev {:source-paths   ["dev/src"]
                    :resource-paths ["dev/resources"]
                    :test-paths ["src"]
-                   :env {:timbre-level "trace"
-                         :config-file "dev.edn"}
                    :dependencies [[integrant/repl "0.2.0"]
-                                  [eftest "0.3.1"]
                                   [org.clojure/tools.trace "0.7.9"]
                                   [cheshire "5.7.1"]]}
              :uberjar {:aot [duckling.core]}}
