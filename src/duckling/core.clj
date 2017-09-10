@@ -14,7 +14,7 @@
    [duckling.engine :as engine]
    [duckling.learn :as learn]
    [duckling.resource :as res]
-   [duckling.dims.time.api :as api]
+   [duckling.dims.api :as dims]
    [duckling.dims.time.obj :as time]
    [duckling.util :as util]))
 
@@ -166,7 +166,8 @@
                      (map (fn [{:keys [pos end text] :as token}]
                             (merge token {:start pos
                                           :end end
-                                          :body text}))))]
+                                          :body text})))
+                     )]
     ;; (log/debugf "stash: %s" (with-out-str (clojure.pprint/pprint stash)))
     (log/debugf "winners: %s" (with-out-str (clojure.pprint/pprint winners)))
     {:stash stash :winners winners}))

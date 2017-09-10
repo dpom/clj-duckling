@@ -6,7 +6,6 @@
             ;; [fipp.edn :refer [pprint]]
             [clojure.tools.namespace.repl :refer [refresh]]
             [clojure.java.io :as io]
-            [eftest.runner :as eftest]
             [taoensso.timbre :as timbre]
             [integrant.core :as ig]
             [integrant.repl :refer [clear halt go init prep reset]]
@@ -15,9 +14,6 @@
 
 (defn read-config []
   (sys/read-config "dev.edn"))
-
-(defn test []
-  (eftest/run-tests (eftest/find-tests "src")))
 
 (clojure.tools.namespace.repl/set-refresh-dirs "dev/src" "src")
 

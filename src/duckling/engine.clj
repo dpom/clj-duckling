@@ -227,11 +227,13 @@
   ; TODO ns should be dynamic based on dim ; or better use a protocol
   (time/resolve token context))
 
-(defn export-value
+
+(defmulti export-value
   "Transforms a token value for API output. Returns the modified value."
-  [token opts]
-  ; TODO dynamic ns based on dim
-  (time/export-value token opts))
+  (fn [token opts] (:dim token)))
+
+(defmethod export-value :default [{:keys [dim value] :as token} opts]
+  {:value value})
 
 (defn estimate-confidence
   "Returns the tokens with :confidence a rough confidence estimation for each.
