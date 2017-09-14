@@ -96,3 +96,7 @@
 
 
 (d/parse :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei" [:budget :age :gender])
+
+
+(d/parse :en$core "the car is 2 meters long and costs 3000$." [:distance :amount-of-money])
+
