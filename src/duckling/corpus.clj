@@ -3,7 +3,7 @@
    [plumbing.core :except [millis]])
   (:require
    [taoensso.timbre :as log]
-   [duckling.time.obj :as time]
+   [duckling.dims.time.obj :as time]
    [duckling.util :as util]))
 
                                         ; Checker functions return *nil* when OK, or [expected actual] when not OK
@@ -97,12 +97,12 @@
 (defn budget
   "Create a budget condition"
   [value' & [unit' level']]
-  (fn [_ {:keys [dim value] :as token}]
+  (fn [_ {:keys [dim value unit level] :as token}]
     (not (and
           (= :budget dim)
-          (= value' (:value value))
-          (= unit' (:unit value))
-          (= level' (:level value))))))
+          (= value' value)
+          (= unit' unit)
+          (= level' level)))))
 
 (defn place
   "Create a place checker"

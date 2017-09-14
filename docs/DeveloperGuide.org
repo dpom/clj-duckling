@@ -48,6 +48,69 @@ different features approaches.
 
 
 
+* Architecture
+
+** core
+
+   The main module with public API. The entry points are:
+   - load! :: (Re)loads rules and classifiers for languages or/and config.
+   - parse :: Parses text using given module.
+
+   bookmark: [[file:~/Dropbox/emag/clj-duckling/src/duckling/core.clj::(cond->%20(set%20(res/get-subdirs%20"languages"))][Last studied line]] 
+
+   Global status variables:
+   - corpus-map :: store the corpus map
+   #+BEGIN_SRC clojure
+{:ro$core {:context {:reference-time {:start #object[org.joda.time.DateTime 0x398ced02 "2013-02-12T04:30:00.000-02:00"], :grain :second},
+                     :min {:start #object[org.joda.time.DateTime 0x1cb29052 "1900-01-01T00:00:00.000-02:00"], :grain :year},
+                     :max {:start #object[org.joda.time.DateTime 0x2bce42dd "2100-01-01T00:00:00.000-02:00"], :grain :year}},
+           :tests ({:text ["10 lei" "10 ron" "10 RON"],
+                    :checks [#object[duckling.corpus$money$fn__3878 0x11fa9e27 "duckling.corpus$money$fn__3878@11fa9e27"]]}
+                   {:text ["50 bani" "50 BANI"],
+                    :checks [#object[duckling.corpus$money$fn__3878 0x19c2bc4a "duckling.corpus$money$fn__3878@19c2bc4a"]]}
+                   )}}
+   #+END_SRC
+   - rules-map :: store the rules map
+   #+BEGIN_SRC clojure
+{:ro$core ({:name "intersect (X cents)",
+            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x802558f "duckling.engine$pattern_fn$fn__4364@802558f"]
+                      #object[duckling.engine$pattern_fn$fn__4364 0x6c6d587e "duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
+            :production #object[duckling.time.prod$eval6563$fn__6564 0x5fb4773e "duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
+           {:name "intersect (and X cents)",
+            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "duckling.engine$pattern_fn$fn__4364@7e7e5309"]
+                      #object[duckling.engine$pattern_fn$fn__4358 0x79e77776 "duckling.engine$pattern_fn$fn__4358@79e77776"]
+                      #object[duckling.engine$pattern_fn$fn__4364 0x52388605 "duckling.engine$pattern_fn$fn__4364@52388605"]),
+            :production #object[duckling.time.prod$eval6578$fn__6579 0x476824ec "duckling.time.prod$eval6578$fn__6579@476824ec"]})}
+   #+END_SRC
+
+
+** storage
+
+The persistent layer module. It stores the application's entities:
+- corpus ::
+- rules :: 
+- classifiers ::
+
+*** memory 
+
+The storage implementation in memory (atoms).
+
+*** resource
+
+   Utility functions for resource folder management.
+
+*** corpus
+
+** learn
+
+
+
+** analyze
+
+** dims
+
+Dimensions specific functions.
+
 * Extending Duckling's Coverage
 
   Workflow:
@@ -321,46 +384,3 @@ nil
 
    If you really need to examine token 7 in depth, you can get the full map with
    =(token 7)=.
-
-
-* Architecture
-
-** core
-
-   The main module with public API. The entry points are:
-   - load! :: (Re)loads rules and classifiers for languages or/and config.
-   - parse :: Parses text using given module.
-
-   bookmark: [[file:~/Dropbox/emag/clj-duckling/src/duckling/core.clj::(cond->%20(set%20(res/get-subdirs%20"languages"))][Last studied line]] 
-
-   Global status variables:
-   - corpus-map :: store the corpus map
-   #+BEGIN_SRC clojure
-{:ro$core {:context {:reference-time {:start #object[org.joda.time.DateTime 0x398ced02 "2013-02-12T04:30:00.000-02:00"], :grain :second},
-                     :min {:start #object[org.joda.time.DateTime 0x1cb29052 "1900-01-01T00:00:00.000-02:00"], :grain :year},
-                     :max {:start #object[org.joda.time.DateTime 0x2bce42dd "2100-01-01T00:00:00.000-02:00"], :grain :year}},
-           :tests ({:text ["10 lei" "10 ron" "10 RON"],
-                    :checks [#object[duckling.corpus$money$fn__3878 0x11fa9e27 "duckling.corpus$money$fn__3878@11fa9e27"]]}
-                   {:text ["50 bani" "50 BANI"],
-                    :checks [#object[duckling.corpus$money$fn__3878 0x19c2bc4a "duckling.corpus$money$fn__3878@19c2bc4a"]]}
-                   )}}
-   #+END_SRC
-   - rules-map :: store the rules map
-   #+BEGIN_SRC clojure
-{:ro$core ({:name "intersect (X cents)",
-            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x802558f "duckling.engine$pattern_fn$fn__4364@802558f"]
-                      #object[duckling.engine$pattern_fn$fn__4364 0x6c6d587e "duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
-            :production #object[duckling.time.prod$eval6563$fn__6564 0x5fb4773e "duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
-           {:name "intersect (and X cents)",
-            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "duckling.engine$pattern_fn$fn__4364@7e7e5309"]
-                      #object[duckling.engine$pattern_fn$fn__4358 0x79e77776 "duckling.engine$pattern_fn$fn__4358@79e77776"]
-                      #object[duckling.engine$pattern_fn$fn__4364 0x52388605 "duckling.engine$pattern_fn$fn__4364@52388605"]),
-            :production #object[duckling.time.prod$eval6578$fn__6579 0x476824ec "duckling.time.prod$eval6578$fn__6579@476824ec"]})}
-   #+END_SRC
-
-
-** resource
-
-   Utility functions for resource folder management.
-
-** corpus

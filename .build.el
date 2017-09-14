@@ -25,11 +25,11 @@
 
 (task 'format '() "format the project" '(lambda (&optional x) "lein cljfmt fix"))
 
-(task 'check '() "check the project" '(lambda (&optional x) "lein with-profile +check checkall"))
+(task 'check '() "check the project" '(lambda (&optional x) "lein with-profile +check do check, kibit, eastwood"))
 
 (task 'tree '() "tree dependencies" '(lambda (&optional x) "lein do clean, deps :tree"))
 
-(task 'tests '() "run tests" '(lambda (&optional x) "lein do clean, test"))
+(task 'tests '() "run tests" '(lambda (&optional x) "lein test"))
 
 (task 'libupdate () "update project libraries" '(lambda (&optional x) "lein ancient :no-colors"))
 

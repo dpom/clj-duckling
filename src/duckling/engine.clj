@@ -8,8 +8,8 @@
             [clojure.stacktrace]
             [taoensso.timbre :as log]
             [clojure.test :refer :all]
-            [duckling.time.prod]
-            [duckling.time.api :as time]
+            [duckling.dims.time.prod]
+            [duckling.dims.time.api :as time]
             [duckling.util :as util]))
 
 ;;
@@ -87,7 +87,7 @@
   "Builds a new rule"
   [name pattern production]
   (if (not (string? name)) (throw (Exception. "Can't accept rule without name.")))
-  (let [duckling-helper-ns (the-ns 'duckling.time.prod) ; could split time.patterns and time.prod helpers
+  (let [duckling-helper-ns (the-ns 'duckling.dims.time.prod) ; could split time.patterns and time.prod helpers
         pattern (binding [*ns* duckling-helper-ns] (eval pattern))
         pattern-vec (if (vector? pattern) pattern [pattern])]
     {:name name
@@ -227,11 +227,13 @@
   ; TODO ns should be dynamic based on dim ; or better use a protocol
   (time/resolve token context))
 
-(defn export-value
+
+(defmulti export-value
   "Transforms a token value for API output. Returns the modified value."
-  [token opts]
-  ; TODO dynamic ns based on dim
-  (time/export-value token opts))
+  (fn [token opts] (:dim token)))
+
+(defmethod export-value :default [{:keys [dim value] :as token} opts]
+  {:value value})
 
 (defn estimate-confidence
   "Returns the tokens with :confidence a rough confidence estimation for each.

@@ -1,4 +1,4 @@
-(ns duckling.time.obj
+(ns duckling.dims.time.obj
   (:require [clj-time.core :as time]
             [clj-time.local :as local])
   (:import [org.joda.time DateTimeFieldType DateTime DateTimeZone]))
