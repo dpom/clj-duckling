@@ -19,21 +19,25 @@
 
 (task 'api '() "build the API documentation" '(lambda (&optional x) "lein codox"))
 
+(task 'tags '() "(re)generate tags file" '(lambda (&optional x) "lein codeindex"))
+
 (task 'doc '(org2md api) "build the project documentation" '(lambda (&optional x) "ls docs"))
 
 (task 'format '() "format the project" '(lambda (&optional x) "lein cljfmt fix"))
 
-(task 'check '() "check the project" '(lambda (&optional x) "lein with-profile +check checkall"))
+(task 'check '() "check the project" '(lambda (&optional x) "lein with-profile +check do check, kibit, eastwood"))
 
 (task 'tree '() "tree dependencies" '(lambda (&optional x) "lein do clean, deps :tree"))
 
-(task 'tests '() "run tests" '(lambda (&optional x) "lein do clean, test"))
+(task 'tests '() "run tests" '(lambda (&optional x) "lein test"))
 
 (task 'libupdate () "update project libraries" '(lambda (&optional x) "lein ancient :no-colors"))
 
 (task 'package '() "package the library" '(lambda (&optional x) "lein do clean, uberjar"))
 
-(task 'deploy '() "deploy to clojars" '(lambda (&optional x) "lein deploy clojars"))
+(task 'install '() "install in local .m2" '(lambda (&optional x) "lein do pom, jar, install"))
+
+;; (task 'deploy '() "deploy to clojars" '(lambda (&optional x) "lein deploy clojars"))
 
 
 ;; Local Variables:

@@ -1,9 +1,11 @@
-(ns duckling.time.prod
-  (:use [clojure.tools.logging])
-  (:require [duckling.time.pred :as p]
-            [duckling.time.obj :as t])
-  (:import [java.text NumberFormat]
-           [java.util Locale]))
+(ns duckling.dims.time.prod
+  (:require
+   [taoensso.timbre :as log]
+   [duckling.dims.time.pred :as p]
+   [duckling.dims.time.obj :as t])
+  (:import
+   [java.text NumberFormat]
+   [java.util Locale]))
 
 ;; Production helpers, called from the rules
 
@@ -57,10 +59,10 @@
         grain2 (-> tok2 :pred meta :grain)
         incl (or (= :day grain1 grain2) to-inclusive?)]
   ;(prn "interval called")
-  (if true;(=  )
-    (ti (p/intervals (:pred tok1) (:pred tok2) incl)
-        {:timezone (or (:timezone tok1) (:timezone tok2))})
-    {:dim :invalid})))
+    (if true;(=  )
+      (ti (p/intervals (:pred tok1) (:pred tok2) incl)
+          {:timezone (or (:timezone tok1) (:timezone tok2))})
+      {:dim :invalid})))
 
 ;; if we say "Monday" and today is Monday, we mean next Monday
 ;; hence the :not-immediate that modifies resolution
@@ -183,7 +185,6 @@
   (ti (p/shift-duration (p/take-the-nth (p/cycle :second) 0)
                         (t/negative-period duration))))
 
-
 (defn duration-after
   "Shifts the pred to pred+duration and changes the grain, typically to
   the one just below the duration grain. See pred.clj for conversion."
@@ -213,8 +214,8 @@
   "Returns how many zeros a given number ends with 9 => 0, 40 => 1, 300 => 2"
   [n acc]
   (cond
-    (= 0 n) acc
-    (not (= 0 (mod n 10))) acc
+    (zero? n) acc
+    (not= 0 (mod n 10)) acc
     :else                  (rounditude (/ n 10) (inc acc))))
 
 (defn compose-numbers
@@ -234,9 +235,7 @@
     {:dim :amount-of-money
      :value amount
      :unit (:unit m1)
-     :fields {(:unit m1) (:value amount)}
-   })
-  )
+     :fields {(:unit m1) (:value amount)}}))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Patterns (may be moved to their own ns)

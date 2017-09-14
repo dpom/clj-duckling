@@ -1,8 +1,12 @@
 (ns duckling.resource
-  (:require [clojure.java.io :as io])
-  (:import [java.io File]
-           [java.net URL]
-           [java.util.jar JarEntry]))
+  "Utility functions for resource folder management."
+  (:require
+   [clojure.java.io :as io]
+   [clojure.test :refer :all])
+  (:import
+   [java.io File]
+   [java.net URL]
+   [java.util.jar JarEntry]))
 
 (defn dir?
   "Whether filename is a directory."
@@ -50,7 +54,7 @@
         prefix (subs path (+ 2 idx))]
     (if (< -1 idx)
       (->> (jar-url->entries url)
-             (keep (partial direct-child-name prefix)))
+           (keep (partial direct-child-name prefix)))
       (file-url->child-names url))))
 
 (defn ^URL get-resource
@@ -77,7 +81,15 @@
 (defn get-subdirs
   "Lists subdirectories of resource path."
   [^String path]
-  (->> (ls path) (filter dir?) (map rm-trailing-slash)))
+  (->> (ls path)
+       (filter dir?)
+       (map rm-trailing-slash)
+       sort))
+
+(deftest function-test
+  (is (=  ["ar" "da" "de" "en" "es" "et" "fr" "ga" "he" "hr" "id" "it" "ja"
+           "ko" "my" "nb" "nl" "pl" "pt" "ro" "ru" "sv" "tr" "uk" "vi" "zh"]
+          (get-subdirs "languages"))))
 
 (defn get-files
   "Lists files of resource path."

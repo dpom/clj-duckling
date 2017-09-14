@@ -4,11 +4,12 @@
   1. rules are transformed into objets via rules macro
   2. rules are (recursively) matched based on theirs pattern vectors.
   3. tokens containing final info are produced using their production rules"
-  (:use [clojure.tools.logging])
   (:require [clojure.set :as sets]
             [clojure.stacktrace]
-            [duckling.time.prod]
-            [duckling.time.api :as time]
+            [taoensso.timbre :as log]
+            [clojure.test :refer :all]
+            [duckling.dims.time.prod]
+            [duckling.dims.time.api :as time]
             [duckling.util :as util]))
 
 ;;
@@ -80,21 +81,21 @@
       (lookup-token pattern stash))
 
     :else (throw
-            (Exception. (str "Unable to parse pattern: " (prn-str pattern) " class:" (class pattern))))))
+           (Exception. (str "Unable to parse pattern: " (prn-str pattern) " class:" (class pattern))))))
 
 (defn build-rule
   "Builds a new rule"
   [name pattern production]
   (if (not (string? name)) (throw (Exception. "Can't accept rule without name.")))
-  (let [duckling-helper-ns (the-ns 'duckling.time.prod) ; could split time.patterns and time.prod helpers
+  (let [duckling-helper-ns (the-ns 'duckling.dims.time.prod) ; could split time.patterns and time.prod helpers
         pattern (binding [*ns* duckling-helper-ns] (eval pattern))
         pattern-vec (if (vector? pattern) pattern [pattern])]
     {:name name
      :pattern (map pattern-fn pattern-vec)
      :production (binding [*ns* duckling-helper-ns]
                    (eval `(fn ~(vec (map #(symbol (str "%" %))
-                                        (range 1 (inc (count pattern-vec)))))
-                                        ~production)))}))
+                                         (range 1 (inc (count pattern-vec)))))
+                            ~production)))}))
 
 (defn rules
   "Parses a set of rules and 'add' them into 'the-rules'.
@@ -132,11 +133,11 @@
                {:text (subs sentence pos end), :pos pos, :end end, :rule rule, :route route}))
       (catch Exception e
         (throw (ex-info (format "Exception duckling@produce span='%s' rule='%s' sentence='%s' ex='%s' stack=%s"
-                                    (subs sentence pos end)
-                                    (:name rule)
-                                    sentence
-                                    e
-                                    (with-out-str (clojure.stacktrace/print-stack-trace e)))
+                                (subs sentence pos end)
+                                (:name rule)
+                                sentence
+                                e
+                                (with-out-str (clojure.stacktrace/print-stack-trace e)))
                         {:exception e}))))))
 
 (defn- never-produced?
@@ -156,22 +157,21 @@
               (cons route results) ;; add "finished" route to results and return
               (try
                 (apply concat
-                  (for [token ((first pattern) stash position)
-                        :when (or first-pattern? (adjacent? position token stash))]
-                    (match-recur (rest pattern)
-                      false
-                      stash
-                      (:end token)
-                      (conj route token)
-                      results)))
+                       (for [token ((first pattern) stash position)
+                             :when (or first-pattern? (adjacent? position token stash))]
+                         (match-recur (rest pattern)
+                                      false
+                                      stash
+                                      (:end token)
+                                      (conj route token)
+                                      results)))
                 (catch Exception e
                   ;; (.printStackTrace e) - probably use logging/debug and turn logging output
                   ;; (prn stash)
                   (throw (ex-info (format "Exception @match stack=%s stash=%s"
                                           (with-out-str (clojure.stacktrace/print-stack-trace e))
                                           (with-out-str (pr stash)))
-                                  {:exception e}))
-                  ))))]
+                                  {:exception e}))))))]
     (match-recur pattern true stash 0 [] [])))
 
 (defn- pass-once
@@ -179,15 +179,15 @@
   Returns a new stash augmented with the seq of produced tokens."
   [stash rules sentence]
   (into stash ; we want a vector, not a list, or into changes the order of items
-    (apply concat
-      (for [rule rules]
-        (try
-          (->> (match (:pattern rule) stash) ; get the routes that match this rule
-               (filter (partial never-produced? stash rule)) ; remove what we already have
-               (map (fn [route] (produce rule route sentence)))) ; produce
-          (catch Exception e
-            (throw (Exception. (str "Exception matching rule: "
-                                 (:name rule) " " e)))))))))
+        (apply concat
+               (for [rule rules]
+                 (try
+                   (->> (match (:pattern rule) stash) ; get the routes that match this rule
+                        (filter (partial never-produced? stash rule)) ; remove what we already have
+                        (map (fn [route] (produce rule route sentence)))) ; produce
+                   (catch Exception e
+                     (throw (Exception. (str "Exception matching rule: "
+                                             (:name rule) " " e)))))))))
 
 (defn pass-all
   "Make as many passes as necessary until no new tokens are produced
@@ -198,15 +198,15 @@
          ; safeguard: number of max iterations (loops DO occur :))
          remaining-iter 10]
     (let [stash-size (count stash)
-          max-iter-reached? (< remaining-iter 0)
+          max-iter-reached? (neg? remaining-iter)
           max-stash-reached? (> stash-size 600)
           finished? (<= stash-size prev-stash-size)]
       (if (or max-iter-reached? max-stash-reached? finished?)
         (do
           (when max-iter-reached?
-            (warnf "@pass-all reached maximum iterations for sentence '%s'" sentence))
+            (log/warnf "@pass-all reached maximum iterations for sentence '%s'" sentence))
           (when max-stash-reached?
-            (warnf "@pass-all reached maximum stash size for sentence '%s'" sentence))
+            (log/warnf "@pass-all reached maximum stash size for sentence '%s'" sentence))
           stash)
         (recur (pass-once stash rules sentence) (count stash) (dec remaining-iter))))))
 
@@ -217,7 +217,7 @@
                    (if (:pos token)
                      (- (:end token) (:pos token))
                      0))
-    stash))
+         stash))
 
 (defn resolve-token
   "Resolve a token based on its dimension, predicate, and the context.
@@ -227,11 +227,12 @@
   ; TODO ns should be dynamic based on dim ; or better use a protocol
   (time/resolve token context))
 
-(defn export-value
+(defmulti export-value
   "Transforms a token value for API output. Returns the modified value."
-  [token opts]
-  ; TODO dynamic ns based on dim
-  (time/export-value token opts))
+  (fn [token opts] (:dim token)))
+
+(defmethod export-value :default [{:keys [dim value] :as token} opts]
+  {:value value})
 
 (defn estimate-confidence
   "Returns the tokens with :confidence a rough confidence estimation for each.

@@ -1,0 +1,9 @@
+{
+ :duckling/core {:languages ["ro" "en"]
+                 :logger #ig/ref :duckling/logger}
+
+ :duckling/logger {:level    :error
+              :ns-whitelist  ["duckling.core"]
+              :ns-blacklist  ["taoensso.*" "duckling.learn"]
+              :appender {:println (println-appender {:stream :auto})}}
+ }

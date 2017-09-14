@@ -8,3 +8,12 @@ pom.xml.asc
 target
 .idea
 resources/export.json
+/.lein-codeindex
+/TAGS
+/GPATH
+/GRTAGS
+/GSYMS
+/GTAGS
+/.lein-env
+dev/resources/local.edn
+dev/src/local.clj

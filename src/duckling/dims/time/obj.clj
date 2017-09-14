@@ -1,4 +1,4 @@
-(ns duckling.time.obj
+(ns duckling.dims.time.obj
   (:require [clj-time.core :as time]
             [clj-time.local :as local])
   (:import [org.joda.time DateTimeFieldType DateTime DateTimeZone]))
@@ -15,22 +15,21 @@
 ; instant. If you use them, make sure it's what you want.
 
 
-
 ; week is a special case (it's not a field byitself), it's managed as a special
 ; case in functions
 (def time-fields
-            [[:year    (DateTimeFieldType/year) 0]
-             [:month   (DateTimeFieldType/monthOfYear) 1]
-             [:day     (DateTimeFieldType/dayOfMonth) 1]
-             [:hour    (DateTimeFieldType/hourOfDay) 0]
-             [:minute  (DateTimeFieldType/minuteOfHour) 0]
-             [:second  (DateTimeFieldType/secondOfMinute) 0]
-             [:milliseconds (DateTimeFieldType/millisOfSecond) 0]])
+  [[:year    (DateTimeFieldType/year) 0]
+   [:month   (DateTimeFieldType/monthOfYear) 1]
+   [:day     (DateTimeFieldType/dayOfMonth) 1]
+   [:hour    (DateTimeFieldType/hourOfDay) 0]
+   [:minute  (DateTimeFieldType/minuteOfHour) 0]
+   [:second  (DateTimeFieldType/secondOfMinute) 0]
+   [:milliseconds (DateTimeFieldType/millisOfSecond) 0]])
 
 ; for grain ordering
 (def grain-order (into {} (map vector
-                      [:year :quarter :month :week :day :hour :minute :second]
-                      (range))))
+                               [:year :quarter :month :week :day :hour :minute :second]
+                               (range))))
 
 (def period-fields {:year     [time/years 1]
                     :quarter  [time/months 3]
@@ -79,8 +78,8 @@
   [{:keys [start grain end] :as t}]
   {:pre [(valid? t)]}
   (or end (time/plus
-            start
-            (let [[g n] (period-fields grain)] (g n)))))
+           start
+           (let [[g n] (period-fields grain)] (g n)))))
 
 (defn interval
   "Builds a time interval between start of t1 and *start* of t2.
@@ -110,18 +109,18 @@
         e1 (end t1)
         s2 (:start t2)
         e2 (end t2)]
-  (if (or (= s1 s2) (time/before? s1 s2))
-    (when (time/before? s2 e1)
-      (cond
-        (or (time/before? e2 e1) (= e1 e2))
-        t2
-        (time/before? e1 e2)
-        t1
-        :else
-        {:start s1
-         :grain (max-key grain-order (:grain t1) (:grain t2))
-         :end e2}))
-    (intersect t2 t1))))
+    (if (or (= s1 s2) (time/before? s1 s2))
+      (when (time/before? s2 e1)
+        (cond
+          (or (time/before? e2 e1) (= e1 e2))
+          t2
+          (time/before? e1 e2)
+          t1
+          :else
+          {:start s1
+           :grain (max-key grain-order (:grain t1) (:grain t2))
+           :end e2}))
+      (intersect t2 t1))))
 
 (defn starting-at-the-end-of
   "Build a time that starts at the end of provided time, with same grain"
@@ -145,7 +144,7 @@
   (time/day (:start t)))
 
 (defn hour [t]
-  (time/hour (-> t :start)))
+  (time/hour (:start t)))
 
 (defn minute [t]
   (time/minute (:start t)))
@@ -199,8 +198,8 @@
                                next)]
       {:start (reduce (fn [tim [_ ty v]]
                         (.withField ^DateTime tim ty (int v))) (:start tt)
-                          fields-to-reset)
-           :grain grain})))
+                      fields-to-reset)
+       :grain grain})))
 
 (defn start-before-the-end-of? [t1 t2] ; TODO equality?
   {:pre [(valid? t1) (valid? t2)]}
@@ -216,7 +215,6 @@
 
 (defn now []
   {:start (local/local-now) :grain :second})
-
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ; Periods

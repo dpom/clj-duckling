@@ -1,5 +1,4 @@
 (ns duckling.util
-  (:use [clojure.tools.logging :exclude [trace]])
   (:require [clojure.string  :as string]
             [clojure.set     :as sets]
             [clojure.java.io :as io]
@@ -7,6 +6,8 @@
             [clj-time.format :as tf]
             [clojure.repl :as repl]
             [clojure.pprint :as pprint]
+            [taoensso.timbre :as log]
+            [clojure.test :refer :all]
             [clj-time.coerce :as tcoerce])
   (:import [java.io IOException OutputStream StringReader]
            [java.math BigInteger]
@@ -19,7 +20,7 @@
   WARNING THIS IS NOT RECURSIVE FOR THE MOMENT"
   [pattern input]
   (every? (fn [[key val]] (= val (key input)))
-    pattern))
+          pattern))
 
 (defn valid-limit?
   "Decide if two adjacent chars are reasonably separated
@@ -43,7 +44,7 @@
    Cameroun (as Camero + 'un') => NOT OK"
   [sentence pos end]
   {:pre [(<= end (count sentence))]}
-  (and (or (= 0 pos)
+  (and (or (zero? pos)
            (valid-limit? (nth sentence (dec pos)) (nth sentence pos)))
        (or (= (count sentence) end)
            (valid-limit? (nth sentence (dec end)) (nth sentence end)))))
@@ -67,10 +68,10 @@
    cannot be compared.)"
   [partial-order-fn coll base-coll]
   (let [splitted (group-by
-                   (fn [x] (every? #(let [p (partial-order-fn x %)]
-                                      (or (nil? p) (>= p 0)))
-                                   base-coll))
-                   coll)]
+                  (fn [x] (every? #(let [p (partial-order-fn x %)]
+                                     (or (nil? p) (>= p 0)))
+                                  base-coll))
+                  coll)]
     [(splitted true) (splitted false)]))
 
 (defn merge-according-to
@@ -103,4 +104,4 @@
   [m]
   (let [w (StringWriter.)]
     (pprint/pprint m w)
-    (.toString w)))
+    (str w)))

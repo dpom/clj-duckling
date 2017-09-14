@@ -1,5 +1,5 @@
-(ns duckling.time.obj-test
-  (:use [duckling.time.obj] 
+(ns duckling.dims.time.obj-test
+  (:use [duckling.dims.time.obj]
         [clojure.test]))
 
 (def today (t 0 2014 8 30 5 30 18))
@@ -26,4 +26,4 @@
            (period-grain {:week 1 :day 3 :second 18}))))
   (testing "negative"
     (is (= {:week -1 :day -3 :second -18}
-           (negative-period {:week 1 :day 3 :second 18}))))) 
+           (negative-period {:week 1 :day 3 :second 18})))))

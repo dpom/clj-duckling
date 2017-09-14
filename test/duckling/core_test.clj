@@ -63,10 +63,10 @@
                      '({:type "value"
                         :value "2014-01-01T00:00:00.000-02:00"
                         :grain :month})
-                      :type "value"
-                      :value "2014-01-01T00:00:00.000-02:00"
-                      :grain
-                      :month}
+                     :type "value"
+                     :value "2014-01-01T00:00:00.000-02:00"
+                     :grain
+                     :month}
              :body "january 2014"
              :label "T"}]
            (extract "january 2014" (default-context :corpus) nil [{:module "en$core"
@@ -83,17 +83,17 @@
                                                             :value "brasse"
                                                             :pos 2
                                                             :end 9}]
-                                                          [{:module "en$core"
-                                                            :dim "quantity"
-                                                            :label "T"}]))))
+                    [{:module "en$core"
+                      :dim "quantity"
+                      :label "T"}]))))
   (testing "Very big one"
     (is (< 1
            (count
-             (with-timeout 10000 "TIMEOUT!!"
-                           (extract "Oct. 12 from 2 to 5 p.m. Monday-Friday, Sept. 7-March 1, 8 a.m.-noon, 1-5 p.m."
-                                    (default-context :corpus) nil [{:module "en$core"
-                                                                    :dim "time"
-                                                                    :label "T"}])))))))
+            (with-timeout 10000 "TIMEOUT!!"
+              (extract "Oct. 12 from 2 to 5 p.m. Monday-Friday, Sept. 7-March 1, 8 a.m.-noon, 1-5 p.m."
+                       (default-context :corpus) nil [{:module "en$core"
+                                                       :dim "time"
+                                                       :label "T"}])))))))
 
 (deftest load!-api-test
   (with-redefs [get-dims (constantly [:number :time])]

@@ -19,7 +19,7 @@
 
 (def text-classifier
   (train-classifier
-    (map #(vector (count-words (first %)) (second %)) text-dataset)))
+   (map #(vector (count-words (first %)) (second %)) text-dataset)))
 
 (def gender-classifier
   (train-classifier [[{:height 6    :weight 180 :foot-size 12} "male"]

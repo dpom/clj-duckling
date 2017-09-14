@@ -33,15 +33,15 @@
   ;; Named things
 
   "named-day"
-  #"(?i)lun(ea|i)|lun|lu"
+  #"(?i)lun(ea|i)|lun"
   (day-of-week 1)
 
   "named-day"
-  #"(?i)mar[tț](ea|i)|mar|ma"
+  #"(?i)mar[tț](ea|i)|mar"
   (day-of-week 2)
 
   "named-day"
-  #"(?i)miercur(ea|i)|mie|mi"
+  #"(?i)miercur(ea|i)|mie"
   (day-of-week 3)
 
   "named-day"
@@ -49,15 +49,15 @@
   (day-of-week 4)
 
   "named-day"
-  #"(?i)viner(ea|i)|vin|vi"
+  #"(?i)viner(ea|i)|vin"
   (day-of-week 5)
 
   "named-day"
-  #"(?i)s[aâ]mb[aă]t[aă]|s[aâ]m|s[aâ]"
+  #"(?i)s[aâ]mb[aă]t[aă]|s[aâ]m"
   (day-of-week 6)
 
   "named-day"
-  #"(?i)duminic[aă]|dum|du"
+  #"(?i)duminic[aă]|dum"
   (day-of-week 7)
 
   "named-month"
