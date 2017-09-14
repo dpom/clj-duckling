@@ -166,8 +166,7 @@
                      (map (fn [{:keys [pos end text] :as token}]
                             (merge token {:start pos
                                           :end end
-                                          :body text})))
-                     )]
+                                          :body text}))))]
     ;; (log/debugf "stash: %s" (with-out-str (clojure.pprint/pprint stash)))
     ;; (log/debugf "winners: %s" (with-out-str (clojure.pprint/pprint winners)))
     {:stash stash :winners winners}))
@@ -187,9 +186,9 @@
         (if pos
           (printf "%s %s%s%s %2d | %-9s | %-25s | P = %04.4f | %.20s\n"
                   (if (some #{(:index tok)} winners-indices) "W" " ")
-                  (apply str (repeat pos \space))
-                  (apply str (repeat (- end pos) \-))
-                  (apply str (repeat (- width end -1) \space))
+                  (string/join (repeat pos \space))
+                  (string/join (repeat (- end pos) \-))
+                  (string/join (repeat (- width end -1) \space))
                   i
                   (when-let [x (:dim tok)] (name x))
                   (when-let [x (-> tok :rule :name)] (name x))
@@ -301,7 +300,7 @@
                              "measure"
                              "numbers"
                              "temperature"
-                             "time"],
+                             "time"]
                     :rules ["budget"
                             "communication"
                             "cycles"
@@ -313,7 +312,7 @@
                             "temperature"
                             "time"]}
           :tr$core {:corpus ["numbers"], :rules ["numbers"]}}
-          (gen-config-for-langs ["ro" "tr"]))))
+         (gen-config-for-langs ["ro" "tr"]))))
 
 (defn- read-rules
   [lang new-file]
@@ -427,32 +426,32 @@
 
 (deftest load!-test
   (is (= {:en$core '(:amount-of-money
-                    :cycle
-                    :distance :duration
-                    :email
-                    :leven-product :leven-unit
-                    :number
-                    :ordinal
-                    :phone-number
-                    :quantity
-                    :temperature :time :timezone
-                    :unit :unit-of-duration :url
-                    :volume),
+                     :cycle
+                     :distance :duration
+                     :email
+                     :leven-product :leven-unit
+                     :number
+                     :ordinal
+                     :phone-number
+                     :quantity
+                     :temperature :time :timezone
+                     :unit :unit-of-duration :url
+                     :volume)
           :ro$core '(:amount-of-money
-                    :budget
-                    :cycle
-                    :distance
-                    :email
-                    :gender
-                    :leven-product :leven-unit
-                    :number
-                    :ordinal
-                    :phone-number
-                    :quantity
-                    :temperature :time :timezone
-                    :unit :unit-of-duration :url
-                    :volume)}
-         (load! {:languages ["ro" "en"] }))))
+                     :budget
+                     :cycle
+                     :distance
+                     :email
+                     :gender
+                     :leven-product :leven-unit
+                     :number
+                     :ordinal
+                     :phone-number
+                     :quantity
+                     :temperature :time :timezone
+                     :unit :unit-of-duration :url
+                     :volume)}
+         (load! {:languages ["ro" "en"]}))))
 
 ;;--------------------------------------------------------------------------
 ;; Corpus running
@@ -497,7 +496,6 @@
            (printf "(play %s \"%s\")\n" mod text)
            (play mod text)))))))
 
-
 (defmethod ig/init-key :duckling/core [_ params]
   (load! params))
 
@@ -536,10 +534,10 @@
 (defn- generate-context
   "Wit.ai internal. Will move to Wit."
   [base-context]
-  (-> base-context
-      (p/?> (instance? org.joda.time.DateTime (:reference-time base-context))
-            (assoc :reference-time {:start (:reference-time base-context)
-                                    :grain :second}))))
+  (p/?> base-context
+        (instance? org.joda.time.DateTime (:reference-time base-context))
+        (assoc :reference-time {:start (:reference-time base-context)
+                                :grain :second})))
 
 (defn extract
   "API used by Wit.ai (will be moved to Wit)
@@ -575,4 +573,3 @@
                  :targets targets}]
         (log/errorf e "duckling error err=%s" (pr-str err))
         []))))
-

@@ -56,8 +56,6 @@ different features approaches.
    - load! :: (Re)loads rules and classifiers for languages or/and config.
    - parse :: Parses text using given module.
 
-   bookmark: [[file:~/Dropbox/emag/clj-duckling/src/duckling/core.clj::(cond->%20(set%20(res/get-subdirs%20"languages"))][Last studied line]] 
-
    Global status variables:
    - corpus-map :: store the corpus map
    #+BEGIN_SRC clojure
@@ -110,6 +108,8 @@ The storage implementation in memory (atoms).
 ** dims
 
 Dimensions specific functions.
+
+If you create a new dimension you should add a dimension file here implementing the specific export-value method.
 
 * Extending Duckling's Coverage
 

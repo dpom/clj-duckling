@@ -14,8 +14,8 @@ project so I forked it in this new project.
 Duckling is a Clojure library that parses text into structured data:
 
 #+BEGIN_EXAMPLE
-    “the first Tuesday of October” => {:value "2014-10-07T00:00:00.000-07:00"
-                                       :grain :day}
+   "the car is 2 meters long and costs 3000$." => [{:dim :amount-of-money, :body "3000$", :value {:type "value", :value 3000, :unit "$"}, :start 35, :end 40}
+                                                   {:dim :distance, :body "2 meters", :value {:type "value", :value 2, :unit "metre"}, :start 11, :end 19}]
 #+END_EXAMPLE
 
 

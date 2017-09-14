@@ -81,13 +81,15 @@
 (defn get-subdirs
   "Lists subdirectories of resource path."
   [^String path]
-  (->> (ls path) (filter dir?) (map rm-trailing-slash)))
+  (->> (ls path)
+       (filter dir?)
+       (map rm-trailing-slash)
+       sort))
 
 (deftest function-test
-  (is (=  ["pt" "hr" "uk" "it" "da" "id" "sv" "zh" "tr" "ga" "pl" "vi" "ko" "my" "nb" "en" "de" "he" "ja" "ro" "ar" "ru" "es" "fr" "nl" "et"]
+  (is (=  ["ar" "da" "de" "en" "es" "et" "fr" "ga" "he" "hr" "id" "it" "ja"
+           "ko" "my" "nb" "nl" "pl" "pt" "ro" "ru" "sv" "tr" "uk" "vi" "zh"]
           (get-subdirs "languages"))))
-
-
 
 (defn get-files
   "Lists files of resource path."

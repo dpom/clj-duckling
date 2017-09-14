@@ -7,7 +7,5 @@
    [duckling.dims.quantity]
    [duckling.dims.temperature]
    [duckling.dims.time]
-   [duckling.dims.volume]
-   ))
-
+   [duckling.dims.volume]))
 

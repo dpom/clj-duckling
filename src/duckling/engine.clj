@@ -198,7 +198,7 @@
          ; safeguard: number of max iterations (loops DO occur :))
          remaining-iter 10]
     (let [stash-size (count stash)
-          max-iter-reached? (< remaining-iter 0)
+          max-iter-reached? (neg? remaining-iter)
           max-stash-reached? (> stash-size 600)
           finished? (<= stash-size prev-stash-size)]
       (if (or max-iter-reached? max-stash-reached? finished?)
@@ -226,7 +226,6 @@
   [token context module]
   ; TODO ns should be dynamic based on dim ; or better use a protocol
   (time/resolve token context))
-
 
 (defmulti export-value
   "Transforms a token value for API output. Returns the modified value."
