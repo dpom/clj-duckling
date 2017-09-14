@@ -11,7 +11,7 @@
  "frate"
  "fecior"
  (fn [token _] (and (= :gender (:dim token))
-                    (= :male (:val token))))
+                    (= :male (:value token))))
 
  "femeie"
  "muiere"
@@ -21,5 +21,5 @@
  "fetita"
  "fetiţa"
  (fn [token _] (and (= :gender (:dim token))
-                    (= :female (:val token))))
+                    (= :female (:value token))))
  )

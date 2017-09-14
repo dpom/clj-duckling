@@ -100,3 +100,12 @@
 
 (d/parse :en$core "the car is 2 meters long and costs 3000$." [:distance :amount-of-money])
 
+(d/parse :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani si 2 luni care sa coste maxim 300 lei" [:budget :duration :gender])
+
+(d/parse :ro$core "2 luni" [:duration])
+
+(d/parse :ro$core "o zi" [:duration])
+
+
+(d/parse :ro$core "vreau informatii despre ultima mea comanda" [:order])
+
