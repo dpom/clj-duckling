@@ -133,7 +133,7 @@
   base-stash ():
 
   Returns:
-  ():
+  (map): a map with 2 keys :stash and :winners
   "
   [s context module targets base-stash]
   {:pre [s context module]}
@@ -169,7 +169,7 @@
                                           :body text})))
                      )]
     ;; (log/debugf "stash: %s" (with-out-str (clojure.pprint/pprint stash)))
-    (log/debugf "winners: %s" (with-out-str (clojure.pprint/pprint winners)))
+    ;; (log/debugf "winners: %s" (with-out-str (clojure.pprint/pprint winners)))
     {:stash stash :winners winners}))
 
 ;;--------------------------------------------------------------------------
@@ -526,7 +526,8 @@
    (->> (analyze text context module (map (fn [dim] {:dim dim :label dim}) dims) nil)
         :winners
         (map #(assoc % :value (engine/export-value % {})))
-        (map #(select-keys % [:dim :body :value :start :end :latent])))))
+        (map #(select-keys % [:dim :body :value :start :end :latent]))
+        distinct)))
 
 ;;--------------------------------------------------------------------------
 ;; The stuff below is specific to Wit.ai and will be moved out of Duckling

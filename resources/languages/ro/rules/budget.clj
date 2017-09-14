@@ -4,13 +4,13 @@
  {:dim :budget
   :value (:value %2)
   :unit (:unit %2)
-  :level "max"}
+  :level :max}
 
 "min budget"
 [#"(?i)peste|min(\.|im)?" (dim :amount-of-money)]
  {:dim :budget
   :value (:value %2)
   :unit (:unit %2)
-  :level "min"}
+  :level :min}
 )
 
