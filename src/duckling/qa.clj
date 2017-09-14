@@ -14,7 +14,7 @@
                          {:keys [winners] :as res} (p/parse s (p/default-context :now) module-id [{:dim :time :label "T"}])
                          {:keys [start end value] :as first-winner} (first winners)
                          covers? (and start
-                                      (= 0 start)
+                                      (zero? start)
                                       (= (count s) end))]
                      [s covers? value]))
          ko (remove second results)]

@@ -24,11 +24,11 @@
   (let [[date token-fields] (vec->date-and-map args)]
     (fn [context token]
       (when-not
-          (and
-           (= :time (:dim token))
-           (util/hash-match (select-keys token-fields [:direction :precision])
-                            token)
-           (= (-> token :value) date))
+       (and
+        (= :time (:dim token))
+        (util/hash-match (select-keys token-fields [:direction :precision])
+                         token)
+        (= (:value token) date))
         [date (:value token)]))))
 
 (defn datetime-interval
@@ -39,9 +39,9 @@
         date (time/interval start end)]
     (fn [context {:keys [value dim] :as token}]
       (when-not
-          (and
-           (= :time dim)
-           (= value date))
+       (and
+        (= :time dim)
+        (= value date))
         [date value]))))
 
 (defn number
@@ -49,18 +49,18 @@
   If value is integer, it also checks :integer true"
   [value]
   (fn [_ token] (when-not
-                    (and
-                     (= :number (:dim token))
-                     (or (not (integer? value)) (:integer token))
-                     (= (:value token) value))
+                 (and
+                  (= :number (:dim token))
+                  (or (not (integer? value)) (:integer token))
+                  (= (:value token) value))
                   [value (:value token)])))
 
 (defn ordinal
   [value]
   (fn [_ token] (when-not
-                    (and
-                     (= :ordinal (:dim token))
-                     (= (:value token) value))
+                 (and
+                  (= :ordinal (:dim token))
+                  (= (:value token) value))
                   [value (:value token)])))
 
 (defn temperature

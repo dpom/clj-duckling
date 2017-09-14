@@ -1,7 +1,6 @@
 (ns duckling.dims.time
   (:require
-   [duckling.engine :refer [export-value]]
-   ))
+   [duckling.engine :refer [export-value]]))
 
 (defn export-time-value
   [{:keys [start end grain] :as value} direction date-fn]
@@ -24,7 +23,6 @@
     {:type "value"
      :value (date-fn start)
      :grain grain}))
-
 
 ;; Given a token, returns its value for the outside world. Datetimes are modified by date-fn."
 ;; TEMP 'values' hold several hypotheses

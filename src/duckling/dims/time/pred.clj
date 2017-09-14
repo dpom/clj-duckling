@@ -1,7 +1,7 @@
 (ns duckling.dims.time.pred
   (:refer-clojure :exclude [cycle resolve])
   (:use
-        [plumbing.core])
+   [plumbing.core])
   (:require
    [taoensso.timbre :as log]
    [duckling.dims.time.obj :as t]))
@@ -338,7 +338,7 @@
 
   [pred-from pred-to inclusive-to?]
   (let [inter-fn (if inclusive-to? t/interval-start-end t/interval)
-        f (fn [t ctx] (let [slot (first (first (pred-to t ctx)))]
+        f (fn [t ctx] (let [slot (ffirst (pred-to t ctx))]
                         (when slot
                           (inter-fn t slot))))]
     (seq-map f pred-from true)))

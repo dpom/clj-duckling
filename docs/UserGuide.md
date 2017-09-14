@@ -74,9 +74,6 @@ The English module (`:en$core`) will allow you to capture the following dimensio
 |          | :url              |                                     |
 |          | :volume           |                                     |
 
-Extending Duckling
-==================
-
 Walkthrough
 ===========
 

@@ -144,7 +144,7 @@
   (time/day (:start t)))
 
 (defn hour [t]
-  (time/hour (-> t :start)))
+  (time/hour (:start t)))
 
 (defn minute [t]
   (time/minute (:start t)))

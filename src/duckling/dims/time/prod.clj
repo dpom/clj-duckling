@@ -214,8 +214,8 @@
   "Returns how many zeros a given number ends with 9 => 0, 40 => 1, 300 => 2"
   [n acc]
   (cond
-    (= 0 n) acc
-    (not (= 0 (mod n 10))) acc
+    (zero? n) acc
+    (not= 0 (mod n 10)) acc
     :else                  (rounditude (/ n 10) (inc acc))))
 
 (defn compose-numbers

@@ -73,7 +73,6 @@ The English module (=:en$core=)  will allow you to capture the following dimensi
 |          | :volume           |                                     |
 |----------+-------------------+-------------------------------------|
 
-* Extending Duckling
 
 * Walkthrough
 

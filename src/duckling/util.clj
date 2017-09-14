@@ -44,7 +44,7 @@
    Cameroun (as Camero + 'un') => NOT OK"
   [sentence pos end]
   {:pre [(<= end (count sentence))]}
-  (and (or (= 0 pos)
+  (and (or (zero? pos)
            (valid-limit? (nth sentence (dec pos)) (nth sentence pos)))
        (or (= (count sentence) end)
            (valid-limit? (nth sentence (dec end)) (nth sentence end)))))
@@ -104,4 +104,4 @@
   [m]
   (let [w (StringWriter.)]
     (pprint/pprint m w)
-    (.toString w)))
+    (str w)))

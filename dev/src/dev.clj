@@ -9,8 +9,7 @@
             [taoensso.timbre :as timbre]
             [integrant.core :as ig]
             [integrant.repl :refer [clear halt go init prep reset]]
-            [integrant.repl.state :refer [config system]]
-))
+            [integrant.repl.state :refer [config system]]))
 
 (defn read-config []
   (sys/read-config "dev.edn"))

@@ -15,7 +15,7 @@
   [token]
   (let [rules (reduce str (map #(get-in % [:rule :name]) (:route token)))
         time-tokens (filter #(= :time (:dim %)) (:route token))
-        grains (when (< 0 (count time-tokens))
+        grains (when (pos? (count time-tokens))
                  (reduce str (map #(-> % :pred meta :grain) time-tokens)))]
     (filter identity [rules grains])))
 
@@ -56,7 +56,7 @@
                        (map #(assoc % :check (check context %))))
         fc-tokens-ok (remove :check fc-tokens)
         fc-tokens-ko (filter :check fc-tokens)
-        found     (not (empty? fc-tokens-ok))
+        found     (seq fc-tokens-ok)
         _ (when-not found (prn "not found" s))
         tokens-ok (apply sets/union
                          (for [tok fc-tokens-ok]

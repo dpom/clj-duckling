@@ -2,6 +2,119 @@
 
 ---
 
+Probabilistic parsing
+=====================
+
+Learn
+-----
+
+### Build dataset
+
+The goal of this phase is to build a proper Machine Learning dataset from a corpus of sentences with expected result (interval of time). There is one separate ML model per rule: each rule is seen as a boolean classifier who has to decide, given a 'route' of tokens filling its slots, the probability that it's a good idea for the rule to fire.
+
+The global dataset is a map ='rule name' `> dataset` for the rule
+
+The local dataset for a rule is a vector of samples. A general sample is just a vector `[features output]`
+
+features  
+could be anything "seen" by the rule (more on that later). For the moment, it's just the text filling the slots of the rule.
+
+output  
+is a boolean, `true` if the rule has matched "successfully" (ie, leading to the right result at the top of the parse tree) for this sample).
+
+### Train model
+
+Once the dataset has been built, different ML techniques can try to build the best ML model for it. It should be clearly separated.
+
+Run
+---
+
+At runtime, the model predicts the local probability of each token by running the model of the rule who built the token on its *route*. The global probability of the token is the product of its local prob by the local probs of the tokens of its route.
+
+Features
+--------
+
+Feature extraction is used both during learning and runtime. It must be done by a separate function. The same dataset building strategy can be tried with different features approaches.
+
+Architecture
+============
+
+core
+----
+
+The main module with public API. The entry points are:
+
+load!  
+(Re)loads rules and classifiers for languages or/and config.
+
+parse  
+Parses text using given module.
+
+Global status variables:
+
+corpus-map  
+store the corpus map
+
+``` clojure
+{:ro$core {:context {:reference-time {:start #object[org.joda.time.DateTime 0x398ced02 "2013-02-12T04:30:00.000-02:00"], :grain :second},
+                     :min {:start #object[org.joda.time.DateTime 0x1cb29052 "1900-01-01T00:00:00.000-02:00"], :grain :year},
+                     :max {:start #object[org.joda.time.DateTime 0x2bce42dd "2100-01-01T00:00:00.000-02:00"], :grain :year}},
+           :tests ({:text ["10 lei" "10 ron" "10 RON"],
+                    :checks [#object[duckling.corpus$money$fn__3878 0x11fa9e27 "duckling.corpus$money$fn__3878@11fa9e27"]]}
+                   {:text ["50 bani" "50 BANI"],
+                    :checks [#object[duckling.corpus$money$fn__3878 0x19c2bc4a "duckling.corpus$money$fn__3878@19c2bc4a"]]}
+                   )}}
+```
+
+rules-map  
+store the rules map
+
+``` clojure
+{:ro$core ({:name "intersect (X cents)",
+            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x802558f "duckling.engine$pattern_fn$fn__4364@802558f"]
+                      #object[duckling.engine$pattern_fn$fn__4364 0x6c6d587e "duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
+            :production #object[duckling.time.prod$eval6563$fn__6564 0x5fb4773e "duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
+           {:name "intersect (and X cents)",
+            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "duckling.engine$pattern_fn$fn__4364@7e7e5309"]
+                      #object[duckling.engine$pattern_fn$fn__4358 0x79e77776 "duckling.engine$pattern_fn$fn__4358@79e77776"]
+                      #object[duckling.engine$pattern_fn$fn__4364 0x52388605 "duckling.engine$pattern_fn$fn__4364@52388605"]),
+            :production #object[duckling.time.prod$eval6578$fn__6579 0x476824ec "duckling.time.prod$eval6578$fn__6579@476824ec"]})}
+```
+
+storage
+-------
+
+The persistent layer module. It stores the application's entities:
+
+corpus  
+
+rules  
+
+classifiers  
+
+### memory
+
+The storage implementation in memory (atoms).
+
+### resource
+
+Utility functions for resource folder management.
+
+### corpus
+
+learn
+-----
+
+analyze
+-------
+
+dims
+----
+
+Dimensions specific functions.
+
+If you create a new dimension you should add a dimension file here implementing the specific export-value method.
+
 Extending Duckling's Coverage
 =============================
 
