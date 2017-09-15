@@ -3,10 +3,11 @@
   (:require [clojure.repl :refer :all]
             [duckling.core :as d]
             [duckling.system :as sys]
-            ;; [fipp.edn :refer [pprint]]
+            [duckling.spec]
             [clojure.tools.namespace.repl :refer [refresh]]
             [clojure.java.io :as io]
             [taoensso.timbre :as timbre]
+            [clojure.spec.alpha :as s]
             [integrant.core :as ig]
             [integrant.repl :refer [clear halt go init prep reset]]
             [integrant.repl.state :refer [config system]]))

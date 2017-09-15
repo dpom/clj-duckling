@@ -8,8 +8,6 @@
 	"37 ° celsius"
 	"37 grade Celsius"
 	"treizeci si sapte celsius"
-	"37 grade Celsius"
-	"treizeci si sapte celsius"
 	(temperature 37 "celsius")
 
 	"70°F"

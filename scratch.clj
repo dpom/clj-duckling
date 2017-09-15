@@ -109,3 +109,27 @@
 
 (d/parse :ro$core "vreau informatii despre ultima mea comanda" [:order])
 
+(d/parse :ro$core "1 an" [:duration])
+
+(require '[clojure.spec.alpha :as s])
+
+(s/valid? :duckling/module-key :ro$core)
+
+(s/valid? :unq/rule (first (:ro$core @d/rules-map)))
+(s/explain :unq/rule (first (:ro$core @d/rules-map)))
+
+
+(s/valid? :unq/rules (:ro$core @d/rules-map)) 
+
+(s/valid? :unq/rules-map  @d/rules-map) 
+(s/valid? :unq/corpus-map  @d/corpus-map) 
+(s/valid? :unq/corpus  (:ro$core @d/corpus-map)) 
+(s/valid? :duckling/tests  (:tests (:ro$core @d/corpus-map))) 
+(s/valid? :duckling/test  (first (:tests (:ro$core @d/corpus-map)))) 
+
+(s/explain :duckling/tests  (:tests (:ro$core @d/corpus-map))) 
+
+(doc :duckling/test) 
+
+
+(s/explain :unq/corpus-map  @d/corpus-map) 

@@ -33,6 +33,7 @@ The local dataset for a rule is a vector of samples. A general sample is just a 
 
 Once the dataset has been built, different ML techniques can try to build the best ML model for it. It should be clearly separated.
 
+
 ** Run
 
 At runtime, the model predicts the local probability of each token by running
@@ -80,6 +81,7 @@ different features approaches.
                       #object[duckling.engine$pattern_fn$fn__4364 0x52388605 "duckling.engine$pattern_fn$fn__4364@52388605"]),
             :production #object[duckling.time.prod$eval6578$fn__6579 0x476824ec "duckling.time.prod$eval6578$fn__6579@476824ec"]})}
    #+END_SRC
+   - classifiers-map :: store the classifiers map
 
 
 ** storage
