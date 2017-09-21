@@ -8,8 +8,7 @@ project so I forked it in this new project.
 
 * Duckling
 
-[[https://clojars.org/clj-duckling][https://img.shields.io/clojars/dpom/clj-duckling.svg]]
-
+[[https://clojars.org/dpom/clj-duckling][https://img.shields.io/clojars/v/dpom/clj-duckling.svg]]
 
 Duckling is a Clojure library that parses text into structured data:
 
