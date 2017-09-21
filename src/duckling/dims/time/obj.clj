@@ -129,15 +129,15 @@
 
 (defn year [t]
   "Returns the year of the start of a time grain"
-  (time/year (-> t :start)))
+  (time/year (:start t)))
 
 (defn month [t]
   "Returns the month of a time grain"
-  (time/month (-> t :start)))
+  (time/month (:start t)))
 
 (defn day-of-week [t]
   "Returns the day of week of a time grain"
-  (time/day-of-week (-> t :start)))
+  (time/day-of-week (:start t)))
 
 (defn day [t]
   "Returns the day of month"
