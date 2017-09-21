@@ -81,6 +81,9 @@ store the rules map
             :production #object[duckling.time.prod$eval6578$fn__6579 0x476824ec "duckling.time.prod$eval6578$fn__6579@476824ec"]})}
 ```
 
+classifiers-map  
+store the classifiers map
+
 storage
 -------
 

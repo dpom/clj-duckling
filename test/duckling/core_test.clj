@@ -101,7 +101,7 @@
                   (= (map-vals set (map-from-keys get-dims exp))
                      (map-vals set (load! arg))))]
       (testing "load! should load all languages by default"
-        (with-redefs [res/get-files (constantly ["numbers.clj"])
+        (with-redefs [res/get-files (constantly ["number.clj"])
                       res/get-subdirs (constantly ["en" "zh" "pt"])]
           (are [arg] (check arg [:en$core :zh$core :pt$core])
             nil
@@ -113,13 +113,13 @@
           ["foo" "bar"] []
           ["bar" "es" "pt" "ru"] [:es$core :pt$core :ru$core]))
       (testing "load! should accept a custom config"
-        (is (check {:config {:en$numbers {:corpus ["numbers"] :rules ["numbers"]}}} [:en$numbers])))
+        (is (check {:config {:en$number {:corpus ["number"] :rules ["number"]}}} [:en$number])))
       (testing "load! should return a map of loaded modules with dimensions"
         (are [arg exp] (check arg exp)
           {:languages ["fr"]} [:fr$core]
           {:languages ["fr" "foo" "en"]} [:fr$core :en$core]
-          {:config {:en$numbers {:corpus ["numbers"] :rules ["numbers"]}}} [:en$numbers]
+          {:config {:en$number {:corpus ["number"] :rules ["number"]}}} [:en$number]
 
-          {:config {:en$numbers {:corpus ["numbers"] :rules ["numbers"]}}
+          {:config {:en$number {:corpus ["number"] :rules ["number"]}}
            :languages ["fr" "blah"]}
-          [:fr$core :en$numbers])))))
+          [:fr$core :en$number])))))

@@ -1,6 +1,7 @@
 (ns duckling.core
   "The main module with public API."
   (:require
+   [clojure.spec.alpha :as s]
    [clojure.java.io :as io]
    [clojure.set :as set]
    [clojure.string :as string]
@@ -11,6 +12,7 @@
    [clojure.test :refer :all]
    [duckling.system :as sys]
    [duckling.corpus :as corpus]
+   duckling.spec
    [duckling.engine :as engine]
    [duckling.learn :as learn]
    [duckling.resource :as res]
@@ -70,8 +72,7 @@
     (get @rules-map (keyword id))))
 
 (deftest get-rules-test
-  (is (=  [:name :pattern :production]
-          (keys (first (get-rules "ro$core"))))))
+  (is (nil? (s/explain-data :rule/rules (get-rules "ro$core")))))
 
 (defn- compare-tokens
   "Compares two candidate tokens a and b for runtime selection.
@@ -293,26 +294,9 @@
        (into {})))
 
 (deftest gen-config-for-langs-test
-  (is (= {:ro$core {:corpus ["budget"
-                             "communication"
-                             "finance"
-                             "gender"
-                             "measure"
-                             "numbers"
-                             "temperature"
-                             "time"]
-                    :rules ["budget"
-                            "communication"
-                            "cycles"
-                            "duration"
-                            "finance"
-                            "gender"
-                            "measure"
-                            "numbers"
-                            "temperature"
-                            "time"]}
-          :tr$core {:corpus ["numbers"], :rules ["numbers"]}}
-         (gen-config-for-langs ["ro" "tr"]))))
+  (let [config (gen-config-for-langs ["ro" "tr"])]
+    (is (nil? (s/explain-data :config/config config)))
+    (is (= [:ro$core :tr$core] (keys config)))))
 
 (defn- read-rules
   [lang new-file]
@@ -344,8 +328,7 @@
 
 (deftest make-corpus-test
   (let [c (make-corpus "ro" ["temperature"])]
-    (is (= [:context :tests] (keys c)))
-    (is (= [:text :checks] (keys (first (:tests c)))))))
+    (is (s/valid? :corpus/corpus c))))
 
 (defn- make-rules
   "Make a rules vector
@@ -362,8 +345,7 @@
        (apply concat)))
 
 (deftest make-rules-test
-  (is (= [:name :pattern :production]
-         (keys (first (make-rules "ro" ["temperature"]))))))
+  (is (nil? (s/explain-data :rule/rules (make-rules "ro" ["temperature"])))))
 
 (defn- get-dims-for-test
   [context module {:keys [text]}]
@@ -425,33 +407,9 @@
           (into {})))))
 
 (deftest load!-test
-  (is (= {:en$core '(:amount-of-money
-                     :cycle
-                     :distance :duration
-                     :email
-                     :leven-product :leven-unit
-                     :number
-                     :ordinal
-                     :phone-number
-                     :quantity
-                     :temperature :time :timezone
-                     :unit :unit-of-duration :url
-                     :volume)
-          :ro$core '(:amount-of-money
-                     :budget
-                     :cycle
-                     :distance
-                     :email
-                     :gender
-                     :leven-product :leven-unit
-                     :number
-                     :ordinal
-                     :phone-number
-                     :quantity
-                     :temperature :time :timezone
-                     :unit :unit-of-duration :url
-                     :volume)}
-         (load! {:languages ["ro" "en"]}))))
+  (let [config (load! {:languages ["ro" "en"]})]
+    (is (nil? (s/explain-data :gen/load-result config)))
+    (is (= [:en$core :ro$core] (keys config)))))
 
 ;;--------------------------------------------------------------------------
 ;; Corpus running
