@@ -1,9 +1,7 @@
 (ns duckling.spec
   (:require
    [clojure.spec.alpha :as s]
-   [clojure.test :as t]
-   ))
-
+   [clojure.test :as t]))
 
 (s/def :gen/module-key (s/and keyword? #(re-matches #"[a-z]{2}\$core" (name %))))
 (s/def :gen/grain keyword?)
@@ -26,12 +24,11 @@
                   :temperature :time :timezone
                   :unit :unit-of-duration :url
                   :volume})
-(def dimensions-str (into #{} (map name dimensions)))
+(def dimensions-str (set (map name dimensions)))
 
 (s/def :gen/dim dimensions)
 (s/def :gen/dim-str dimensions-str)
 (s/def :gen/load-result (s/map-of :gen/module-key (s/coll-of :gen/dim)))
-
 
 ;;; config
 (s/def :config/corpus (s/coll-of :gen/dim-str))
@@ -83,8 +80,7 @@
               (derive :email :text)
               (derive :url :text)
               (derive :level-unit :text)
-              (derive :level-product :text)
-              ))
+              (derive :level-product :text)))
 
 (defmulti token-type :dim :hierarchy #'hdim)
 (s/def :token/token (s/multi-spec token-type :dim))
@@ -95,13 +91,11 @@
   (s/merge :token/common
            (s/keys :req-un [:number/value])))
 
-
 ;; text
 (s/def :text/value string?)
 (defmethod token-type :text [_]
   (s/merge :token/common
            (s/keys :req-un [:text/value])))
-
 
 ;;; number
 (s/def :number/integer boolean?)
@@ -139,7 +133,6 @@
 (defmethod token-type :gender [_]
   (s/merge :token/common
            (s/keys :req-un [:number/value :unit/unit :budget/level])))
-
 
 ;;; time
 (s/def :time/pred t/function?)
