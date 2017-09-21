@@ -13,6 +13,7 @@
    This is the feature extractor we use."
                                         ; FIXME the grain feature should be moved to the time module
   [token]
+  ;; (log/debugf "token: %s" token)
   (let [rules (reduce str (map #(get-in % [:rule :name]) (:route token)))
         time-tokens (filter #(= :time (:dim %)) (:route token))
         grains (when (pos? (count time-tokens))
