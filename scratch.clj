@@ -36,7 +36,7 @@
 (load! {:languages ["ro"]})
 
 
-(d/run :ro$core)
+(d/run :ro$core) 
 
 (d/play :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei" [:budget])
 
