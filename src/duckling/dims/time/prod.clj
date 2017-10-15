@@ -1,6 +1,5 @@
 (ns duckling.dims.time.prod
   (:require
-   [taoensso.timbre :as log]
    [duckling.dims.time.pred :as p]
    [duckling.dims.time.obj :as t])
   (:import

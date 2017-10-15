@@ -6,7 +6,9 @@
             [clj-time.format :as tf]
             [clojure.repl :as repl]
             [clojure.pprint :as pprint]
-            [taoensso.timbre :as log]
+            [duct.logger :as logger]
+            [duct.logger.timbre :as timbre]
+            [integrant.core :as ig]
             [clojure.test :refer :all]
             [clj-time.coerce :as tcoerce])
   (:import [java.io IOException OutputStream StringReader]
@@ -105,3 +107,29 @@
   (let [w (StringWriter.)]
     (pprint/pprint m w)
     (str w)))
+
+(defn get-default-logger
+  []
+  (let [config {::logger/timbre  {:level :info, :appenders {:prn (ig/ref ::timbre/println)}}
+                ::timbre/println {}}
+        logger (::logger/timbre (ig/init config))]
+    logger))
+
+(deftest get-default-logger-test
+  (let [logger (get-default-logger)]
+    (is (re-matches
+         #"(?x)\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d\ [^\s]+
+           \ INFO\ \[duckling\.util:\d\d\]\ -
+           \ :duckling\.util/testing\n"
+         (with-out-str (logger/log logger :info ::testing))))
+    (is (re-matches
+         #"(?x)\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d\ [^\s]+
+          \ WARN\ \[duckling\.util:\d\d\]\ -
+          \ :duckling\.util/testing\ \{:foo\ \"bar\"\}\n"
+         (with-out-str (logger/log logger :warn ::testing {:foo "bar"}))))))
+
+
+
+
+
+  

@@ -2,7 +2,6 @@
   (:use
    [plumbing.core :except [millis]])
   (:require
-   [taoensso.timbre :as log]
    [duckling.dims.time.obj :as time]
    [duckling.util :as util]))
 

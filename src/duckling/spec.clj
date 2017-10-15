@@ -44,7 +44,7 @@
 (s/def :rule/rules-map (s/map-of :gen/module-key :rule/rules))
 
 ;; corpus
-(s/def :corpus/text (s/coll-of string? :min-count 1))
+(s/def :corpus/text (s/coll-of string? :min-count 1 :distinct false))
 (s/def :corpus/checks (s/coll-of t/function? :min-count 1 :distinct true))
 (s/def :corpus/test (s/keys :req-un [:corpus/text :corpus/checks]))
 (s/def :corpus/tests (s/coll-of :corpus/test))

@@ -1,8 +1,8 @@
 (ns duckling.learn
   (:require
    [clojure.set :as sets]
-   [taoensso.timbre :as log]
    [clj-time.core :as t]
+   [duct.logger :refer [log]] 
    [clojure.pprint :refer [pprint]]
    [duckling.engine :as engine]
    [duckling.ml.naivebayes :as naive]
@@ -50,7 +50,7 @@
           Output is true if the rule was contributing
           successfully, false otherwise"
   [s context check rules feature-extractor dataset]
-  (log/debugf "learning %s %s\n" s check)
+  ;; (log/debugf "learning %s %s\n" s check)
   (let [fc-tokens (->> (engine/pass-all s rules nil)
                        (filter #(and (:pos %) (= (count s) (- (:end %) (:pos %)))))
                        (mapcat #(engine/resolve-token % context nil)) ; fully-covering tokens
@@ -84,7 +84,7 @@
 
 (defn corpus->dataset
   "Takes a corpus and a feature extractor and builds a dataset (phase 1.a. on duckling.md)."
-  [{context :context, tests :tests, :as corpus} rules feature-extractor]
+  [{:keys [context tests] :as corpus} rules feature-extractor]
   (let [sentences-and-check
         (for [test tests
               text (:text test)]
@@ -136,7 +136,7 @@
 (defn train-classifiers
   "Given a corpus and a set of rules, train a classifier per rule"
   [corpus rules fextractor]
-  (log/debugf "training with %d tests and %d rules" (count (:tests corpus)) (count rules))
+  ;; (log/debugf "training with %d tests and %d rules" (count (:tests corpus)) (count rules))
   (let [dataset (corpus->dataset corpus rules fextractor)]
     (into {} (for [[name examples :as example] dataset]
                [name (train-rule example)]))))
