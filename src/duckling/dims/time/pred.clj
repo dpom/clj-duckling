@@ -3,7 +3,7 @@
   (:use
    [plumbing.core])
   (:require
-   [taoensso.timbre :as log]
+   [duct.logger :refer [log]] 
    [duckling.dims.time.obj :as t]))
 
 ;; Contains the time semantics.
@@ -392,7 +392,7 @@
 
       [token]) ; default for other dims
     (catch Throwable e
-      (log/errorf e "Error while resolving %s" (dissoc token :route))
+      ;; (log/errorf e "Error while resolving %s" (dissoc token :route))
       (print-token token)
       (throw (ex-info (format "Error while resolving %s" (dissoc token :route)) {})))))
 

@@ -1,9 +1,15 @@
-{:duckling/core {:languages ["ro" "en" "fr"]
-                 :logger #ig/ref :duckling/logger}
+{
+ :duckling/core {:languages ["ro" "en" "fr"]
+                 :logger   #ig/ref :duct.logger/timbre}
 
- :duckling/logger {:level    :debug
-                   :ns-whitelist  ["duckling.core" "duckling.learn"]
-              :ns-blacklist  ["taoensso.*"]
-              :appender {:println (println-appender {:stream :auto})}}
+ :duct.logger/timbre {:level    :debug
+                      :set-root-config? true
+                      :appenders {:duct.logger.timbre/spit #ig/ref :duct.logger.timbre/spit,
+                                  :duct.logger.timbre/brief #ig/ref :duct.logger.timbre/brief}},
+
+
+ :duct.logger.timbre/println {}
+ :duct.logger.timbre/brief {:min-level :report},
+ :duct.logger.timbre/spit {:fname "logs/dev.log" :min-level :debug}
 
  }

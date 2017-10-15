@@ -6,8 +6,8 @@
   3. tokens containing final info are produced using their production rules"
   (:require [clojure.set :as sets]
             [clojure.stacktrace]
-            [taoensso.timbre :as log]
             [clojure.test :refer :all]
+            [duct.logger :refer [log]] 
             [duckling.dims.time.prod]
             [duckling.dims.time.api :as time]
             [duckling.util :as util]))
@@ -200,13 +200,14 @@
     (let [stash-size (count stash)
           max-iter-reached? (neg? remaining-iter)
           max-stash-reached? (> stash-size 600)
+          logger (util/get-default-logger)
           finished? (<= stash-size prev-stash-size)]
       (if (or max-iter-reached? max-stash-reached? finished?)
         (do
           (when max-iter-reached?
-            (log/warnf "@pass-all reached maximum iterations for sentence '%s'" sentence))
+            (log logger :warn ::pass-all-max-iterations {:sentence sentence}))
           (when max-stash-reached?
-            (log/warnf "@pass-all reached maximum stash size for sentence '%s'" sentence))
+            (log logger :warn ::pass-all-max-stash-size {:sentence sentence}))
           stash)
         (recur (pass-once stash rules sentence) (count stash) (dec remaining-iter))))))
 

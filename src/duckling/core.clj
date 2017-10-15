@@ -6,8 +6,8 @@
    [clojure.set :as set]
    [clojure.string :as string]
    [integrant.core :as ig]
+   [duct.logger :refer [log]] 
    [plumbing.core :as p]
-   [taoensso.timbre :as log]
    [environ.core :refer [env]]
    [clojure.test :refer :all]
    [duckling.system :as sys]
@@ -139,8 +139,9 @@
   [s context module targets base-stash]
   {:pre [s context module]}
   (let [classifiers (get-classifier module)
+        logger (get context :logger (util/get-default-logger))
         _ (when-not (map? classifiers)
-            (log/errorf "[duckling] Module %s is not loaded. Did you (load!)?" module))
+            (log logger :error ::module-not-loaded {:module module}))
         rules (get-rules module)
         stash (engine/pass-all s rules base-stash)
         ;; add an index to tokens in the stash
@@ -349,16 +350,16 @@
 
 (defn- get-dims-for-test
   [context module {:keys [text]}]
-  (mapcat (fn [text]
+  (let [logger (get context :logger (util/get-default-logger))]
+    (mapcat (fn [text]
             (try
               (->> (analyze text context module nil nil)
                    :stash
                    (keep :dim))
               (catch Exception e
-                (log/warnf "Error while analyzing module=%s context=%s text=%s"
-                           module context text)
+                (log logger :warn ::get-dims-fot-test {:module module :context context :text text})
                 [])))
-          text))
+          text)))
 
 (defn get-dims
   "Retrieves all available dimensions for module by running its corpus."
@@ -380,18 +381,22 @@
    (map): loaded modules with available dimensions.
   "
   ([] (load! nil))
-  ([{:keys [languages config]}]
+  ([{:keys [languages config logger]}]
    (let [langs (seq languages)
          lang-config (when (or langs (empty? config))
                        (cond-> (set (res/get-subdirs "languages"))
                          langs (set/intersection (set langs))
                          true gen-config-for-langs))
          config (merge lang-config config)]
+     (log logger :debug ::load  {:config config})
      (reset! rules-map {})
      (reset! corpus-map {})
      (let [data (->> config
                      (pmap (fn [[config-key {corpus-files :corpus rules-files :rules}]]
-                             (let [lang (-> config-key name (string/split #"\$") first)
+                             (let [lang (-> config-key
+                                            name
+                                            (string/split #"\$")
+                                            first)
                                    corpus (make-corpus lang corpus-files)
                                    rules (make-rules lang rules-files)
                                    c (learn/train-classifiers corpus rules learn/extract-route-features)]
@@ -478,12 +483,13 @@
   ([module text dims]
    (parse module text dims (default-context :now)))
   ([module text dims context]
-   (log/debugf "parse: module = %s, dims = %s, text = |%s|" module dims text)
-   (->> (analyze text context module (map (fn [dim] {:dim dim :label dim}) dims) nil)
-        :winners
-        (map #(assoc % :value (engine/export-value % {})))
-        (map #(select-keys % [:dim :body :value :start :end :latent]))
-        distinct)))
+   (let [logger (get context :logger (util/get-default-logger))] 
+     (log logger :debug ::parse {:module module, :dims dims, :text text})
+     (->> (analyze text context module (map (fn [dim] {:dim dim :label dim}) dims) nil)
+          :winners
+          (map #(assoc % :value (engine/export-value % {})))
+          (map #(select-keys % [:dim :body :value :start :end :latent]))
+          distinct))))
 
 ;;--------------------------------------------------------------------------
 ;; The stuff below is specific to Wit.ai and will be moved out of Duckling
@@ -507,8 +513,9 @@
          (map? context)
          (:reference-time context)
          (vector? targets)]}
-  (try
-    (log/infof "Extracting from '%s' with targets %s" sentence targets)
+  (let [logger (get context :logger (util/get-default-logger))]
+    (try
+    (log logger :info ::extract  {:sentence sentence :targets targets})
     (letfn [(extract'
               [module targets] ; targets specify all the dims we should extract
               (let [module (keyword module)
@@ -529,5 +536,5 @@
                  :context context
                  :leven-stash leven-stash
                  :targets targets}]
-        (log/errorf e "duckling error err=%s" (pr-str err))
-        []))))
+        (log logger :error ::extract-error err)
+        [])))))
