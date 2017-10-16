@@ -32,7 +32,7 @@ To use Duckling in your project, you just need two functions: load! to load all 
 
 ``` clojure
 (ns myproject.core
-  (:require [duckling.core :as p]))
+  (:require [clj-duckling.core :as p]))
 
 (p/load!) ;; Load all languages
 
@@ -80,7 +80,7 @@ Walkthrough
 Load Duckling with all languages:
 
 ``` clojure
-duckling.core=> (load!)
+clj-duckling.core=> (load!)
 {:ar$core (:number :ordinal)
  :da$core (:time :cycle :unit-of-duration :number :ordinal :duration :timezone)
  :de$core (:time :number :ordinal :cycle :unit-of-duration :duration :timezone)
@@ -266,7 +266,7 @@ duckling.core=> (load!)
 Run the corpus and check that all the tests pass:
 
 ``` clojure
-duckling.core=> (run)
+clj-duckling.core=> (run)
 :sv$core: 378 examples, 0 failed.
 :pt$core: 384 examples, 0 failed.
 :ko$core: 407 examples, 0 failed.
@@ -293,13 +293,13 @@ duckling.core=> (run)
 :uk$core: 84 examples, 0 failed.
 :et$core: 48 examples, 0 failed.
 :en$core: 505 examples, 0 failed.
-#'duckling.core/c
+#'clj-duckling.core/c
 ```
 
 See the detailed parsing of a given string like “in two hours”:
 
 ``` clojure
-duckling.core=> (play :en$core "in two hours")
+clj-duckling.core=> (play :en$core "in two hours")
 W ------------  11 | time      | in <duration>             | P = -4.0729 |  + <integer> <unit-o
 W    ---        10 | volume    | number as volume          | P = -2.2022 | integer (0..19)
 W    ---         9 | distance  | number as distance        | P = -2.3138 | integer (0..19)
@@ -321,6 +321,6 @@ distance (latent)         {:type "value", :value 2} {}
 volume (latent)           {:type "value", :value 2} {}
 time                      {:type "value", :value "2013-02-12T06:30:00.000-02:00", :grain :minute, :values ({:type "value", :value "2013-02-12T06:30:00.000-02:00", :grain :minute})} {}
 For further info: (details idx) where 1 <= idx <= 11
-#'duckling.core/token
-duckling.core=> 
+#'clj-duckling.core/token
+clj-duckling.core=> 
 ```

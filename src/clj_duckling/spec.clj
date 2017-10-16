@@ -1,4 +1,4 @@
-(ns duckling.spec
+(ns clj-duckling.spec
   (:require
    [clojure.spec.alpha :as s]
    [clojure.test :as t]))

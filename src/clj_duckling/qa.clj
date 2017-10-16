@@ -1,5 +1,5 @@
-(ns duckling.qa
-  (:require [duckling.core :as p]
+(ns clj-duckling.qa
+  (:require [clj-duckling.core :as p]
             [clojure.string :as strings]
             [cheshire.core :as j]))
 

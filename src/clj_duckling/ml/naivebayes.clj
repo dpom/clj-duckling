@@ -1,4 +1,4 @@
-(ns duckling.ml.naivebayes
+(ns clj-duckling.ml.naivebayes
   (:use [clojure.test])
   (:require [clojure.string :as strings]))
 

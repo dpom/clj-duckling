@@ -26,7 +26,7 @@ load the default configuration, and =parse= to parse a string.
 
 #+BEGIN_SRC clojure
     (ns myproject.core
-      (:require [duckling.core :as p]))
+      (:require [clj-duckling.core :as p]))
 
     (p/load!) ;; Load all languages
 

@@ -1,4 +1,4 @@
-(ns duckling.resource
+(ns clj-duckling.resource
   "Utility functions for resource folder management."
   (:require
    [clojure.java.io :as io]

@@ -2,9 +2,9 @@
   (:refer-clojure :exclude [test])
   (:require
    [clojure.repl :refer :all]
-   [duckling.core :as d]
-   [duckling.system :as sys]
-   [duckling.spec]
+   [clj-duckling.core :as d]
+   [clj-duckling.system :as sys]
+   [clj-duckling.spec]
    [clojure.tools.namespace.repl :refer [refresh]]
    [clojure.java.io :as io]
    [clojure.spec.alpha :as s]

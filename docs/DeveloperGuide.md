@@ -202,11 +202,11 @@ Duckling will frequently generate several possible results for a given input. In
 Once you’ve added your tests, reload your module (see above) and run the corpus:
 
 ``` clojure
-duckling.core=> (run :en$core)
+clj-duckling.core=> (run :en$core)
 O0 FAIL "nil"
     Expected null
 :en$core: 356 examples, 1 failed.
-#'duckling.core/c
+#'clj-duckling.core/c
 ```
 
 Make sure the tests don’t pass anymore (if they do, either you’re very lucky and the existing rules actually cover your new tests, or you did not reload the corpus – usually it’s the latter!). Now you’re ready to write rules.
@@ -229,7 +229,7 @@ When the pattern is matched, the production token is produced. Duckling adds thi
 Here is an illustration of this process, with a stash containing 11 tokens:
 
 ``` clojure
-duckling.core=> (play :en$core "in two hours")
+clj-duckling.core=> (play :en$core "in two hours")
 W ------------  11 | time      | in/after <duration>       | P = -3.4187 |  + <integer> <unit-o
 W    ---        10 | volume    | number as volume          | P = -2.1172 | integer (0..19)
 W    ---         9 | distance  | number as distance        | P = -2.2680 | integer (0..19)
@@ -329,7 +329,7 @@ Debugging
 When a corpus test doesn’t pass and you don’t understand why, you can have a closer look at what happens with play:
 
 ``` clojure
-duckling.core=> (play :en$core "45 degrees")
+clj-duckling.core=> (play :en$core "45 degrees")
 W ----------   7 | temperature | <latent temp> degrees     | P = -1.9331 | number as temp +
 W --           6 | volume    | number as volume          | P = -1.8094 | integer (numeric)
 W --           5 | distance  | number as distance        | P = -1.6120 | integer (numeric)
@@ -357,7 +357,7 @@ Columns:
 If you need more information about a specific token, call the details function with the token index:
 
 ``` clojure
-duckling.core=> (details 7)
+clj-duckling.core=> (details 7)
 <latent temp> degrees (-1.9331200116060705)
 |-- number as temp (-1.9331200116060705)
 |   `-- integer (numeric) (-0.16649651564955764)

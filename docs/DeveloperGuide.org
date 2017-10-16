@@ -64,22 +64,22 @@ different features approaches.
                      :min {:start #object[org.joda.time.DateTime 0x1cb29052 "1900-01-01T00:00:00.000-02:00"], :grain :year},
                      :max {:start #object[org.joda.time.DateTime 0x2bce42dd "2100-01-01T00:00:00.000-02:00"], :grain :year}},
            :tests ({:text ["10 lei" "10 ron" "10 RON"],
-                    :checks [#object[duckling.corpus$money$fn__3878 0x11fa9e27 "duckling.corpus$money$fn__3878@11fa9e27"]]}
+                    :checks [#object[clj-duckling.corpus$money$fn__3878 0x11fa9e27 "clj-duckling.corpus$money$fn__3878@11fa9e27"]]}
                    {:text ["50 bani" "50 BANI"],
-                    :checks [#object[duckling.corpus$money$fn__3878 0x19c2bc4a "duckling.corpus$money$fn__3878@19c2bc4a"]]}
+                    :checks [#object[clj-duckling.corpus$money$fn__3878 0x19c2bc4a "clj-duckling.corpus$money$fn__3878@19c2bc4a"]]}
                    )}}
    #+END_SRC
    - rules-map :: store the rules map
    #+BEGIN_SRC clojure
 {:ro$core ({:name "intersect (X cents)",
-            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x802558f "duckling.engine$pattern_fn$fn__4364@802558f"]
-                      #object[duckling.engine$pattern_fn$fn__4364 0x6c6d587e "duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
-            :production #object[duckling.time.prod$eval6563$fn__6564 0x5fb4773e "duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
+            :pattern (#object[clj-duckling.engine$pattern_fn$fn__4364 0x802558f "clj-duckling.engine$pattern_fn$fn__4364@802558f"]
+                      #object[clj-duckling.engine$pattern_fn$fn__4364 0x6c6d587e "clj-duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
+            :production #object[clj-duckling.time.prod$eval6563$fn__6564 0x5fb4773e "clj-duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
            {:name "intersect (and X cents)",
-            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "duckling.engine$pattern_fn$fn__4364@7e7e5309"]
-                      #object[duckling.engine$pattern_fn$fn__4358 0x79e77776 "duckling.engine$pattern_fn$fn__4358@79e77776"]
-                      #object[duckling.engine$pattern_fn$fn__4364 0x52388605 "duckling.engine$pattern_fn$fn__4364@52388605"]),
-            :production #object[duckling.time.prod$eval6578$fn__6579 0x476824ec "duckling.time.prod$eval6578$fn__6579@476824ec"]})}
+            :pattern (#object[clj-duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "clj-duckling.engine$pattern_fn$fn__4364@7e7e5309"]
+                      #object[clj-duckling.engine$pattern_fn$fn__4358 0x79e77776 "clj-duckling.engine$pattern_fn$fn__4358@79e77776"]
+                      #object[clj-duckling.engine$pattern_fn$fn__4364 0x52388605 "clj-duckling.engine$pattern_fn$fn__4364@52388605"]),
+            :production #object[clj-duckling.time.prod$eval6578$fn__6579 0x476824ec "clj-duckling.time.prod$eval6578$fn__6579@476824ec"]})}
    #+END_SRC
    - classifiers-map :: store the classifiers map
 
@@ -207,11 +207,11 @@ If you create a new dimension you should add a dimension file here implementing 
 
    Once you’ve added your tests, reload your module (see above) and run the corpus:
    #+BEGIN_SRC clojure
-duckling.core=> (run :en$core)
+clj-duckling.core=> (run :en$core)
 O0 FAIL "nil"
     Expected null
 :en$core: 356 examples, 1 failed.
-#'duckling.core/c
+#'clj-duckling.core/c
    #+END_SRC
 
    Make sure the tests don’t pass anymore (if they do, either you’re very lucky
@@ -239,7 +239,7 @@ O0 FAIL "nil"
 
    Here is an illustration of this process, with a stash containing 11 tokens:
    #+BEGIN_SRC clojure
-duckling.core=> (play :en$core "in two hours")
+clj-duckling.core=> (play :en$core "in two hours")
 W ------------  11 | time      | in/after <duration>       | P = -3.4187 |  + <integer> <unit-o
 W    ---        10 | volume    | number as volume          | P = -2.1172 | integer (0..19)
 W    ---         9 | distance  | number as distance        | P = -2.2680 | integer (0..19)
@@ -347,7 +347,7 @@ W    ---         1 | number    | integer (0..19)           | P = -0.1866 |
    When a corpus test doesn’t pass and you don’t understand why, you can have a
    closer look at what happens with play:
    #+BEGIN_SRC clojure
-duckling.core=> (play :en$core "45 degrees")
+clj-duckling.core=> (play :en$core "45 degrees")
 W ----------   7 | temperature | <latent temp> degrees     | P = -1.9331 | number as temp +
 W --           6 | volume    | number as volume          | P = -1.8094 | integer (numeric)
 W --           5 | distance  | number as distance        | P = -1.6120 | integer (numeric)
@@ -375,7 +375,7 @@ W --           1 | number    | integer (numeric)         | P = -0.1665 |
    If you need more information about a specific token, call the details
    function with the token index:
    #+BEGIN_SRC clojure
-duckling.core=> (details 7)
+clj-duckling.core=> (details 7)
 <latent temp> degrees (-1.9331200116060705)
 |-- number as temp (-1.9331200116060705)
 |   `-- integer (numeric) (-0.16649651564955764)

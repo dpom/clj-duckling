@@ -104,10 +104,10 @@
 
 (d/parse :ro$core "2 luni" [:duration])
 
-(d/parse :ro$core "o zi" [:duration])
+(d/parse :ro$core "o zi" [:duration]) 
 
 
-(d/parse :ro$core "vreau informatii despre ultima mea comanda" [:order])
+(d/parse :ro$core "vreau informatii despre ultima mea comanda" [:order]) 
 
 (d/parse :ro$core "1 an" [:duration])
 

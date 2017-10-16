@@ -1,6 +1,6 @@
-(ns duckling.dims.quantity
+(ns clj-duckling.dims.quantity
   (:require
-   [duckling.engine :refer [export-value]]))
+   [clj-duckling.engine :refer [export-value]]))
 
 (defmethod export-value :quantity [token _]
   (select-keys token [:value :unit :product]))

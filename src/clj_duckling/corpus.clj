@@ -1,9 +1,9 @@
-(ns duckling.corpus
+(ns clj-duckling.corpus
   (:use
    [plumbing.core :except [millis]])
   (:require
-   [duckling.dims.time.obj :as time]
-   [duckling.util :as util]))
+   [clj-duckling.dims.time.obj :as time]
+   [clj-duckling.util :as util]))
 
                                         ; Checker functions return *nil* when OK, or [expected actual] when not OK
 

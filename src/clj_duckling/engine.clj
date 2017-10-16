@@ -1,4 +1,4 @@
-(ns duckling.engine
+(ns clj-duckling.engine
   "This component parses a phrase and extracts information based on rules.
   The two main phases are matching and production.
   1. rules are transformed into objets via rules macro
@@ -8,9 +8,9 @@
             [clojure.stacktrace]
             [clojure.test :refer :all]
             [duct.logger :refer [log]] 
-            [duckling.dims.time.prod]
-            [duckling.dims.time.api :as time]
-            [duckling.util :as util]))
+            [clj-duckling.dims.time.prod]
+            [clj-duckling.dims.time.api :as time]
+            [clj-duckling.util :as util]))
 
 ;;
 ;; Lookup and basic matching functions, used by patterns in rules
@@ -87,7 +87,7 @@
   "Builds a new rule"
   [name pattern production]
   (if (not (string? name)) (throw (Exception. "Can't accept rule without name.")))
-  (let [duckling-helper-ns (the-ns 'duckling.dims.time.prod) ; could split time.patterns and time.prod helpers
+  (let [duckling-helper-ns (the-ns 'clj-duckling.dims.time.prod) ; could split time.patterns and time.prod helpers
         pattern (binding [*ns* duckling-helper-ns] (eval pattern))
         pattern-vec (if (vector? pattern) pattern [pattern])]
     {:name name

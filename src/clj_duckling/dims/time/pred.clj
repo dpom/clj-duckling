@@ -1,14 +1,14 @@
-(ns duckling.dims.time.pred
+(ns clj-duckling.dims.time.pred
   (:refer-clojure :exclude [cycle resolve])
   (:use
    [plumbing.core])
   (:require
    [duct.logger :refer [log]] 
-   [duckling.dims.time.obj :as t]))
+   [clj-duckling.dims.time.obj :as t]))
 
 ;; Contains the time semantics.
 ;; Knows nothing  about tokens, morphology, syntax, forms.
-;; These functions are normally called by production helpers (duckling.time.prod)
+;; These functions are normally called by production helpers (clj-duckling.time.prod)
 
 (defmacro fn& [grain args & forms]
   (let [[t ctx] args]

@@ -1,4 +1,4 @@
-(defproject dpom/clj-duckling "0.6.1"
+(defproject dpom/clj-duckling "0.6.2-dev02"
   :description "A Clojure library that parses text into structured data"
   :license {:url "https://github.com/wit-ai/duckling"
             :comments "see LICENSE"}
@@ -28,7 +28,7 @@
                    :dependencies [[integrant/repl "0.2.0"]
                                   [org.clojure/tools.trace "0.7.9"]
                                   [cheshire "5.7.1"]]}
-             :uberjar {:aot [duckling.core]}}
+             :uberjar {:aot [clj-duckling.core]}}
   :test-selectors {:default (complement :benchmark)
                    :benchmark :benchmark}
   :scm {:name "git"

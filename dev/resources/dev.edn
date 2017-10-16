@@ -1,6 +1,6 @@
 {
- :duckling/core {:languages ["ro" "en" "fr"]
-                 :logger   #ig/ref :duct.logger/timbre}
+ :clj-duckling.core/load {:languages ["ro" "en" "fr"]
+                          :logger   #ig/ref :duct.logger/timbre}
 
  :duct.logger/timbre {:level    :debug
                       :set-root-config? true

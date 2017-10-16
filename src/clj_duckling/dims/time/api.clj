@@ -1,5 +1,5 @@
-(ns duckling.dims.time.api
-  (:require [duckling.dims.time.pred :as pred]
+(ns clj-duckling.dims.time.api
+  (:require [clj-duckling.dims.time.pred :as pred]
             [clj-time.coerce :as c])
   (:refer-clojure :exclude [resolve]))
 

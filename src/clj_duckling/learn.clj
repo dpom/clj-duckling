@@ -1,12 +1,12 @@
-(ns duckling.learn
+(ns clj-duckling.learn
   (:require
    [clojure.set :as sets]
    [clj-time.core :as t]
    [duct.logger :refer [log]] 
    [clojure.pprint :refer [pprint]]
-   [duckling.engine :as engine]
-   [duckling.ml.naivebayes :as naive]
-   [duckling.util :as util]))
+   [clj-duckling.engine :as engine]
+   [clj-duckling.ml.naivebayes :as naive]
+   [clj-duckling.util :as util]))
 
 (defn extract-route-features
   "Extracts names of previous routes used to produce this route token.
@@ -83,7 +83,7 @@
     final-dataset))
 
 (defn corpus->dataset
-  "Takes a corpus and a feature extractor and builds a dataset (phase 1.a. on duckling.md)."
+  "Takes a corpus and a feature extractor and builds a dataset (phase 1.a. on clj-duckling.md)."
   [{:keys [context tests] :as corpus} rules feature-extractor]
   (let [sentences-and-check
         (for [test tests

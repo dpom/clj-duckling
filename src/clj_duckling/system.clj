@@ -1,4 +1,4 @@
-(ns duckling.system
+(ns clj-duckling.system
   (:require
    [clojure.java.io :as io]
    [taoensso.timbre :as timbre]
