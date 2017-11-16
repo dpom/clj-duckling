@@ -1,0 +1,11 @@
+{
+ :context  {}
+ :tests [{:text ["sub 300 lei"
+                 "sub 300 de lei"
+                 "maxim 300 lei"]
+          :checks [#corpus/budget [300 "RON" :max]]}
+         {:text ["peste 100 lei"
+                 "minim 100 lei"]
+         :checks [#corpus/budget [100 "RON" :min]]}
+         ]
+ }

@@ -5,7 +5,7 @@
                                "communication"
                                "temperature"
                                "numbers"
-                               "measure"]))
+                               "measure"]))  
 
 (def rules (make-rules "ro"  ["finance"
                               "time"
@@ -173,4 +173,31 @@ token: {:pred #function[clojure.lang.AFunction/1], :check [1 {:start #object[org
 token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name "ordinals (primul..9lea)", :pattern (#function[duckling.engine/pattern-fn/fn--30494]), :production #function[duckling.dims.time.prod/eval56736/fn--56737]}, :route [{:pos 0, :end 9, :text "al doilea", :groups ["al doilea" nil "al" "doilea" nil nil nil nil nil nil nil nil nil nil nil nil nil nil]}], :check nil}
 
 
+(:context (:ro$core @d/corpus-map)) 
 
+{:reference-time {:start #object[org.joda.time.DateTime 0x4d655c8e "2013-02-12T04:30:00.000-02:00"], :grain :second}, :min {:start #object[org.joda.time.DateTime 0x164c7f13 "1900-01-01T00:00:00.000-02:00"], :grain :year}, :max {:start #object[org.joda.time.DateTime 0x1505a62c "2100-01-01T00:00:00.000-02:00"], :grain :year}} 
+
+
+(first (:tests (:ro$core @d/corpus-map))) 
+
+
+{:text ["sub 300 lei" "sub 300 de lei" "maxim 300 lei"], :checks [#function[clj-duckling.corpus/budget/fn--21160]]}
+
+(require '[taoensso.nippy :as nippy]) 
+
+(def frozen-corpus-map (nippy/freeze @d/corpus-map)) 
+
+(file-seq (io/as-file "/home/dan/emag/clj-duckling/resources/languages/ro/corpus")) 
+
+(require '[clj-duckling.corpus :as corpus]) 
+
+(def f (cor/budget 300 "RON" :max)) 
+
+(defn default-reader
+  [t v]
+  (println "t: %s, v:%s" t v)
+  (apply (resolve t) v)) 
+
+(require '[clojure.edn :as edn]) 
+
+(edn/read-string {:default default-reader} (slurp (io/as-file "resources/languages/ro/corpus/budget.edn"))) 
