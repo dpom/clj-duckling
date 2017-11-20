@@ -11,13 +11,13 @@
    [environ.core :refer [env]]
    [clojure.test :refer :all]
    [clj-duckling.system :as sys]
-   [clj-duckling.corpus :as corpus]
+   [clj-duckling.corpus.core :as corpus]
    clj-duckling.spec
    [clj-duckling.engine :as engine]
    [clj-duckling.learn :as learn]
    [clj-duckling.resource :as res]
    [clj-duckling.dims.api :as dims]
-   [clj-duckling.dims.time.obj :as time]
+   [clj-duckling.util.time :as time]
    [clj-duckling.util :as util]))
 
 (defonce rules-map (atom {}))
@@ -311,7 +311,8 @@
   [lang new-file]
   (-> (format "languages/%s/corpus/%s.clj" lang new-file)
       io/resource
-      corpus/read-corpus))
+      ;; corpus/read-corpus
+      ))
 
 (defn- make-corpus
   "Make a corpus map

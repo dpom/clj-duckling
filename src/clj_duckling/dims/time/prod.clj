@@ -1,7 +1,7 @@
 (ns clj-duckling.dims.time.prod
   (:require
    [clj-duckling.dims.time.pred :as p]
-   [clj-duckling.dims.time.obj :as t])
+   [clj-duckling.util.time :as t])
   (:import
    [java.text NumberFormat]
    [java.util Locale]))

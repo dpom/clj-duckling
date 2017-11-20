@@ -4,7 +4,7 @@
    [plumbing.core])
   (:require
    [duct.logger :refer [log]] 
-   [clj-duckling.dims.time.obj :as t]))
+   [clj-duckling.util.time :as t]))
 
 ;; Contains the time semantics.
 ;; Knows nothing  about tokens, morphology, syntax, forms.

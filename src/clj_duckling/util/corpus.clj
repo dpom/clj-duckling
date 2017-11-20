@@ -1,6 +1,9 @@
-(ns clj-duckling.corpus.util
-  "Utils functions used in corpus files"
-  )
+(ns clj-duckling.util.corpus
+  "Checker functions used in corpus files. They return *nil* when OK, or [expected actual] when not OK"
+  (:require
+   [plumbing.core :refer [?>]]
+   [clj-duckling.util.time :as time]
+   [clj-duckling.util :as util]))
 
 (defn number
   "check if the token is a number equal to value.
@@ -20,6 +23,43 @@
                      (= :ordinal (:dim token))
                      (= (:value token) value))
                   [value (:value token)])))
+
+
+(defn- vec->date-and-map
+  "Turns a vector of args into a date and a map of extra fields"
+  [args]
+  (let [[date-fields other-keys-and-values] (split-with integer? args)
+        token-fields (into {} (map vec (partition 2 other-keys-and-values)))
+        date (-> (apply time/t -2 date-fields)
+                 (?> (:grain token-fields) (assoc :grain (:grain token-fields)))
+                 (?> (:timezone token-fields) (assoc :timezone (:timezone token-fields))))]
+    [date token-fields]))
+
+(defn datetime
+  "Creates a datetime checker function to check if the token is valid"
+  [& args]
+  (let [[date token-fields] (vec->date-and-map args)]
+    (fn [context token]
+      (when-not
+       (and
+        (= :time (:dim token))
+        (util/hash-match (select-keys token-fields [:direction :precision])
+                         token)
+        (= (:value token) date))
+        [date (:value token)]))))
+
+(defn datetime-interval
+  "Creates a datetime interval checker function"
+  [from to]
+  (let [[start start-fields] (vec->date-and-map from)
+        [end end-fields] (vec->date-and-map to)
+        date (time/interval start end)]
+    (fn [context {:keys [value dim] :as token}]
+      (when-not
+       (and
+        (= :time dim)
+        (= value date))
+        [date value]))))
 
 (defn temperature
   "Create a temp condition"
@@ -107,4 +147,18 @@
          (or (nil? max) (<= (:value token) max))
          (every? #(% token) predicates))))
 
+(defn gender
+  "Create a gender condition"
+  [gen]
+  (fn [_ {:keys [dim value] :as token}]
+    (not (and
+          (= :gender dim)
+          (= gen value)))))
 
+(defn order
+  "Create an order  condition"
+  [val]
+  (fn [_ {:keys [dim value] :as token}]
+    (not (and
+          (= :order dim)
+          (= val value)))))

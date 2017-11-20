@@ -14,8 +14,7 @@
  "fecior"
  "tata"
  "bunic"
- (fn [token _] (and (= :gender (:dim token))
-                    (= :male (:value token))))
+ (gender :male)
 
  "femeie"
  "muiere"
@@ -26,6 +25,7 @@
  "fetiţa"
  "mama"
  "bunica"
- (fn [token _] (and (= :gender (:dim token))
-                    (= :female (:value token))))
+ (gender :female)
+
+
  )

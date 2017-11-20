@@ -1,7 +1,6 @@
 #!/usr/bin/env inlein
 
-;; syntax1: convert file infile outfile
-;; syntax2: convert dir dirpath
+;; syntax: convert dir dirpath
 
 '{:dependencies [[org.clojure/clojure "1.9.0-RC1"]
                  [cljfmt "0.5.7"]]}
@@ -71,7 +70,7 @@
                          (java.nio.file.FileSystems/getDefault)
                          "glob:*.{clj}")
         files (->> dirpath
-                   clojure.java.io/file
+                   io/file
                    file-seq
                    (filter #(.isFile %))
                    (filter #(.matches grammar-matcher (.getFileName (.toPath %))))
@@ -81,8 +80,4 @@
       (convert-file f (str/replace f #"\.clj" ".edn")))))
 
 
-(let [cmd (first *command-line-args*)]
-  (case cmd
-    "file" (convert-file (second *command-line-args*) (nth *command-line-args* 2))
-    "dir" (convert-dir (second *command-line-args*))
-    "syntax:\n  convert file infile outfile\n  convert dir dirpath"))
+(convert-dir (first *command-line-args*))

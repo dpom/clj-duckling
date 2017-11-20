@@ -1,0 +1,164 @@
+{:context {}
+ :tests [{:text ["0"
+                 "zero"
+                 "nici unul"
+                 "nici unu"
+                 "nici una"
+                 "nici o"
+                 "nimic"]
+          :checks [#corpus/number [0]]}
+         {:text ["1"
+                 "unu"
+                 "unul"
+                 "un"
+                 "o"
+                 "intai"
+                 "întâi"]
+          :checks [#corpus/number [1]]}
+         {:text ["primul"
+                 "prima"]
+          :checks [#corpus/ordinal [1]]}
+         {:text ["2"
+                 "doi"
+                 "doua"
+                 "două"]
+          :checks [#corpus/number [2]]}
+         {:text ["al doilea"
+                 "al doi-lea"
+                 "al doi lea"
+                 "al 2-lea"
+                 "al 2 lea"
+                 "a 2 a"
+                 "a 2-a"
+                 "a doua"]
+          :checks [#corpus/ordinal [2]]}
+         {:text ["3"
+                 "trei"]
+          :checks [#corpus/number [3]]}
+         {:text ["al treilea"
+                 "al trei-lea"
+                 "a treia"]
+          :checks [#corpus/ordinal [3]]}
+         {:text ["4"
+                 "patru"]
+          :checks [#corpus/number [4]]}
+         {:text ["5"
+                 "cinci"]
+          :checks [#corpus/number [5]]}
+         {:text ["6"
+                 "sase"
+                 "șase"]
+          :checks [#corpus/number [6]]}
+         {:text ["al saselea"
+                 "al șaselea"
+                 "al sase-lea"
+                 "al șase-lea"
+                 "a sasea"
+                 "a șase a"]
+          :checks [#corpus/ordinal [6]]}
+         {:text ["7"
+                 "sapte"
+                 "șapte"]
+          :checks [#corpus/number [7]]}
+         {:text ["8"
+                 "opt"]
+          :checks [#corpus/number [8]]}
+         {:text ["9"
+                 "noua"
+                 "nouă"]
+          :checks [#corpus/number [9]]}
+         {:text ["al noualea"
+                 "al noua-lea"
+                 "al noua lea"
+                 "al nouălea"
+                 "al nouă lea"
+                 "a noua"]
+          :checks [#corpus/ordinal [9]]}
+         {:text ["10"
+                 "zece"
+                 "zeci"]
+          :checks [#corpus/number [10]]}
+         {:text ["10"
+                 "zece"]
+          :checks [#corpus/number [10]]}
+         {:text ["11"
+                 "unsprezece"
+                 "unspe"
+                 "unșpe"]
+          :checks [#corpus/number [11]]}
+         {:text ["19"
+                 "nouasprezece"
+                 "nouaspe"
+                 "nouăsprezece"
+                 "nouășpe"]
+          :checks [#corpus/number [19]]}
+         {:text ["70"
+                 "sapte zeci"
+                 "7 zeci"
+                 "șapte zeci"]
+          :checks [#corpus/number [70]]}
+         {:text ["1,1"
+                 "1,10"
+                 "01,10"]
+          :checks [#corpus/number [1.1]]}
+         {:text ["0,77"
+                 ",77"]
+          :checks [#corpus/number [0.77]]}
+         {:text ["100.000"
+                 "100000"]
+          :checks [#corpus/number [100000]]}
+         {:text ["3000000"
+                 "3.000.000"]
+          :checks [#corpus/number [3000000]]}
+         {:text ["1.200.000"
+                 "1200000"]
+          :checks [#corpus/number [1200000]]}
+         {:text ["-1.200.000"
+                 "-1200000"
+                 "minus 1.200.000"]
+          :checks [#corpus/number [-1200000]]}
+         {:text ["-3"
+                 "3 negativ"]
+          :checks [#corpus/number [-3]]}
+         {:text ["5 mii"
+                 "cinci mii"]
+          :checks [#corpus/number [5000]]}
+         {:text ["o mie"
+                 "1 mie"]
+          :checks [#corpus/number [1000]]}
+         {:text ["o suta"
+                 "o sută"
+                 "1 suta"
+                 "1 sută"]
+          :checks [#corpus/number [100]]}
+         {:text ["3 sute"
+                 "trei sute"]
+          :checks [#corpus/number [300]]}
+         {:text ["un milion"
+                 "1 milion"]
+          :checks [#corpus/number [1000000]]}
+         {:text ["7 milioane"
+                 "sapte milioane"
+                 "șapte milioane"]
+          :checks [#corpus/number [7000000]]}
+         {:text ["un miliard"
+                 "1 miliard"]
+          :checks [#corpus/number [1000000000]]}
+         {:text ["9 miliarde"
+                 "noua miliarde"
+                 "nouă miliarde"]
+          :checks [#corpus/number [9000000000]]}
+         {:text ["20"
+                 "douazeci"
+                 "doua zeci"
+                 "douăzeci"
+                 "două zeci"]
+          :checks [#corpus/number [20]]}
+         {:text ["23"
+                 "20 3"
+                 "douazeci 3"
+                 "douăzeci 3"
+                 "douăzeci trei"
+                 "douazeci si trei"
+                 "douăzeci și trei"]
+          :checks [#corpus/number [23]]}]}

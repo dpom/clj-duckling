@@ -1,0 +1,5 @@
+{:context {}
+ :tests [{:text ["ultima comanda"]
+          :checks [#corpus/order [-1]]}
+         {:text ["comanda 123456789"]
+          :checks [#corpus/order [123456789]]}]}

@@ -274,3 +274,33 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
        (filter #(.isFile %))
        (filter #(.matches grammar-matcher (.getFileName (.toPath %))))
        (mapv #(.getAbsolutePath %)))) 
+
+;; 2017-11-20
+
+(require [clj-duckling.corpus.edn :refer [read-corpus-file]]) 
+
+(def dirpath "resources/languages/ro/corpus") 
+
+ 
+
+(require '[clj-duckling.corpus.edn :as corpus]) 
+
+(def edncorpus (get system corpus/ukey)) 
+
+@(get edncorpus :corpus) 
+(def logger @(get edncorpus :logger)) 
+
+(let [grammar-matcher (.getPathMatcher
+                       (java.nio.file.FileSystems/getDefault)
+                       "glob:*.{edn}")
+      xf (comp
+          (filter #(.isFile %))
+          (filter #(.matches grammar-matcher (.getFileName (.toPath %))))
+          (map #(.getAbsolutePath %))
+          (map #(corpus/read-corpus-file % logger))
+          )]
+  (transduce xf (completing (fn [res item]
+                  (fipp (format "** res: %s\n item: %s" res item))
+                  (merge-with into res item)))
+             {:context {} :tests []}
+             (file-seq (io/file dirpath)))) 

@@ -1,0 +1,25 @@
+{:context {}
+ :tests [{:text ["barbat"
+                 "bărbat"
+                 "baiat"
+                 "baietel"
+                 "băiat"
+                 "băieţel"
+                 "sot"
+                 "soţ"
+                 "fiu"
+                 "frate"
+                 "fecior"
+                 "tata"
+                 "bunic"]
+          :checks [#corpus/gender [:male]]}
+         {:text ["femeie"
+                 "muiere"
+                 "sotie"
+                 "soţie"
+                 "fica"
+                 "fetita"
+                 "fetiţa"
+                 "mama"
+                 "bunica"]
+          :checks [#corpus/gender [:female]]}]}

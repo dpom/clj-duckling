@@ -6,8 +6,8 @@
    [clojure.spec.alpha :as s]
    [clojure.edn :as edn]
    [duct.logger :refer [log Logger]]
-   [clj-duckling.corpus.util :as corpus]
-   [clj-duckling.corpus.core :as core]))
+   [clj-duckling.corpus.core :as core])
+  (:import [java.io File]))
 
 (def ukey
   "this unit key"
@@ -16,9 +16,9 @@
 (defn default-reader
   [t v]
   (prn (format "t: %s, v:%s" t v))
-  (apply (resolve t) v))
+  (apply (resolve (symbol (str "clj-duckling.util." t))) v))
 
-(defn read-corpus
+(defn read-corpus-file
   "Read corpus from a file
 
   Args:
@@ -26,26 +26,32 @@
 
   Returns:
   (map): a Corpus map {:context {}, :tests []}"
-  [corpus-file]
+  [corpus-file logger]
+  (log logger :debug ::read-corpus-file {:file corpus-file})
   (edn/read-string {:default default-reader} (slurp (io/as-file corpus-file))))
 
 
-(defn train-corpus
-  [traindir]
-  (->> (file-seq (io/as-file traindir))
-       )
-  )
 
 (defrecord EdnCorpus [id corpus language dirpath logger]
   core/Corpus
   (build-corpus! [this]
-    (log @logger :debug ::train {:path traindir :lang language})
-    (log @logger :error ::not-implemented))
-  (get-corpus [this]
-    @model)
+    (log @logger :debug ::train {:path dirpath :lang language})
+    (let [grammar-matcher (.getPathMatcher
+                           (java.nio.file.FileSystems/getDefault)
+                           "glob:*.{edn}")
+          xf (comp
+              (filter #(.isFile ^File %))
+              (filter #(.matches grammar-matcher (.getFileName (.toPath ^File %))))
+              (map #(.getAbsolutePath ^File %))
+              (map #(read-corpus-file % @logger)))]
+      (reset! corpus (transduce xf
+                                (completing (fn [res item]
+                                              (merge-with into res item)))
+                                {:context {} :tests []}
+                                (file-seq (io/file dirpath))))))
+  (get-corpus [this] @corpus)
   (get-id [this] id)
-  (set-logger! [this newlogger]
-    (reset! logger newlogger))
+  (set-logger! [this newlogger] (reset! logger newlogger))
   )
 
 
@@ -56,4 +62,3 @@
     (core/set-logger! corpus logger)
     (core/build-corpus! corpus)
     corpus))
-
