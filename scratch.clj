@@ -5,7 +5,7 @@
                                "communication"
                                "temperature"
                                "numbers"
-                               "measure"]))  
+                               "measure"]))
 
 (def rules (make-rules "ro"  ["finance"
                               "time"
@@ -17,8 +17,8 @@
 (learn/train-classifiers corpus rules learn/extract-route-features)
 
 (def sentences-and-check (for [test (:tests corpus)
-      text (:text test)]
-  [text (first (:checks test))]))
+                               text (:text test)]
+                           [text (first (:checks test))]))
 
 (def context {})
 
@@ -36,7 +36,7 @@
 (load! {:languages ["ro"]})
 
 
-(d/run :ro$core) 
+(d/run :ro$core)
 
 (d/play :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei" [:budget])
 
@@ -69,9 +69,9 @@
  :unit "RON",
  :dim :budget,
  :rule {:name "min budget",
-         :pattern (#function[duckling.engine/pattern-fn/fn--26004]
-                   #function[duckling.engine/pattern-fn/fn--26010]),
-         :production #function[duckling.dims.time.prod/eval31017/fn--31018]},
+        :pattern (#function[duckling.engine/pattern-fn/fn--26004]
+                  #function[duckling.engine/pattern-fn/fn--26010]),
+        :production #function[duckling.dims.time.prod/eval31017/fn--31018]},
  :value 300,
  :start 65,
  :pos 65,
@@ -92,7 +92,7 @@
  :end 81,
  :body "peste 300 de lei",
  :text "peste 300 de lei"
-}
+ }
 
 
 (d/parse :ro$core "vreau sa cumpar un cadou pentru un baiat de 13 ani care sa coste maxim 300 lei" [:budget :age :gender])
@@ -104,10 +104,10 @@
 
 (d/parse :ro$core "2 luni" [:duration])
 
-(d/parse :ro$core "o zi" [:duration]) 
+(d/parse :ro$core "o zi" [:duration])
 
 
-(d/parse :ro$core "vreau informatii despre ultima mea comanda" [:order]) 
+(d/parse :ro$core "vreau informatii despre ultima mea comanda" [:order])
 
 (d/parse :ro$core "1 an" [:duration])
 
@@ -119,20 +119,20 @@
 (s/explain :unq/rule (first (:ro$core @d/rules-map)))
 
 
-(s/valid? :unq/rules (:ro$core @d/rules-map)) 
+(s/valid? :unq/rules (:ro$core @d/rules-map))
 
-(s/valid? :unq/rules-map  @d/rules-map) 
-(s/valid? :unq/corpus-map  @d/corpus-map) 
-(s/valid? :unq/corpus  (:ro$core @d/corpus-map)) 
-(s/valid? :duckling/tests  (:tests (:ro$core @d/corpus-map))) 
-(s/valid? :duckling/test  (first (:tests (:ro$core @d/corpus-map)))) 
+(s/valid? :unq/rules-map  @d/rules-map)
+(s/valid? :unq/corpus-map  @d/corpus-map)
+(s/valid? :unq/corpus  (:ro$core @d/corpus-map))
+(s/valid? :duckling/tests  (:tests (:ro$core @d/corpus-map)))
+(s/valid? :duckling/test  (first (:tests (:ro$core @d/corpus-map))))
 
-(s/explain :duckling/tests  (:tests (:ro$core @d/corpus-map))) 
+(s/explain :duckling/tests  (:tests (:ro$core @d/corpus-map)))
 
-(doc :duckling/test) 
+(doc :duckling/test)
 
 
-(s/explain :unq/corpus-map  @d/corpus-map) 
+(s/explain :unq/corpus-map  @d/corpus-map)
 
 token: {:dim :number, :integer true, :value 300, :text "300", :pos 4, :end 7, :rule {:name "integer (numeric)", :pattern (#function[duckling.engine/pattern-fn/fn--30494]), :production #function[duckling.dims.time.prod/eval56334/fn--56335]}, :route [{:pos 4, :end 7, :text "300", :groups ["300"]}]}
 
@@ -173,31 +173,104 @@ token: {:pred #function[clojure.lang.AFunction/1], :check [1 {:start #object[org
 token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name "ordinals (primul..9lea)", :pattern (#function[duckling.engine/pattern-fn/fn--30494]), :production #function[duckling.dims.time.prod/eval56736/fn--56737]}, :route [{:pos 0, :end 9, :text "al doilea", :groups ["al doilea" nil "al" "doilea" nil nil nil nil nil nil nil nil nil nil nil nil nil nil]}], :check nil}
 
 
-(:context (:ro$core @d/corpus-map)) 
+(:context (:ro$core @d/corpus-map))
 
-{:reference-time {:start #object[org.joda.time.DateTime 0x4d655c8e "2013-02-12T04:30:00.000-02:00"], :grain :second}, :min {:start #object[org.joda.time.DateTime 0x164c7f13 "1900-01-01T00:00:00.000-02:00"], :grain :year}, :max {:start #object[org.joda.time.DateTime 0x1505a62c "2100-01-01T00:00:00.000-02:00"], :grain :year}} 
+{:reference-time {:start #object[org.joda.time.DateTime 0x4d655c8e "2013-02-12T04:30:00.000-02:00"], :grain :second}, :min {:start #object[org.joda.time.DateTime 0x164c7f13 "1900-01-01T00:00:00.000-02:00"], :grain :year}, :max {:start #object[org.joda.time.DateTime 0x1505a62c "2100-01-01T00:00:00.000-02:00"], :grain :year}}
 
 
-(first (:tests (:ro$core @d/corpus-map))) 
+(first (:tests (:ro$core @d/corpus-map)))
 
 
 {:text ["sub 300 lei" "sub 300 de lei" "maxim 300 lei"], :checks [#function[clj-duckling.corpus/budget/fn--21160]]}
 
-(require '[taoensso.nippy :as nippy]) 
+(require '[taoensso.nippy :as nippy])
 
-(def frozen-corpus-map (nippy/freeze @d/corpus-map)) 
+(def frozen-corpus-map (nippy/freeze @d/corpus-map))
 
-(file-seq (io/as-file "/home/dan/emag/clj-duckling/resources/languages/ro/corpus")) 
+(file-seq (io/as-file "/home/dan/emag/clj-duckling/resources/languages/ro/corpus"))
 
-(require '[clj-duckling.corpus :as corpus]) 
+(require '[clj-duckling.util.corpus :as corpus])
 
-(def f (cor/budget 300 "RON" :max)) 
+(def f (corpus/budget 300 "RON" :max))
 
 (defn default-reader
   [t v]
-  (println "t: %s, v:%s" t v)
-  (apply (resolve t) v)) 
+  (println (format "t: %s, v:%s" t v))
+  (apply (resolve t) v))
 
-(require '[clojure.edn :as edn]) 
+(require '[clojure.edn :as edn])
 
-(edn/read-string {:default default-reader} (slurp (io/as-file "resources/languages/ro/corpus/budget.edn"))) 
+(edn/read-string {:default default-reader} (slurp (io/as-file "resources/languages/ro/corpus/budget.edn")))
+
+
+(require '[clj-duckling.model.corpus :as c])
+(c/read-corpus "resources/languages/ro/corpus/budget.edn")
+
+(def filename "resources/languages/ro/corpus/communication.clj")
+
+(def filename "resources/languages/ro/corpus/time.clj")
+
+
+(require '[clojure.string :as str])
+
+(let [xf (comp
+          (map str/trim)
+          (partition-by empty?)
+          (remove (fn [item] (str/blank? (first item)))))
+      items  (with-open [rdr (io/reader filename)]
+          (into [] xf (line-seq rdr)))]
+ items)
+
+
+(defn build
+  [corpus item]
+  (printf "corpus: %s, item: %s\n" corpus item)
+  (let [a (first item)
+        b (rest item)]
+    (cond
+      (str/starts-with? a "(") (if (seq b)
+                                 (assoc corpus :context (read-string (str/join b)))
+                                 corpus)
+      true corpus)))
+
+(let [xf (comp
+          (map str/trim)
+          (remove (fn [item] (str/starts-with? item ";")))
+          (partition-by empty?)
+          (remove (fn [item] (str/blank? (first item)))))]
+  (with-open [rdr (io/reader filename)]
+    (transduce xf build {} (line-seq rdr))))
+
+(def s ":reference-time (time/t -2 2013 2 12 4 30 0)") 
+(let [index (str/index-of s " ") 
+      k (str/join "" (take index s))
+      val (str/split (str/join "" (drop-last (drop (+ index 2) s))) #"\s")]
+  (format "%s #%s [%s]" k (first val) (str/join " " (rest val)))) 
+
+
+(def s "  ; Context map
+  ; Tuesday Feb 12, 2013 at 4:30am is the \"now\" for the tests
+  {:reference-time (time/t -2 2013 2 12 4 30 0)
+   :min (time/t -2 1900)
+   :max (time/t -2 2100)}
+") 
+
+(def s "{}") 
+(let [xf (comp
+          (map str/trim)
+          (remove (fn [item] (str/starts-with? item ";")))
+          (map #(str/replace % #"\(time/t" "#time/t ["))
+          (map #(str/replace % #"\)" "]"))
+          )]
+  (into [] xf (str/split s #"\n"))) 
+
+
+(let [grammar-matcher (.getPathMatcher 
+                       (java.nio.file.FileSystems/getDefault)
+                       "glob:*.{clj}")]
+  (->> "resources/languages/ro/corpus"
+       clojure.java.io/file
+       file-seq
+       (filter #(.isFile %))
+       (filter #(.matches grammar-matcher (.getFileName (.toPath %))))
+       (mapv #(.getAbsolutePath %)))) 
