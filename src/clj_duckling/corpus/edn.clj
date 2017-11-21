@@ -14,26 +14,21 @@
   "this unit key"
   :clj-duckling.corpus/edn)
 
+(defn make-reader
+  [util-unit]
+  (fn [v]
+    ;; (prn (format "%s reader: v = %s" util-unit v))
+    (binding [*ns* (the-ns util-unit)] (eval (read-string v)))))
 
-
-(defn time-reader
-  [v]
-  (prn (format "time reader: v = %s" v))
-  (binding [*ns* (the-ns 'clj-duckling.util.time)] (eval (read-string v))))
-
-(defn corpus-reader
-  [v]
-  (prn (format "corpus reader: v = %s"  v))
-  (binding [*ns* (the-ns 'clj-duckling.util.corpus)] (eval (read-string v))))
-
-(def edn-readers {'clj-duckling/time time-reader
-                  'clj-duckling/corpus corpus-reader})
+(def edn-readers {'clj-duckling/time (make-reader 'clj-duckling.util.time)
+                  'clj-duckling/corpus (make-reader 'clj-duckling.util.corpus)})
 
 (defn read-corpus-file
   "Read corpus from a file
 
   Args:
   corpus-file (string): filename path
+  logger (Logger): logger
 
   Returns:
   (map): a Corpus map {:context {}, :tests []}"
@@ -46,7 +41,7 @@
 (defrecord EdnCorpus [id corpus language dirpath logger]
   core/Corpus
   (build-corpus! [this]
-    (log @logger :debug ::train {:path dirpath :lang language})
+    (log @logger :debug ::load-corpus {:path dirpath :lang language})
     (let [grammar-matcher (.getPathMatcher
                            (java.nio.file.FileSystems/getDefault)
                            "glob:*.{edn}")

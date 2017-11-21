@@ -1,24 +1,17 @@
-[    ;; Temperature 
-
-    ; latent temperature
- {:name    "number as temp"
-  :pattern #engine/pattern  "(dim :number)"
-  :production #engine/  {:dim :temperature
-     :latent true
-     :value (:value %1)}
-}
-    "<latent temp> grade"
-    [(dim :temperature) #"(?i)(grade)|°"]
-    (-> %1 (dissoc :latent)
-           (merge {:unit "degree"}))
-
-    "<temp> Celcius"
-    [(dim :temperature) #"(?i)c(el[cs]?(ius)?)?\.?"]
-    (-> %1 (dissoc :latent)
-           (merge {:unit "celsius"}))
-
-    "<temp> Fahrenheit"
-    [(dim :temperature) #"(?i)f(ah?rh?eh?n(h?eit)?)?\.?"]
-    (-> %1 (dissoc :latent)
-           (merge {:unit "fahrenheit"}))
-]
+[#clj-duckling.engine/rule {:name    "number as temp"
+                            :pattern   "(dim :number)"
+                            :production  "{:dim :temperature
+                                           :latent true
+                                           :value (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<latent temp> grade"
+                            :pattern "[(dim :temperature) #\"(?i)(grade)|°\"]"
+                            :production "(-> %1 (dissoc :latent)
+                                                (merge {:unit \"degree\"}))"}
+ #clj-duckling.engine/rule {:name "<temp> Celcius"
+                            :pattern "[(dim :temperature) #\"(?i)c(el[cs]?(ius)?)?\.?\"]"
+                            :production "(-> %1 (dissoc :latent)
+                                                (merge {:unit \"celsius\"}))"}
+ #clj-duckling.engine/rule {:name "<temp> Fahrenheit"
+                            :pattern "[(dim :temperature) #\"(?i)f(ah?rh?eh?n(h?eit)?)?\.?\"]"
+                            :production "(-> %1 (dissoc :latent
+                                                (merge {:unit \"fahrenheit\"})))"}]

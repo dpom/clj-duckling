@@ -306,6 +306,7 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
              (file-seq (io/file dirpath)))) 
 
 ;; 2017-11-21
+
 (def t "corpus/temperature") 
 (def v "[37 \"celsius\"]") 
 
@@ -318,3 +319,16 @@ domain
 
 
 (str/replace "ab \" cd" #"\"" "\\\"") 
+
+(def rules1 (-> "languages/ro/rules/temperature.clj" 
+                io/resource
+                slurp
+                read-string
+                clj-duckling.engine/rules)) 
+
+
+(require '[clj-duckling.engine.edn :as eng]) 
+
+(def logger (:duct.logger/timbre system)) 
+
+(def rules2 (eng/read-rules-file "resources/languages/ro/rules/temperature.clj" logger)) 
