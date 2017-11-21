@@ -3,7 +3,7 @@
   (:require
    [plumbing.core :refer [?>]]
    [clj-duckling.util.time :as time]
-   [clj-duckling.util :as util]))
+   [clj-duckling.util.core :as util]))
 
 (defn number
   "check if the token is a number equal to value.

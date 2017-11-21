@@ -2,36 +2,36 @@
  :tests [{:text ["3 kilometri"
                  "3 km"
                  "3km"]
-          :checks [#corpus/distance [3 "kilometru" {:value 3000 :unit "metru"}]]}
+          :checks [#clj-duckling/corpus "(distance 3 \"kilometru\" {:value 3000 :unit \"metru\"})"]}
          {:text ["3,0 km"]
-          :checks [#corpus/distance [3.0 "kilometru" {:value 3000.0 :unit "metru"}]]}
+          :checks [#clj-duckling/corpus "(distance 3.0 \"kilometru\" {:value 3000.0 :unit \"metru\"})"]}
          {:text ["8 mile"]
-          :checks [#corpus/distance [8 "mile" {:value 12872 :unit "metru"}]]}
+          :checks [#clj-duckling/corpus "(distance 8 \"mile\" {:value 12872 :unit \"metru\"})"]}
          {:text ["9m"
                  "9 m"]
-          :checks [#corpus/distance [9 "metru"]]}
+          :checks [#clj-duckling/corpus "(distance 9 \"metru\")"]}
          {:text ["2cm"
                  "2 centimetri"]
-          :checks [#corpus/distance [2 "centimetru" {:value 0.02 :unit "metru"}]]}
+          :checks [#clj-duckling/corpus "(distance 2 \"centimetru\" {:value 0.02 :unit \"metru\"})"]}
          {:text ["250 mililitri"
                  "250ml"
                  "250 ml"]
-          :checks [#corpus/volume [250 "mililitru" {:value 0.25 :unit "litru"}]]}
+          :checks [#clj-duckling/corpus "(volume  250 \"mililitru\" {:value 0.25 :unit \"litru\"})"]}
          {:text ["2 litri"
                  "2 l"
                  "2l"]
-          :checks [#corpus/volume [2 "litru"]]}
+          :checks [#clj-duckling/corpus "(volume 2 \"litru\")"]}
          {:text ["3 galoane"
                  "3 gal"]
-          :checks [#corpus/volume [3 "galon" {:value 11.355 :unit "litru"}]]}
+          :checks [#clj-duckling/corpus "(volume 3 \"galon\" {:value 11.355 :unit \"litru\"})"]}
          {:text ["3 hectolitri"]
-          :checks [#corpus/volume [300 "litru" {:value 30 :unit "litru"}]]}
+          :checks [#clj-duckling/corpus "(volume 300 \"litru\" {:value 30 :unit \"litru\"})"]}
          {:text ["jumatate de litru"
                  "jumătate de litru"]
-          :checks [#corpus/volume [0.5 "litru"]]}
+          :checks [#clj-duckling/corpus "(volume 0.5 \"litru\")"]}
          {:text ["doua livre de carne"]
-          :checks [#corpus/quantity [2 "livra" "carne"]]}
+          :checks [#clj-duckling/corpus "(quantity 2 \"livra\" \"carne\")"]}
          {:text ["o livră"]
-          :checks [#corpus/quantity [1 "livra"]]}
+          :checks [#clj-duckling/corpus "(quantity 1 \"livra\")"]}
          {:text ["o carne"]
-          :checks [#corpus/quantity [1 nil "carne"]]}]}
+          :checks [#clj-duckling/corpus "(quantity 1 nil \"carne\")"]}]}

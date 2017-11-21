@@ -1,4 +1,4 @@
-(ns clj-duckling.util
+(ns clj-duckling.util.core
   (:require [clojure.string  :as string]
             [clojure.set     :as sets]
             [clojure.java.io :as io]

@@ -2,6 +2,7 @@
   "The edn corpus"
   (:require
    [integrant.core :as ig]
+   [clojure.string :as str]
    [clojure.java.io :as io]
    [clojure.spec.alpha :as s]
    [clojure.edn :as edn]
@@ -13,10 +14,20 @@
   "this unit key"
   :clj-duckling.corpus/edn)
 
-(defn default-reader
-  [t v]
-  (prn (format "t: %s, v:%s" t v))
-  (apply (resolve (symbol (str "clj-duckling.util." t))) v))
+
+
+(defn time-reader
+  [v]
+  (prn (format "time reader: v = %s" v))
+  (binding [*ns* (the-ns 'clj-duckling.util.time)] (eval (read-string v))))
+
+(defn corpus-reader
+  [v]
+  (prn (format "corpus reader: v = %s"  v))
+  (binding [*ns* (the-ns 'clj-duckling.util.corpus)] (eval (read-string v))))
+
+(def edn-readers {'clj-duckling/time time-reader
+                  'clj-duckling/corpus corpus-reader})
 
 (defn read-corpus-file
   "Read corpus from a file
@@ -28,7 +39,7 @@
   (map): a Corpus map {:context {}, :tests []}"
   [corpus-file logger]
   (log logger :debug ::read-corpus-file {:file corpus-file})
-  (edn/read-string {:default default-reader} (slurp (io/as-file corpus-file))))
+  (edn/read-string {:readers edn-readers} (slurp (io/as-file corpus-file))))
 
 
 

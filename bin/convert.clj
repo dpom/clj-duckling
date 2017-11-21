@@ -15,8 +15,9 @@
   (let [xf (comp
             (map str/trim)
             (remove (fn [item] (str/starts-with? item ";")))
-            (map #(str/replace % #"\(time/t" "#time/t ["))
-            (map #(str/replace % #"\)" "]")))]
+            ;; (map #(str/replace % #"\"" "\\\""))
+            (map #(str/replace % #"\(time/t" "#clj-duckling/time \"(t"))
+            (map #(str/replace % #"\)" ")\"")))]
     (into [] xf s)))
 
 (defn get-context
@@ -26,20 +27,15 @@
          " :tests [")
     ""))
 
-(defn get-corpus-function
-  [item]
-  (if (str/starts-with? item ")")
-    ""
-    (let [params (str/split (str/join "" (drop-last (drop 1 item))) #"\s")]
-      (format "#corpus/%s [%s]" (first params) (str/join " " (rest params))))))
+
 
 
 (defn get-test
   [item]
   (let [els (partition-by #(str/starts-with? % "\"") item)]
-    (format "{:text [%s]\n :checks [%s]}\n"
+    (format "{:text [%s]\n :checks [#clj-duckling/corpus \"%s\"]}\n"
             (str/join "\n" (first els))
-            (str/join "\n" (mapv get-corpus-function (second els))))))
+            (str/replace (str/join "\n" (second els)) #"\"" "\\\\\"") )))
 
 (defn convert-file
   [infile outfile]

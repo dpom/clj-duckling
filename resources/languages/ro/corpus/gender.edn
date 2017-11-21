@@ -12,7 +12,8 @@
                  "fecior"
                  "tata"
                  "bunic"]
-          :checks [#corpus/gender [:male]]}
+          :checks [#clj-duckling/corpus "(fn [token _] (and (= :gender (:dim token))
+(= :male (:value token))))"]}
          {:text ["femeie"
                  "muiere"
                  "sotie"
@@ -22,4 +23,6 @@
                  "fetiţa"
                  "mama"
                  "bunica"]
-          :checks [#corpus/gender [:female]]}]}
+          :checks [#clj-duckling/corpus "(fn [token _] (and (= :gender (:dim token))
+(= :female (:value token))))
+)"]}]}

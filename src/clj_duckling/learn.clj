@@ -6,7 +6,7 @@
    [clojure.pprint :refer [pprint]]
    [clj-duckling.engine :as engine]
    [clj-duckling.ml.naivebayes :as naive]
-   [clj-duckling.util :as util]))
+   [clj-duckling.util.core :as util]))
 
 (defn extract-route-features
   "Extracts names of previous routes used to produce this route token.

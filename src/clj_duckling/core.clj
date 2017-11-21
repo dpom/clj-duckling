@@ -18,7 +18,7 @@
    [clj-duckling.resource :as res]
    [clj-duckling.dims.api :as dims]
    [clj-duckling.util.time :as time]
-   [clj-duckling.util :as util]))
+   [clj-duckling.util.core :as util]))
 
 (defonce rules-map (atom {}))
 (defonce corpus-map (atom {}))

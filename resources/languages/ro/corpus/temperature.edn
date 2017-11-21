@@ -3,12 +3,12 @@
                  "37 ° celsius"
                  "37 grade Celsius"
                  "treizeci si sapte celsius"]
-          :checks [#corpus/temperature [37 "celsius"]]}
+          :checks [#clj-duckling/corpus "(temperature 37 \"celsius\")"]}
          {:text ["70°F"
                  "70 ° Fahrenheit"
                  "70 grade F"
                  "saptezeci Fahrenheit"]
-          :checks [#corpus/temperature [70 "fahrenheit"]]}
+          :checks [#clj-duckling/corpus "(temperature 70 \"fahrenheit\")"]}
          {:text ["45°"
                  "45 grade"]
-          :checks [#corpus/temperature [45 "degree"]]}]}
+          :checks [#clj-duckling/corpus "(temperature 45 \"degree\")"]}]}

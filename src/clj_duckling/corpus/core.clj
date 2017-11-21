@@ -9,7 +9,5 @@
   (get-corpus [this] "Get corpus")
   (set-logger! [this newlogger] "Set logger"))
 
-(s/def :corpus/dirpath string?)
-(s/def :corpus/logger map?)
 
 

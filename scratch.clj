@@ -304,3 +304,17 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
                   (merge-with into res item)))
              {:context {} :tests []}
              (file-seq (io/file dirpath)))) 
+
+;; 2017-11-21
+(def t "corpus/temperature") 
+(def v "[37 \"celsius\"]") 
+
+  (def t1 "eval") 
+(require '[clojure.string :as str]) 
+(let [[domain func] (str/split t1 #"/")
+      ]
+domain
+  )
+
+
+(str/replace "ab \" cd" #"\"" "\\\"") 

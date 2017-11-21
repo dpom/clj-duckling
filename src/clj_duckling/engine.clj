@@ -10,7 +10,7 @@
             [duct.logger :refer [log]] 
             [clj-duckling.dims.time.prod]
             [clj-duckling.dims.time.api :as time]
-            [clj-duckling.util :as util]))
+            [clj-duckling.util.core :as util]))
 
 ;;
 ;; Lookup and basic matching functions, used by patterns in rules
