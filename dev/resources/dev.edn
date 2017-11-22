@@ -6,6 +6,12 @@
                            :dirpath "resources/languages/ro/corpus"
                            :logger   #ig/ref :duct.logger/timbre}
 
+ :clj-duckling.engine/edn {:id "dev-rules-edn"
+                           :language "ro"
+                           :dirpath "resources/languages/ro/rules"
+                           :logger   #ig/ref :duct.logger/timbre}
+
+
  :duct.logger/timbre {:level    :debug
                       :set-root-config? true
                       :appenders {:duct.logger.timbre/spit #ig/ref :duct.logger.timbre/spit,

@@ -310,25 +310,35 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 (def t "corpus/temperature") 
 (def v "[37 \"celsius\"]") 
 
-  (def t1 "eval") 
-(require '[clojure.string :as str]) 
-(let [[domain func] (str/split t1 #"/")
-      ]
-domain
-  )
+(def t1 "eval") 
 
+(require '[clojure.string :as str]) 
 
 (str/replace "ab \" cd" #"\"" "\\\"") 
 
-(def rules1 (-> "languages/ro/rules/temperature.clj" 
+(time (def rules1 (-> "languages/ro/rules/temperature.clj" 
                 io/resource
                 slurp
                 read-string
-                clj-duckling.engine/rules)) 
+                clj-duckling.engine/rules))) 
 
 
 (require '[clj-duckling.engine.edn :as eng]) 
 
 (def logger (:duct.logger/timbre system)) 
 
-(def rules2 (eng/read-rules-file "resources/languages/ro/rules/temperature.clj" logger)) 
+(time (def rules2 (eng/read-rules-file "resources/languages/ro/rules/temperature.edn" logger))) 
+
+;; 2017-11-22
+
+(= (first rules1) (first rules2)) 
+
+(def rules3 (-> "languages/ro/rules/temperature.clj" 
+                io/resource
+                slurp
+                read-string)) 
+
+
+(time (def rules2 (eng/read-rules-file "tmp/temperature.edn" logger))) 
+
+(get-in system [:clj-duckling.engine/edn :rules]) 

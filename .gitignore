@@ -19,3 +19,4 @@ dev/resources/local.edn
 dev/src/local.clj
 /logs
 /tmp.edn
+/tmp

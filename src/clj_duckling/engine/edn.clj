@@ -88,15 +88,17 @@
 
 (defn rule-reader
   [{:keys [name pattern production]}]
+  ;; (println (format "rule-reader: name = %s, pattern = %s, production = %s" name pattern production))
   (let [duckling-helper-ns (the-ns 'clj-duckling.dims.time.prod)
         p (binding [*ns* duckling-helper-ns] (eval (read-string pattern)))
-        p-vec (if (vector? p) p [p])]
+        p-vec (if (vector? p) p [p])
+        prod (read-string production)]
     {:name name
      :pattern (map pattern-fn p-vec)
      :production (binding [*ns* duckling-helper-ns]
                    (eval `(fn ~(vec (map #(symbol (str "%" %))
                                          (range 1 (inc (count p-vec)))))
-                            ~production)))}))
+                            ~prod)))}))
 
 
 
@@ -127,7 +129,7 @@
               (filter #(.matches grammar-matcher (.getFileName (.toPath ^File %))))
               (map #(.getAbsolutePath ^File %))
               (map #(read-rules-file % @logger)))]
-      (reset! rules (into xf (file-seq (io/file dirpath))))))
+      (reset! rules (into [] xf (file-seq (io/file dirpath))))))
   (get-rules [this] @rules)
   (get-id [this] id)
   (set-logger! [this newlogger] (reset! logger newlogger))

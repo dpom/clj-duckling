@@ -1,0 +1,14 @@
+[#clj-duckling.engine/rule {:name "RON", :pattern "#\"(?i)(roni?|lei|leu)\"", :production "{:dim :unit, :unit \"RON\"}"}
+ #clj-duckling.engine/rule {:name "ban", :pattern "#\"(?i)(bani?)\"", :production "{:dim :unit, :unit \"ban\"}"}
+ #clj-duckling.engine/rule {:name "$", :pattern "#\"\\$|dolari?\"", :production "{:dim :unit, :unit \"USD\"}"}
+ #clj-duckling.engine/rule {:name "€", :pattern "#\"(?i)€|([e€]uro?)\"", :production "{:dim :unit, :unit \"EUR\"}"}
+ #clj-duckling.engine/rule {:name "£", :pattern "#\"(?i)£|lir[eaă]?\"", :production "{:dim :unit, :unit \"GBP\"}"}
+ #clj-duckling.engine/rule {:name "USD", :pattern "#\"(?i)US[D\\$]\"", :production "{:dim :unit, :unit \"USD\"}"}
+ #clj-duckling.engine/rule {:name "GBP", :pattern "#\"(?i)GBP\"", :production "{:dim :unit, :unit \"GBP\"}"}
+ #clj-duckling.engine/rule {:name "cent", :pattern "#\"(?i)cen[tț]i?|c|¢\"", :production "{:dim :unit, :unit \"cent\"}"}
+ #clj-duckling.engine/rule {:name "<amount> <unit>", :pattern "[(dim :number) (dim :unit)]", :production "{:dim :amount-of-money, :value (:value %1), :unit (:unit %2), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "<amount> de <unit>", :pattern "[(dim :number) #\"(?i)de\" (dim :unit)]", :production "{:dim :amount-of-money, :value (:value %1), :unit (:unit %3), :fields {(:unit %1) (:value %3)}}"}
+ #clj-duckling.engine/rule {:name "intersect (X lei and Y bani)", :pattern "[(dim :amount-of-money (fn* [p1__3545#] (= (:unit p1__3545#) \"RON\"))) #\"(?i)([sș]i)\" (dim :amount-of-money (fn* [p1__3546#] (= (:unit p1__3546#) \"ban\")))]", :production "(compose-money %1 %3)"}
+ #clj-duckling.engine/rule {:name "intersect (X $ and Y cents)", :pattern "[(dim :amount-of-money (fn* [p1__3547#] (= (:unit p1__3547#) \"USD\"))) #\"(?i)([sș]i)\" (dim :amount-of-money (fn* [p1__3548#] (= (:unit p1__3548#) \"cent\")))]", :production "(compose-money %1 %3)"}
+ #clj-duckling.engine/rule {:name "about <amount-of-money>", :pattern "[#\"(?i)cam|aprox(\\.|imativ)?|aproape|[iî]n jur (de)?\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"approximate\")"}
+ #clj-duckling.engine/rule {:name "exactly <amount-of-money>", :pattern "[#\"(?i)exact\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"exact\")"}]
