@@ -218,8 +218,8 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
           (partition-by empty?)
           (remove (fn [item] (str/blank? (first item)))))
       items  (with-open [rdr (io/reader filename)]
-          (into [] xf (line-seq rdr)))]
- items)
+               (into [] xf (line-seq rdr)))]
+  items)
 
 
 (defn build
@@ -241,11 +241,11 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
   (with-open [rdr (io/reader filename)]
     (transduce xf build {} (line-seq rdr))))
 
-(def s ":reference-time (time/t -2 2013 2 12 4 30 0)") 
-(let [index (str/index-of s " ") 
+(def s ":reference-time (time/t -2 2013 2 12 4 30 0)")
+(let [index (str/index-of s " ")
       k (str/join "" (take index s))
       val (str/split (str/join "" (drop-last (drop (+ index 2) s))) #"\s")]
-  (format "%s #%s [%s]" k (first val) (str/join " " (rest val)))) 
+  (format "%s #%s [%s]" k (first val) (str/join " " (rest val))))
 
 
 (def s "  ; Context map
@@ -253,19 +253,19 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
   {:reference-time (time/t -2 2013 2 12 4 30 0)
    :min (time/t -2 1900)
    :max (time/t -2 2100)}
-") 
+  ")
 
-(def s "{}") 
+(def s "{}")
 (let [xf (comp
           (map str/trim)
           (remove (fn [item] (str/starts-with? item ";")))
           (map #(str/replace % #"\(time/t" "#time/t ["))
           (map #(str/replace % #"\)" "]"))
           )]
-  (into [] xf (str/split s #"\n"))) 
+  (into [] xf (str/split s #"\n")))
 
 
-(let [grammar-matcher (.getPathMatcher 
+(let [grammar-matcher (.getPathMatcher
                        (java.nio.file.FileSystems/getDefault)
                        "glob:*.{clj}")]
   (->> "resources/languages/ro/corpus"
@@ -273,22 +273,22 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
        file-seq
        (filter #(.isFile %))
        (filter #(.matches grammar-matcher (.getFileName (.toPath %))))
-       (mapv #(.getAbsolutePath %)))) 
+       (mapv #(.getAbsolutePath %))))
 
 ;; 2017-11-20
 
-(require [clj-duckling.corpus.edn :refer [read-corpus-file]]) 
+(require [clj-duckling.corpus.edn :refer [read-corpus-file]])
 
-(def dirpath "resources/languages/ro/corpus") 
+(def dirpath "resources/languages/ro/corpus")
 
- 
 
-(require '[clj-duckling.corpus.edn :as corpus]) 
 
-(def edncorpus (get system corpus/ukey)) 
+(require '[clj-duckling.corpus.edn :as corpus])
 
-@(get edncorpus :corpus) 
-(def logger @(get edncorpus :logger)) 
+(def edncorpus (get system corpus/ukey))
+
+@(get edncorpus :corpus)
+(def logger @(get edncorpus :logger))
 
 (let [grammar-matcher (.getPathMatcher
                        (java.nio.file.FileSystems/getDefault)
@@ -300,45 +300,60 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
           (map #(corpus/read-corpus-file % logger))
           )]
   (transduce xf (completing (fn [res item]
-                  (fipp (format "** res: %s\n item: %s" res item))
-                  (merge-with into res item)))
+                              (fipp (format "** res: %s\n item: %s" res item))
+                              (merge-with into res item)))
              {:context {} :tests []}
-             (file-seq (io/file dirpath)))) 
+             (file-seq (io/file dirpath))))
 
 ;; 2017-11-21
 
-(def t "corpus/temperature") 
-(def v "[37 \"celsius\"]") 
+(def t "corpus/temperature")
+(def v "[37 \"celsius\"]")
 
-(def t1 "eval") 
+(def t1 "eval")
 
-(require '[clojure.string :as str]) 
+(require '[clojure.string :as str])
 
-(str/replace "ab \" cd" #"\"" "\\\"") 
+(str/replace "ab \" cd" #"\"" "\\\"")
 
-(time (def rules1 (-> "languages/ro/rules/temperature.clj" 
-                io/resource
-                slurp
-                read-string
-                clj-duckling.engine/rules))) 
+(time (def rules1 (-> "languages/ro/rules/temperature.clj"
+                      io/resource
+                      slurp
+                      read-string
+                      clj-duckling.engine/rules)))
 
 
-(require '[clj-duckling.engine.edn :as eng]) 
+(require '[clj-duckling.engine.edn :as eng])
 
 (def logger (:duct.logger/timbre system)) 
 
-(time (def rules2 (eng/read-rules-file "resources/languages/ro/rules/temperature.edn" logger))) 
+(time (def rules2 (eng/read-rules-file "resources/languages/ro/rules/temperature.edn" logger)))
 
 ;; 2017-11-22
 
-(= (first rules1) (first rules2)) 
+(= (first rules1) (first rules2))
 
-(def rules3 (-> "languages/ro/rules/temperature.clj" 
+(def rules3 (-> "languages/ro/rules/temperature.clj"
                 io/resource
                 slurp
-                read-string)) 
+                read-string))
 
 
-(time (def rules2 (eng/read-rules-file "tmp/temperature.edn" logger))) 
+(time (def rules2 (eng/read-rules-file "tmp/temperature.edn" logger)))
 
-(get-in system [:clj-duckling.engine/edn :rules]) 
+(get-in system [:clj-duckling.engine/edn :rules])
+
+
+(require '[clj-duckling.engine.edn :as eng])
+
+(crt/with-progress-reporting
+  (crt/bench (-> "languages/ro/rules/temperature.clj"
+                 io/resource
+                 slurp
+                 read-string
+                 clj-duckling.engine/rules) :verbose))
+
+
+(crt/with-progress-reporting
+  (crt/bench (eng/read-rules-file "tmp/temperature.edn" logger) :verbose))
+

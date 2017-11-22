@@ -7,6 +7,7 @@
    [clojure.spec.alpha :as s]
    [clojure.edn :as edn]
    [duct.logger :refer [log Logger]]
+   clj-duckling.util.corpus
    [clj-duckling.corpus.core :as core])
   (:import [java.io File]))
 
