@@ -129,7 +129,7 @@
               (filter #(.matches grammar-matcher (.getFileName (.toPath ^File %))))
               (map #(.getAbsolutePath ^File %))
               (map #(read-rules-file % @logger)))]
-      (reset! rules (into [] xf (file-seq (io/file dirpath))))))
+      (reset! rules (flatten (into [] xf (file-seq (io/file dirpath)))))))
   (get-rules [this] @rules)
   (get-id [this] id)
   (set-logger! [this newlogger] (reset! logger newlogger))

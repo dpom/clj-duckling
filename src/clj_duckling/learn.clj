@@ -135,8 +135,9 @@
 
 (defn train-classifiers
   "Given a corpus and a set of rules, train a classifier per rule"
-  [corpus rules fextractor]
-  ;; (log/debugf "training with %d tests and %d rules" (count (:tests corpus)) (count rules))
+  [corpus rules fextractor logger]
+  (log logger :debug ::train-classifiers  {:corpus-cnt (count (:tests corpus))
+                                           :rules-cnt (count rules)})
   (let [dataset (corpus->dataset corpus rules fextractor)]
     (into {} (for [[name examples :as example] dataset]
                [name (train-rule example)]))))

@@ -357,3 +357,45 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 (crt/with-progress-reporting
   (crt/bench (eng/read-rules-file "tmp/temperature.edn" logger) :verbose))
 
+;; 2017-11-23
+
+
+(require '[clj-duckling.model.classifier :as c]) 
+(require '[clj-duckling.model.core :as m]) 
+
+(def model (get system c/ukey)) 
+
+(def classif (m/get-model model)) 
+
+;; 2017-11-25
+
+(require '[clj-duckling.engine.edn :as rul])
+
+(def engine (get system rul/ukey)) 
+
+(count @(:rules engine)) 
+
+
+(first @(:rules engine)) 
+
+(first classif) 
+
+(require '[taoensso.nippy :as nippy])
+
+(def frozen-classif (nippy/freeze classif)) 
+
+(def rules @(:rules engine)) 
+(def model (get system c/ukey)) 
+
+(def classif (m/get-model model)) 
+
+
+(def logger @(:logger model)) 
+
+(require '[clj-duckling.engine :as engine]) 
+
+(def s "informatii despre comanda 123456789")  
+
+(let [stash (engine/pass-all s rules nil)]
+stash
+  ) 
