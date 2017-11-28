@@ -1,5 +1,5 @@
-(ns duckling.dims.time.obj-test
-  (:use [duckling.dims.time.obj]
+(ns clj-duckling.dims.time.obj-test
+  (:use [clj-duckling.dims.time.obj]
         [clojure.test]))
 
 (def today (t 0 2014 8 30 5 30 18))

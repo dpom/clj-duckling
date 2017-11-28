@@ -1,4 +1,4 @@
-(ns clj-duckling.helpers
+(ns clj-duckling.util.helpers
   "This namespace contains the common helpers used in rules"
   (:require
    [clj-time.core :as t]

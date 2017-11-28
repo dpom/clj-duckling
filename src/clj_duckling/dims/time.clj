@@ -1,6 +1,6 @@
 (ns clj-duckling.dims.time
   (:require
-   [clj-duckling.engine :refer [export-value]]))
+   [clj-duckling.util.engine :refer [export-value]]))
 
 (defn export-time-value
   [{:keys [start end grain] :as value} direction date-fn]

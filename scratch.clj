@@ -396,6 +396,26 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 
 (def s "informatii despre comanda 123456789")  
 
-(let [stash (engine/pass-all s rules nil)]
-stash
-  ) 
+(let [stash1 (engine/pass-all s rules nil)
+      stash2 (map #(if (map? %1) (assoc %1 :index %2) %1)
+                 stash1
+                 (iterate inc 0))
+      winners (->> stash
+                   (filter :pos)
+                   (select-winners
+                    #(compare-tokens %1 %2 classifiers dim-label)
+                    #(learn/route-prob % classifiers)
+                    #(engine/resolve-token % context module)))
+      ]
+      winners) 
+
+;; 2017-11-28
+
+
+(require '[clj-duckling.tool.core :as core])  
+(require '[clj-duckling.tool.duckling :as tl])  
+
+(def tool (get system tl/ukey)) 
+(def model (:model tool)) 
+(def rules (:rules tool)) 
+(def logger @(:logger tool)) 

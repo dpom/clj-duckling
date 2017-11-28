@@ -21,7 +21,7 @@
   "Matching hashmap over hashmap. Keys can be functions.
   WARNING THIS IS NOT RECURSIVE FOR THE MOMENT"
   [pattern input]
-  (every? (fn [[key val]] (= val (key input)))
+  (every? (fn [[k v]] (= v (k input)))
           pattern))
 
 (defn valid-limit?

@@ -50,6 +50,19 @@ different features approaches.
 
 
 * Architecture
+  
+** Modules Dependency
+
+#+begin_src dot :file img/Modules.png :cmdline -Kdot -Tpng
+digraph G {
+    corpus -> classifier;
+    engine -> classifier;
+    classifier -> tool;
+    engine -> tool;
+}
+#+end_src
+
+
 
 ** core
 

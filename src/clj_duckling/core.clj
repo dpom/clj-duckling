@@ -13,9 +13,9 @@
    [clj-duckling.system :as sys]
    [clj-duckling.corpus.core :as corpus]
    clj-duckling.spec
-   [clj-duckling.engine :as engine]
-   [clj-duckling.learn :as learn]
-   [clj-duckling.resource :as res]
+   [clj-duckling.util.engine :as engine]
+   [clj-duckling.util.learn :as learn]
+   ;; [clj-duckling.resource :as res]
    [clj-duckling.dims.api :as dims]
    [clj-duckling.util.time :as time]
    [clj-duckling.util.core :as util]))
@@ -257,10 +257,8 @@
 
      ;; 3. ask for details
      (printf "For further info: (details idx) where 1 <= idx <= %d\n" (dec (count stash)))
-     (def details (fn [n]
-                    (print-tokens (nth stash n) (get-classifier module-id))))
-     (def token (fn [n]
-                  (nth stash n))))))
+     (defn details [n] (print-tokens (nth stash n) (get-classifier module-id)))
+     (defn token [n] (nth stash n)))))
 
 ;;--------------------------------------------------------------------------
 ;; Configuration loading
@@ -272,7 +270,7 @@
   (->> ["corpus" "rules"]
        (map (fn [dir]
               (let [files (->> (format "languages/%s/%s" lang dir)
-                               res/get-files
+                               ;; res/get-files
                                (remove #(clojure.string/starts-with? % "_"))
                                (map #(subs % 0 (- (count %) 4)))
                                sort
@@ -385,7 +383,7 @@
   ([{:keys [languages config logger] :or {logger (util/get-default-logger)}}]
    (let [langs (seq languages)
          lang-config (when (or langs (empty? config))
-                       (cond-> (set (res/get-subdirs "languages"))
+                       (cond->  (set #{}) ;; (set (res/get-subdirs "languages"))
                          langs (set/intersection (set langs))
                          true gen-config-for-langs))
          config (merge lang-config config)]
@@ -443,28 +441,22 @@
   ([]
    (run (keys @corpus-map)))
   ([module-id]
-   (loop [[mod & more] (if (seq? module-id) module-id [module-id])
+   (loop [[md & more] (if (seq? module-id) module-id [module-id])
           line 0
           acc []]
-     (if mod
-       (let [output (run-corpus (mod @corpus-map) mod)
+     (if md
+       (let [output (run-corpus (md @corpus-map) md)
              failed (remove (comp (partial = 0) first) output)]
          (doseq [[[error-count text error-msg] i] (map vector failed (iterate inc line))]
            (printf "%d FAIL \"%s\"\n    Expected %s\n" i text (first error-msg))
            (doseq [got (second error-msg)]
              (printf "    Got      %s\n" got)))
-         (printf "%s: %d examples, %d failed.\n" mod (count output) (count failed))
-         (recur more (+ line (count failed)) (concat acc (map (fn [[_ t _]] [mod t]) failed))))
+         (printf "%s: %d examples, %d failed.\n" md (count output) (count failed))
+         (recur more (+ line (count failed)) (concat acc (map (fn [[_ t _]] [md t]) failed))))
        (defn c [n]
-         (let [[mod text] (nth acc n)]
-           (printf "(play %s \"%s\")\n" mod text)
-           (play mod text)))))))
-
-(defmethod ig/init-key ::load [_ params]
-  (let [cfg (load! params)
-        logger (get params :logger (util/get-default-logger))]
-    (log logger :info ::loaded {:config cfg})
-    cfg))
+         (let [[md text] (nth acc n)]
+           (printf "(play %s \"%s\")\n" md text)
+           (play md text)))))))
 
 ;;--------------------------------------------------------------------------
 ;; Public API
@@ -499,46 +491,46 @@
 ;; The stuff below is specific to Wit.ai and will be moved out of Duckling
 ;;--------------------------------------------------------------------------
 
-(defn- generate-context
-  "Wit.ai internal. Will move to Wit."
-  [base-context]
-  (p/?> base-context
-        (instance? org.joda.time.DateTime (:reference-time base-context))
-        (assoc :reference-time {:start (:reference-time base-context)
-                                :grain :second})))
+;; (defn- generate-context
+;;   "Wit.ai internal. Will move to Wit."
+;;   [base-context]
+;;   (p/?> base-context
+;;         (instance? org.joda.time.DateTime (:reference-time base-context))
+;;         (assoc :reference-time {:start (:reference-time base-context)
+;;                                 :grain :second})))
 
-(defn extract
-  "API used by Wit.ai (will be moved to Wit)
-   targets is a coll of maps {:module :dim :label} for instance:
-   {:module fr$core, :dim duration, :label wit$duration} to get duration results
-   Returns a single coll of tokens with :body :value :start :end :label (=wisp) :latent"
-  [sentence context leven-stash targets]
-  {:pre [(string? sentence)
-         (map? context)
-         (:reference-time context)
-         (vector? targets)]}
-  (let [logger (get context :logger (util/get-default-logger))]
-    (try
-    (log logger :info ::extract  {:sentence sentence :targets targets})
-    (letfn [(extract'
-              [module targets] ; targets specify all the dims we should extract
-              (let [module (keyword module)
-                    pic-context (generate-context context)]
-                (when-not (module @rules-map)
-                  (throw (ex-info "Unknown duckling module" {:module module})))
-                (->> (analyze sentence pic-context module targets leven-stash)
-                     :winners
-                     (map #(assoc % :value (engine/export-value % {:date-fn str})))
-                     (map #(select-keys % [:label :body :value :start :end :latent])))))]
-      (->> targets
-           (group-by :module) ; we want to run each config only once
-           (mapcat (fn [[module targets]] (extract' module targets)))
-           vec))
-    (catch Exception e
-      (let [err {:e e
-                 :sentence sentence
-                 :context context
-                 :leven-stash leven-stash
-                 :targets targets}]
-        (log logger :error ::extract-error err)
-        [])))))
+;; (defn extract
+;;   "API used by Wit.ai (will be moved to Wit)
+;;    targets is a coll of maps {:module :dim :label} for instance:
+;;    {:module fr$core, :dim duration, :label wit$duration} to get duration results
+;;    Returns a single coll of tokens with :body :value :start :end :label (=wisp) :latent"
+;;   [sentence context leven-stash targets]
+;;   {:pre [(string? sentence)
+;;          (map? context)
+;;          (:reference-time context)
+;;          (vector? targets)]}
+;;   (let [logger (get context :logger (util/get-default-logger))]
+;;     (try
+;;     (log logger :info ::extract  {:sentence sentence :targets targets})
+;;     (letfn [(extract'
+;;               [module targets] ; targets specify all the dims we should extract
+;;               (let [module (keyword module)
+;;                     pic-context (generate-context context)]
+;;                 (when-not (module @rules-map)
+;;                   (throw (ex-info "Unknown duckling module" {:module module})))
+;;                 (->> (analyze sentence pic-context module targets leven-stash)
+;;                      :winners
+;;                      (map #(assoc % :value (engine/export-value % {:date-fn str})))
+;;                      (map #(select-keys % [:label :body :value :start :end :latent])))))]
+;;       (->> targets
+;;            (group-by :module) ; we want to run each config only once
+;;            (mapcat (fn [[module targets]] (extract' module targets)))
+;;            vec))
+;;     (catch Exception e
+;;       (let [err {:e e
+;;                  :sentence sentence
+;;                  :context context
+;;                  :leven-stash leven-stash
+;;                  :targets targets}]
+;;         (log logger :error ::extract-error err)
+;;         [])))))

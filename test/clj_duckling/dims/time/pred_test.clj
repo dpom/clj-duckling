@@ -1,6 +1,6 @@
-(ns duckling.dims.time.pred-test
+(ns clj-duckling.dims.time.pred-test
   (:use [clojure.test]
-        [duckling.dims.time.pred])
+        [clj-duckling.dims.time.pred])
   (:refer-clojure :exclude [cycle resolve]))
 
 (def evening (intervals (hour 18 false) (hour 0 false) false))

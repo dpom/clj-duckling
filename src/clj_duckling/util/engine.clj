@@ -1,4 +1,4 @@
-(ns clj-duckling.engine
+(ns clj-duckling.util.engine
   "This component parses a phrase and extracts information based on rules.
   The two main phases are matching and production.
   1. rules are transformed into objets via rules macro
@@ -44,8 +44,7 @@
                        :end (+ position pos (count word))
                        :text word
                        :groups groups}))]
-      (->> matches
-           (filter #(util/separated-substring? s (:pos %) (:end %)))))
+       (filter #(util/separated-substring? s (:pos %) (:end %)) matches))
     (catch Exception e
       (throw (ex-info "@lookup-re" {:exception e :s s :regex regex})))))
 
@@ -101,8 +100,7 @@
   "Parses a set of rules and 'add' them into 'the-rules'.
   Can be called several times, since rules might spread into several files."
   [forms]
-  (->> (partition 3 forms)
-       (mapv (partial apply build-rule))))
+   (mapv (partial apply build-rule) (partition 3 forms)))
 
 ;;
 ;; Runtime parsing (core algorithm)

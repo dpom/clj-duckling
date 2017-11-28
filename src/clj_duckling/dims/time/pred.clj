@@ -1,8 +1,8 @@
 (ns clj-duckling.dims.time.pred
   (:refer-clojure :exclude [cycle resolve])
-  (:use
-   [plumbing.core])
   (:require
+   [clojure.spec.alpha :as s]
+   [plumbing.core :as p]
    [duct.logger :refer [log]] 
    [clj-duckling.util.time :as t]))
 
@@ -143,12 +143,13 @@
   "A sequence of each year, or month, or week, etc.
   Used for 'this year', 'next month', 'last week'.."
   [grain]
-  {:pre [#{:year :quarter :month :week :day :hour :minute :second} grain]}
   (fn& grain [t _]
        (let [anchor (t/round t grain)]
          [(iterate #(t/plus % grain 1) anchor)
           (next (iterate #(t/minus % grain 1) anchor))])))
 
+(s/fdef cycle
+        :args (s/cat :grain #{:year :quarter :month :week :day :hour :minute :second}))
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Second order functions
 
@@ -299,7 +300,7 @@
                                                       (map #(f % ctx))
                                                       (remove nil?)
                                                       (take-while #(t/start-before-the-end-of? t %))
-                                                      (?>> (not dont-reverse?) reverse))
+                                                      (p/?>> (not dont-reverse?) reverse))
 
                  ; times remaining ahead
                                            ah-ah (->> seq1-f
@@ -317,7 +318,7 @@
                                                       (map #(f % ctx))
                                                       (remove nil?)
                                                       (take-while #(not (t/start-before-the-end-of? t %)))
-                                                      (?>> (not dont-reverse?) reverse))
+                                                      (p/?>> (not dont-reverse?) reverse))
 
                  ; times remaining behing
                                            bh-bh (->> seq1-b
@@ -384,7 +385,7 @@
           (->> (vector ahead first-behind)
                (remove nil?)
                ; FIXME use timezone in resolution instead of just adding the field
-               (?>> timezone (map #(assoc % :timezone timezone)))
+               (p/?>> timezone (map #(assoc % :timezone timezone)))
                (map #(assoc token :value %))
                ; TEMP also assoc a 'values' key with the 3 future hypotheses
                ; this key will be used in api/export-value
@@ -396,13 +397,3 @@
       (print-token token)
       (throw (ex-info (format "Error while resolving %s" (dissoc token :route)) {})))))
 
-; Debug utlity
-
-(defn show [f]
-  (time
-   (let [now (t/t 2013 2 12 4 30)
-         ctx {:reference-time (t/t 2013 2 12 4 30)
-              :min (t/t 2000)
-              :max (t/t 2018)}]
-     (prn (take 5 (first (f now ctx))))
-     (prn (take 5 (second (f now ctx)))))))

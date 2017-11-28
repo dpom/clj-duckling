@@ -1,6 +1,9 @@
 {
-    ; :clj-duckling.core/load {:languages ["ro" "en" "fr"]
-                               ;                          :logger   #ig/ref :duct.logger/timbre}
+ :clj-duckling.tool/duckling {:id "dev-tool"
+                              :model #ig/ref :clj-duckling.model/classifier
+                              :rules #ig/ref :clj-duckling.engine/edn
+                              :logger   #ig/ref :duct.logger/timbre}
+
 
  :clj-duckling.model/classifier {:id "dev-classifier"
                                  :language "ro"

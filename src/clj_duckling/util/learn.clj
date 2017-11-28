@@ -1,10 +1,10 @@
-(ns clj-duckling.learn
+(ns clj-duckling.util.learn
   (:require
    [clojure.set :as sets]
    [clj-time.core :as t]
    [duct.logger :refer [log]] 
    [clojure.pprint :refer [pprint]]
-   [clj-duckling.engine :as engine]
+   [clj-duckling.util.engine :as engine]
    [clj-duckling.ml.naivebayes :as naive]
    [clj-duckling.util.core :as util]))
 
@@ -63,11 +63,12 @@
                          (for [tok fc-tokens-ok]
                            ;; all subtokens of OK fully covering tokens which have a :rule
                            (sets/select :rule (subtokens tok))))
-        tokens-ko (-> (apply sets/union
-                             (for [tok fc-tokens-ko]
-                               ;; remove OK tokens from KO set
-                               (sets/select :rule (subtokens tok))))
-                      (sets/difference tokens-ok))
+        tokens-ko (sets/difference
+                       (apply sets/union
+                              (for [tok fc-tokens-ko]
+                                ;; remove OK tokens from KO set
+                                (sets/select :rule (subtokens tok))))
+                       tokens-ok)
         f (fn [ds tok]
             (update-in ds [(-> tok :rule :name)]
                        #(conj % [(feature-extractor tok) true])))

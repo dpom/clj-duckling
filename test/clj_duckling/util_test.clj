@@ -1,6 +1,6 @@
-(ns duckling.util-test
+(ns clj-duckling.util-test
   (:use [clojure.test]
-        [duckling.util]))
+        [clj-duckling.util.core]))
 
 (deftest mergings
   (is (= {:foo 2 :bar 2} (merge-according-to {:foo +} {:foo 1 :bar 2} {:foo 1}))))

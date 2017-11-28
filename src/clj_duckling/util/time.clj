@@ -127,20 +127,24 @@
   [tt]
   {:start (end tt) :grain (:grain tt)})
 
-(defn year [t]
+(defn year
   "Returns the year of the start of a time grain"
+ [t]
   (time/year (:start t)))
 
-(defn month [t]
+(defn month
   "Returns the month of a time grain"
+ [t]
   (time/month (:start t)))
 
-(defn day-of-week [t]
+(defn day-of-week
   "Returns the day of week of a time grain"
+ [t]
   (time/day-of-week (:start t)))
 
-(defn day [t]
+(defn day
   "Returns the day of month"
+ [t]
   (time/day (:start t)))
 
 (defn hour [t]
@@ -209,8 +213,9 @@
 (defn before? [t1 t2]
   (time/before? (:start t1) (:start t2)))
 
-(defn days-in-month [tt]
+(defn days-in-month
   "Returns the number of days in the month of tt"
+ [tt]
   (time/day (time/last-day-of-the-month (:start tt))))
 
 (defn now []

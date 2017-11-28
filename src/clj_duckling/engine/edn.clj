@@ -46,8 +46,7 @@
                        :end (+ position pos (count word))
                        :text word
                        :groups groups}))]
-      (->> matches
-           (filter #(util/separated-substring? s (:pos %) (:end %)))))
+       (filter #(util/separated-substring? s (:pos %) (:end %)) matches))
     (catch Exception e
       (throw (ex-info "@lookup-re" {:exception e :s s :regex regex})))))
 

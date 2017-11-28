@@ -3,7 +3,7 @@
   (:require
    [integrant.core :as ig]
    [duct.logger :refer [log]]
-   [clj-duckling.learn :as learn]
+   [clj-duckling.util.learn :as learn]
    [clj-duckling.engine.core :as eng]
    [clj-duckling.corpus.core :as corp]
    [clj-duckling.model.core :as core]))
