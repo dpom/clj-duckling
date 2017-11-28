@@ -419,3 +419,6 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 (def model (:model tool)) 
 (def rules (:rules tool)) 
 (def logger @(:logger tool)) 
+
+
+(require '[clj-duckling.util.engine :as engine]) 

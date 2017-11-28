@@ -1,10 +1,10 @@
-(defproject dpom/clj-duckling "0.7-dev05"
+(defproject dpom/clj-duckling "0.7-dev06"
   :description "A Clojure library that parses text into structured data"
   :license {:url "https://github.com/wit-ai/duckling"
             :comments "see LICENSE"}
   :url "https://dpom.github.io/clj-duckling/"
   :min-lein-version "2.0.0"
-  :dependencies [[org.clojure/clojure "1.9.0-RC1"]
+  :dependencies [[org.clojure/clojure "1.9.0-RC2"]
                  [environ "1.1.0"]
                  [clj-time "0.14.2"]
                  [integrant "0.6.1"]
@@ -15,8 +15,8 @@
   :pedantic? :warning
   :plugins [[s3-wagon-private "1.1.2" :exclusions [commons-logging commons-codec]]
             [lein-ancient "0.6.10" :exclusions [commons-logging org.clojure/clojure]]
-            [jonase/eastwood "0.2.4"]
-            [lein-kibit "0.1.6-beta2" :exclusions [org.clojure/clojure]]
+            [jonase/eastwood "0.2.6-beta2"]
+            [lein-kibit "0.1.6" :exclusions [org.clojure/clojure]]
             [lein-cljfmt "0.5.6" :exclusions [org.clojure/clojure rewrite-clj]]
             [lein-environ "1.1.0"]
             [lein-codox "0.10.3" :exclusions [org.clojure/clojure]]]
@@ -28,7 +28,7 @@
                    :test-paths ["src"]
                    :dependencies [[integrant/repl "0.2.0"]
                                   [org.clojure/tools.trace "0.7.9"]
-                                  [fipp "0.6.10"]
+                                  [fipp "0.6.12"]
                                   [criterium "0.4.4"]
                                   [cheshire "5.8.0"]]}
              :uberjar {:aot [clj-duckling.core]}}
