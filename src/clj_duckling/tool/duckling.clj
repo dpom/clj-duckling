@@ -76,13 +76,15 @@
   targets (coll): a coll of {:dim dim :label label} : only winners of these dims are
                   kept, and they receive a :label key = the label provided.
                   If no targets specified, all winners are returned.
-  base-stash ():
+  model (Model):
+  rules (Enginef):
+  logger (): current logger
 
-  Returns:
+  Returns:f
   (map): a map with 2 keys :stash and :winners
   "
   [s targets context model rules logger]
-  (let [stash1 (engine/pass-all s rules nil)
+  (let [stash1 (engine/pass-all s rules logger)
         ;; add an index to tokens in the stash
         stash (map #(if (map? %1) (assoc %1 :index %2) %1)
                    stash1

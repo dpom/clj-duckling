@@ -440,3 +440,337 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
                     #(engine/resolve-token % context module)))
       ]
   winners)
+
+
+
+(def s "informatii despre ultima comanda") 
+(engine/pass-all s rules logger) 
+
+(require 
+'[clj-duckling.engine.core :as eng]
+'[clj-duckling.model.core :as modl]
+ ) 
+
+
+(tl/analyze s [{:dim "order" :label "order"}] {} (modl/get-model model) (eng/get-rules rules) logger)  
+
+
+(tl/analyze s {} {} (modl/get-model model) (eng/get-rules rules) logger)  
+
+
+(tl/analyze "Vreau un cadou sub 300 lei pentru un baiat 5 ani" [] {} (modl/get-model model) (eng/get-rules rules) logger)  
+
+(def targets [{:dim "gender" :label "sex"}
+              {:dim "duration" :label "age"}
+              {:dim "budget" :label "budget"}]) 
+
+(fipp (:winners (tl/analyze "Vreau un cadou sub 300 lei pentru un baiat 5 ani" targets {} (modl/get-model model) (eng/get-rules rules) logger))) 
+
+
+({:index 1,
+  :dim :gender,
+  :rule {:name "male",
+         :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                           "0x49e35d09"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28402@49e35d09"]),
+         :production #object[clj_duckling.dims.time.prod$eval34597$fn__34598
+                             "0x1c6c126e"
+                             "clj_duckling.dims.time.prod$eval34597$fn__34598@1c6c126e"]},
+  :value :male,
+  :start 37,
+  :pos 37,
+  :route [{:pos 37, :end 42, :text "baiat", :groups [nil]}],
+  :label "sex",
+  :end 42,
+  :body "baiat",
+  :text "baiat"}
+ {:index 49,
+  :dim :duration,
+  :rule {:name "<integer> <unit-of-duration>",
+         :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                           "0x270adc73"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28408@270adc73"]
+                   #object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                           "0x2e5089ab"
+                           
+"clj_duckling.engine.edn$pattern_fn$fn__28408@2e5089ab"]),
+         :production #object[clj_duckling.dims.time.prod$eval35576$fn__35577
+                             "0x1b0b9482"
+                             "clj_duckling.dims.time.prod$eval35576$fn__35577@1b0b9482"]},
+  :value {:year 5},
+  :start 43,
+  :pos 43,
+  :route [{:dim :number,
+           :integer true,
+           :value 5,
+           :text "5",
+           :pos 43,
+           :end 44,
+           :rule {:name "integer (numeric)",
+                  :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                    "0x45324ed3"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28402@45324ed3"]),
+                  :production #object[clj_duckling.dims.time.prod$eval35358$fn__35359
+                                      "0x511a5520"
+                                      "clj_duckling.dims.time.prod$eval35358$fn__35359@511a5520"]},
+           :route [{:pos 43, :end 44, :text "5", :groups ["5"]}]}
+          
+{:dim :unit-of-duration,
+           :grain :year,
+           :text "ani",
+           :pos 45,
+           :end 48,
+           :rule {:name "ani (unit-of-duration)",
+                  :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                    "0x21b6f91d"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28402@21b6f91d"]),
+                  :production #object[clj_duckling.dims.time.prod$eval35552$fn__35553
+                                      "0x502e501c"
+                                      "clj_duckling.dims.time.prod$eval35552$fn__35553@502e501c"]},
+           :route [{:pos 45, :end 48, :text "ani", :groups ["i"]}]}],
+  :label "age",
+  :end 48,
+  :body "5 ani",
+  :text "5 ani"}
+ {:index 50,
+  :dim :duration,
+  :rule {:name "<integer> <unit-of-duration>",
+         :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                           "0x270adc73"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28408@270adc73"
+]
+                   #object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                           "0x2e5089ab"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28408@2e5089ab"]),
+         :production #object[clj_duckling.dims.time.prod$eval35576$fn__35577
+                             "0x1b0b9482"
+                             "clj_duckling.dims.time.prod$eval35576$fn__35577@1b0b9482"]},
+  :value {:year 5},
+  :start 43,
+  :pos 43,
+  :route [{:dim :number,
+           :integer true,
+           :value 5,
+           :text "5",
+           :pos 43,
+           :end 44,
+           :rule {:name "integer (numeric)",
+                  :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                    "0x6ac21324"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28402@6ac21324"]),
+                  :production #object[clj_duckling.dims.time.prod$eval35374$fn__35375
+                                      "0x1c312943"
+                                      
+"clj_duckling.dims.time.prod$eval35374$fn__35375@1c312943"]},
+           :route [{:pos 43, :end 44, :text "5", :groups ["5"]}]}
+          {:dim :unit-of-duration,
+           :grain :year,
+           :text "ani",
+           :pos 45,
+           :end 48,
+           :rule {:name "ani (unit-of-duration)",
+                  :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                    "0x21b6f91d"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28402@21b6f91d"]),
+                  :production #object[clj_duckling.dims.time.prod$eval35552$fn__35553
+                                      "0x502e501c"
+                                      "clj_duckling.dims.time.prod$eval35552$fn__35553@502e501c"]},
+           :route [{:pos 45, :end 48, :text "ani", :groups ["i"]}]}],
+  :label "age",
+  :end 48,
+  :body "5 ani",
+  :text "5 ani"}
+ {:index 51,
+  :unit "RON",
+  :dim :budget,
+  :rule {:name "max budget",
+         :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+
+                           "0x59d161d1"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28402@59d161d1"]
+                   #object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                           "0x145166e3"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28408@145166e3"]),
+         :production #object[clj_duckling.dims.time.prod$eval35636$fn__35637
+                             "0x41b7ed23"
+                             "clj_duckling.dims.time.prod$eval35636$fn__35637@41b7ed23"]},
+  :value 300,
+  :start 15,
+  :pos 15,
+  :route [{:pos 15, :end 18, :text "sub", :groups [nil]}
+          {:dim :amount-of-money,
+           :value 300,
+           :unit "RON",
+           :fields {nil nil},
+           :text "300 lei",
+           :pos 19,
+           :end 26,
+           :rule {:name "<amount> <unit>",
+                  :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                                    "0x132932f2"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28408@132932f2"
+]
+                            #object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                                    "0x18624170"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28408@18624170"]),
+                  :production #object[clj_duckling.dims.time.prod$eval35486$fn__35487
+                                      "0x673304bb"
+                                      "clj_duckling.dims.time.prod$eval35486$fn__35487@673304bb"]},
+           :route [{:dim :number,
+                    :integer true,
+                    :value 300,
+                    :text "300",
+                    :pos 19,
+                    :end 22,
+                    :rule {:name "integer (numeric)",
+                           :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                             "0x45324ed3"
+                                             "clj_duckling.engine.edn$pattern_fn$fn__28402@45324ed3"]),
+                           :production #object[clj_duckling.dims.time.prod$eval35358$fn__35359
+
+                                               "0x511a5520"
+                                               "clj_duckling.dims.time.prod$eval35358$fn__35359@511a5520"]},
+                    :route [{:pos 19,
+                             :end 22,
+                             :text "300",
+                             :groups ["300"]}]}
+                   {:dim :unit,
+                    :unit "RON",
+                    :text "lei",
+                    :pos 23,
+                    :end 26,
+                    :rule {:name "RON",
+                           :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                             "0xf0bb136"
+                                             "clj_duckling.engine.edn$pattern_fn$fn__28402@f0bb136"]),
+                           :production #object[clj_duckling.dims.time.prod$eval35452$fn__35453
+                                               "0x69d4b5f4"
+                                               "clj_duckling.dims.time.prod$eval35452$fn__35453@69d4b5f4"
+]},
+                    :route [{:pos 23,
+                             :end 26,
+                             :text "lei",
+                             :groups ["lei"]}]}]}],
+  :level :max,
+  :label "budget",
+  :end 26,
+  :body "sub 300 lei",
+  :text "sub 300 lei"}
+ {:index 52,
+  :unit "RON",
+  :dim :budget,
+  :rule {:name "max budget",
+         :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                           "0x59d161d1"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28402@59d161d1"]
+                   #object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                           "0x145166e3"
+                           "clj_duckling.engine.edn$pattern_fn$fn__28408@145166e3"]),
+         :production #object[clj_duckling.dims.time.prod$eval35636$fn__35637
+                             "0x41b7ed23"
+                             "clj_duckling.dims.time.prod$eval35636$fn__35637@41b7ed23"]},
+  :value 300,
+  :start 15,
+  :pos 15,
+  :route [{:pos 15, :end 18, :text "sub", :groups
+ [nil]}
+          {:dim :amount-of-money,
+           :value 300,
+           :unit "RON",
+           :fields {nil nil},
+           :text "300 lei",
+           :pos 19,
+           :end 26,
+           :rule {:name "<amount> <unit>",
+                  :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                                    "0x132932f2"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28408@132932f2"]
+                            #object[clj_duckling.engine.edn$pattern_fn$fn__28408
+                                    "0x18624170"
+                                    "clj_duckling.engine.edn$pattern_fn$fn__28408@18624170"]),
+                  :production #object[clj_duckling.dims.time.prod$eval35486$fn__35487
+                                      "0x673304bb"
+                                      "clj_duckling.dims.time.prod$eval35486$fn__35487@673304bb"]},
+           :route [{:dim :number,
+                    :integer true,
+                    :value 300,
+                    
+:text "300",
+                    :pos 19,
+                    :end 22,
+                    :rule {:name "integer (numeric)",
+                           :pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                             "0x6ac21324"
+                                             "clj_duckling.engine.edn$pattern_fn$fn__28402@6ac21324"]),
+                           :production #object[clj_duckling.dims.time.prod$eval35374$fn__35375
+                                               "0x1c312943"
+                                               "clj_duckling.dims.time.prod$eval35374$fn__35375@1c312943"]},
+                    :route [{:pos 19,
+                             :end 22,
+                             :text "300",
+                             :groups ["300"]}]}
+                   {:dim :unit,
+                    :unit "RON",
+                    :text "lei",
+                    :pos 23,
+                    :end 26,
+                    :rule {:name "RON",
+                           
+:pattern (#object[clj_duckling.engine.edn$pattern_fn$fn__28402
+                                             "0xf0bb136"
+                                             "clj_duckling.engine.edn$pattern_fn$fn__28402@f0bb136"]),
+                           :production #object[clj_duckling.dims.time.prod$eval35452$fn__35453
+                                               "0x69d4b5f4"
+                                               "clj_duckling.dims.time.prod$eval35452$fn__35453@69d4b5f4"]},
+                    :route [{:pos 23,
+                             :end 26,
+                             :text "lei",
+                             :groups ["lei"]}]}]}],
+  :level :max,
+  :label "budget",
+  :end 26,
+  :body "sub 300 lei",
+  :text "sub 300 lei"})
+
+
+
+(fipp
+ (mapv #(select-keys % [:index :dim :value :start :end :label :body])
+       (:winners (tl/analyze "Vreau un cadou sub 300 lei pentru un baiat 5 ani" targets {} (modl/get-model model) (eng/get-rules rules) logger)))) 
+
+
+[{:index 1,
+  :dim :gender,
+  :value :male,
+  :start 37,
+  :end 42,
+  :label "sex",
+  :body "baiat"}
+ {:index 49,
+  :dim :duration,
+  :value {:year 5},
+  :start 43,
+  :end 48,
+  :label "age",
+  :body "5 ani"}
+ {:index 50,
+  :dim :duration,
+  :value {:year 5},
+  :start 43,
+  :end 48,
+  :label "age",
+  :body "5 ani"}
+ {:index 51,
+  :dim :budget,
+  :value 300,
+  :start 15,
+  :end 26,
+  :label "budget",
+  :body "sub 300 lei"}
+ {:index 52,
+  :dim :budget,
+  :value 300,
+  :start 15,
+  :end 26,
+  :label "budget",
+  :body "sub 300 lei"}]

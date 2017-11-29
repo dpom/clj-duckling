@@ -120,8 +120,8 @@
 (defn- produce
   "Produce a new token when a rule has matched.
   The 'route' is a seq of tokens, it is provided by the 'match' function"
-  [rule route sentence]
-  {:pre [rule route sentence]}
+  [rule route sentence logger]
+  ;; (log logger :debug ::produce {:rule rule :route route :sentence sentence})
   (let [pos (:pos (first route))
         end (:end (last route))]
     (try
@@ -174,14 +174,14 @@
 (defn- pass-once
   "Make one pass of each rule on the stash.
   Returns a new stash augmented with the seq of produced tokens."
-  [stash rules sentence]
+  [stash rules sentence logger]
   (into stash ; we want a vector, not a list, or into changes the order of items
         (apply concat
                (for [rule rules]
                  (try
                    (->> (match (:pattern rule) stash) ; get the routes that match this rule
                         (filter (partial never-produced? stash rule)) ; remove what we already have
-                        (map (fn [route] (produce rule route sentence)))) ; produce
+                        (map (fn [route] (produce rule route sentence logger)))) ; produce
                    (catch Exception e
                      (throw (Exception. (str "Exception matching rule: "
                                              (:name rule) " " e)))))))))
@@ -205,7 +205,9 @@
           (when max-stash-reached?
             (log logger :warn ::pass-all-max-stash-size {:sentence sentence}))
           stash)
-        (recur (pass-once stash rules sentence) (count stash) (dec remaining-iter))))))
+        (recur (pass-once stash rules sentence logger)
+               (count stash)
+               (dec remaining-iter))))))
 
 (defn maxlen-judge
   "Choose the winning token in the stash."
