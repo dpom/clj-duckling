@@ -3,7 +3,9 @@
   (:require
    [integrant.core :as ig]
    [duct.logger :refer [log]]
+   [plumbing.core :as p]
    [clj-duckling.util.learn :as learn]
+   [clj-duckling.util.engine :as engine]
    [clj-duckling.engine.core :as eng]
    [clj-duckling.model.core :as modl]
    [clj-duckling.util.core :as util]
@@ -65,7 +67,47 @@
 
 
 
+(defn analyze
+  "Parse a sentence, returns the stash and a curated list of winners.
 
+  Args:
+  s (string):
+  context (map):
+  targets (coll): a coll of {:dim dim :label label} : only winners of these dims are
+                  kept, and they receive a :label key = the label provided.
+                  If no targets specified, all winners are returned.
+  base-stash ():
+
+  Returns:
+  (map): a map with 2 keys :stash and :winners
+  "
+  [s targets context model rules logger]
+  (let [stash1 (engine/pass-all s rules nil)
+        ;; add an index to tokens in the stash
+        stash (map #(if (map? %1) (assoc %1 :index %2) %1)
+                   stash1
+                   (iterate inc 0))
+        dim-label (when (seq targets) (into {} (for [{:keys [dim label]} targets]
+                                                 [(keyword dim) label])))
+        winners (->> stash
+                     (filter :pos)
+                     ;; just keep the dims we want, and add the label key
+                     (p/?>> dim-label (keep #(when-let [label (get dim-label (:dim %))]
+                                               (assoc % :label label))))
+
+                     (select-winners
+                      #(compare-tokens %1 %2 model dim-label)
+                      #(learn/route-prob % model)
+                      #(engine/resolve-token % context))
+
+                     ;; adapt the keys for the outside world
+                     (map (fn [{:keys [pos end text] :as token}]
+                            (merge token {:start pos
+                                          :end end
+                                          :body text}))))]
+    ;; (log/debugf "stash: %s" (with-out-str (clojure.pprint/pprint stash)))
+    ;; (log/debugf "winners: %s" (with-out-str (clojure.pprint/pprint winners)))
+    {:stash stash :winners winners}))
 
 (defrecord DucklingTool [id model rules logger]
   core/Tool

@@ -422,3 +422,21 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 
 
 (require '[clj-duckling.util.engine :as engine]) 
+
+;; 2017-11-29
+
+
+(require '[clj-duckling.util.learn :as learn]) 
+
+(let [stash1 (engine/pass-all s rules nil)
+      stash2 (map #(if (map? %1) (assoc %1 :index %2) %1)
+                  stash1
+                  (iterate inc 0))
+      winners (->> stash
+                   (filter :pos)
+                   (select-winners
+                    #(compare-tokens %1 %2 model dim-label)
+                    #(learn/route-prob % model)
+                    #(engine/resolve-token % context module)))
+      ]
+  winners)

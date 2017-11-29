@@ -161,9 +161,6 @@
                       #(learn/route-prob % classifiers)
                       #(engine/resolve-token % context module))
 
-                     ;; add a confidence key
-                     ;; low confidence for numbers covered by datetime
-                     (engine/estimate-confidence context module)
                      ;; adapt the keys for the outside world
                      (map (fn [{:keys [pos end text] :as token}]
                             (merge token {:start pos

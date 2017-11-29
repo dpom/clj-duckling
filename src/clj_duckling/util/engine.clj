@@ -9,7 +9,6 @@
             [clojure.test :refer :all]
             [duct.logger :refer [log]] 
             [clj-duckling.dims.time.prod]
-            [clj-duckling.dims.time.api :as time]
             [clj-duckling.util.core :as util]))
 
 ;;
@@ -218,13 +217,13 @@
                      0))
          stash))
 
-(defn resolve-token
+(defmulti resolve-token
   "Resolve a token based on its dimension, predicate, and the context.
   Returns a coll of tokens, since they can have multiple resolutions, or none.
   Unresolved tokens are returned as is, without a :value key."
-  [token context module]
-  ; TODO ns should be dynamic based on dim ; or better use a protocol
-  (time/resolve token context))
+  (fn [token context] (:dim token)))
+
+(defmethod resolve-token :default [token context] token)
 
 (defmulti export-value
   "Transforms a token value for API output. Returns the modified value."
@@ -233,8 +232,4 @@
 (defmethod export-value :default [{:keys [dim value] :as token} opts]
   {:value value})
 
-(defn estimate-confidence
-  "Returns the tokens with :confidence a rough confidence estimation for each.
-   Numbers covered by datetime are very unlikely."
-  [context module tokens]
-  tokens)
+
