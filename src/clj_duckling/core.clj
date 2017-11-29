@@ -16,7 +16,7 @@
    [clj-duckling.util.engine :as engine]
    [clj-duckling.util.learn :as learn]
    ;; [clj-duckling.resource :as res]
-   [clj-duckling.dims.api :as dims]
+   [clj-duckling.dims.core :as dims]
    [clj-duckling.util.time :as time]
    [clj-duckling.util.core :as util]))
 

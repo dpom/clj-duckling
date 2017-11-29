@@ -61,7 +61,7 @@
            ;; TEMP also assoc a 'values' key with the 3 future hypotheses
            ;; this key will be used in api/export-value
            (map #(assoc % :values (take 3 all-ahead)))
-           first))
+           (take 1)))
     (catch Throwable e
       (throw (ex-info (format "Error %s while resolving %s" (str e) (dissoc token :route)) {})))))
 

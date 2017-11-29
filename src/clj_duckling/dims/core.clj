@@ -1,4 +1,4 @@
-(ns clj-duckling.dims.api
+(ns clj-duckling.dims.core
   (:require
    [clj-duckling.dims.distance]
    [clj-duckling.dims.duration]

@@ -49,11 +49,10 @@
     vector: an enriched dataset [{<rule-name> [features, output]}]
           Output is true if the rule was contributing
           successfully, false otherwise"
-  [s context check rules feature-extractor dataset]
-  ;; (log/debugf "learning %s %s\n" s check)
-  (let [fc-tokens (->> (engine/pass-all s rules nil)
+  [s context check rules feature-extractor dataset logger]
+  (let [fc-tokens (->> (engine/pass-all s rules logger)
                        (filter #(and (:pos %) (= (count s) (- (:end %) (:pos %)))))
-                       (mapcat #(engine/resolve-token % context nil)) ; fully-covering tokens
+                       (mapcat #(engine/resolve-token % context)) ; fully-covering tokens
                        (map #(assoc % :check (check context %))))
         fc-tokens-ok (remove :check fc-tokens)
         fc-tokens-ko (filter :check fc-tokens)
@@ -85,13 +84,13 @@
 
 (defn corpus->dataset
   "Takes a corpus and a feature extractor and builds a dataset (phase 1.a. on clj-duckling.md)."
-  [{:keys [context tests] :as corpus} rules feature-extractor]
-  (let [sentences-and-check
-        (for [test tests
-              text (:text test)]
-          [text (first (:checks test))])]
-    (reduce (fn [dataset [text check]]
-              (sentence->dataset text context check rules feature-extractor dataset))
+  [{:keys [context tests] :as corpus} rules feature-extractor logger]
+  (let [sentences-and-check (for [test tests
+                                  text (:text test)]
+                              [text (first (:checks test))])]
+    (reduce (fn [dataset [t c]]
+              (log logger :debug ::corpus->dataset {:t t :c c})
+              (sentence->dataset t context c rules feature-extractor dataset logger))
             {} ;; initial dataset
             sentences-and-check)))
 
@@ -139,6 +138,6 @@
   [corpus rules fextractor logger]
   (log logger :debug ::train-classifiers  {:corpus-cnt (count (:tests corpus))
                                            :rules-cnt (count rules)})
-  (let [dataset (corpus->dataset corpus rules fextractor)]
+  (let [dataset (corpus->dataset corpus rules fextractor logger)]
     (into {} (for [[name examples :as example] dataset]
                [name (train-rule example)]))))

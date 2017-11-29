@@ -189,15 +189,14 @@
 (defn pass-all
   "Make as many passes as necessary until no new tokens are produced
   (there is a limit to avoid infinite loops though)"
-  [sentence rules base-stash]
-  (loop [stash (into [{:text sentence}] base-stash)
+  [sentence rules logger]
+  (loop [stash  [{:text sentence}]
          prev-stash-size 0
          ; safeguard: number of max iterations (loops DO occur :))
          remaining-iter 10]
     (let [stash-size (count stash)
           max-iter-reached? (neg? remaining-iter)
           max-stash-reached? (> stash-size 600)
-          logger (util/get-default-logger)
           finished? (<= stash-size prev-stash-size)]
       (if (or max-iter-reached? max-stash-reached? finished?)
         (do
@@ -223,7 +222,8 @@
   Unresolved tokens are returned as is, without a :value key."
   (fn [token context] (:dim token)))
 
-(defmethod resolve-token :default [token context] token)
+(defmethod resolve-token :default [token context]
+  [token])
 
 (defmulti export-value
   "Transforms a token value for API output. Returns the modified value."
