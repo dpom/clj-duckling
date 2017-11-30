@@ -1,0 +1,30 @@
+{:context {}
+
+ :tests [{:text ["3 kilomètres" "3 kilometres" "3 km" "3km" "3k"]
+          :checks [#clj-duckling/corpus "(distance 3 \"kilometre\" {:value 3000, :unit \"metre\"})"]}
+         {:text ["3,0 km"]
+          :checks [#clj-duckling/corpus "(distance 3.0 \"kilometre\" {:value 3000.0, :unit \"metre\"})"]}
+         {:text ["8 miles"]
+          :checks [#clj-duckling/corpus "(distance 8 \"mile\" {:value 12872, :unit \"metre\"})"]}
+         {:text ["9 metres" "9m"]
+          :checks [#clj-duckling/corpus "(distance 9 \"metre\")"]}
+         {:text ["2cm" "2 centimetres"]
+          :checks [#clj-duckling/corpus "(distance 2 \"centimetre\" {:value 0.02, :unit \"metre\"})"]}
+         {:text ["250 millilitres" "250ml" "250 ml"]
+          :checks [#clj-duckling/corpus "(volume 250 \"millilitre\" {:value 0.25, :unit \"litre\"})"]}
+         {:text ["2 litres"]
+          :checks [#clj-duckling/corpus "(volume 2 \"litre\")"]}
+         {:text ["3 gallons" "3 gal"]
+          :checks [#clj-duckling/corpus "(volume 3 \"gallon\" {:value 11.355, :unit \"litre\"})"]}
+         {:text ["3 hectolitres"]
+          :checks [#clj-duckling/corpus "(volume 300 \"litre\" {:value 30, :unit \"litre\"})"]}
+         {:text ["demi-litre" "demi litre"]
+          :checks [#clj-duckling/corpus "(volume 0.5 \"litre\")"]}
+         {:text ["2 tasses de café"]
+          :checks [#clj-duckling/corpus "(quantity 2 \"tasse\" \"café\")"]}
+         {:text ["une tasse"]
+          :checks [#clj-duckling/corpus "(quantity 1 \"tasse\")"]}
+         {:text ["un café"]
+          :checks [#clj-duckling/corpus "(quantity 1 nil \"café\")"]}
+         {:text ["3 cuillères à soupe de sucre"]
+          :checks [#clj-duckling/corpus "(quantity 3 \"cuillère à soupe\" \"sucre\")"]}]}

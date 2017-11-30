@@ -1,0 +1,8 @@
+{:context {}
+
+ :tests [{:text ["37°C" "37 ° celsius" "37 degrees Celsius" "thirty seven celsius"]
+          :checks [#clj-duckling/corpus "(temperature 37 \"celsius\")"]}
+         {:text ["70°F" "70 ° Fahrenheit" "70 degrees F" "seventy Fahrenheit"]
+          :checks [#clj-duckling/corpus "(temperature 70 \"fahrenheit\")"]}
+         {:text ["45°" "45 degrees" "45 deg."]
+          :checks [#clj-duckling/corpus "(temperature 45 \"degree\")"]}]}

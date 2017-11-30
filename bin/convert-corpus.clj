@@ -10,55 +10,44 @@
 (require '[clojure.pprint :as pp])
 (require '[cljfmt.core :refer [reformat-string]])
 
-(defn get-context-value
-  [s]
-  (let [xf (comp
-            (map str/trim)
-            (remove (fn [item] (str/starts-with? item ";")))
-            ;; (map #(str/replace % #"\"" "\\\""))
-            (map #(str/replace % #"\(time/t" "#clj-duckling/time \"(t"))
-            (map #(str/replace % #"\)" ")\"")))]
-    (into [] xf s)))
+(defn convert-form [c]
+  (case c
+    \" "\\\""
+    \( "\"("
+    \)  ")\""
+    nil))
 
-(defn get-context
-  [item]
-  (if (seq item)
-    (str " :context " (str/join "\n" (get-context-value item)) "\n"
-         " :tests [")
-    ""))
+(defn convert-context [x]
+  (-> x
+      prn-str
+      (str/replace #"\(time/t" "#clj-duckling/time (t")
+      (str/escape convert-form)))
 
-
-
-
-(defn get-test
-  [item]
-  (let [els (partition-by #(str/starts-with? % "\"") item)]
-    (format "{:text [%s]\n :checks [#clj-duckling/corpus \"%s\"]}\n"
-            (str/join "\n" (first els))
-            (str/replace (str/join "\n" (second els)) #"\"" "\\\\\"") )))
 
 (defn convert-file
   [infile outfile]
-  (let [xf (comp
-            (map str/trim)
-            (remove (fn [item] (str/starts-with? item ";")))
-            (partition-by empty?)
-            (remove (fn [item] (str/blank? (first item)))))
-        items (with-open [rdr (io/reader infile)]
-                (into [] xf (line-seq rdr)))]
+  (let [items (->> (read-string (slurp infile))
+                   (partition-by (fn [x] (or (str/starts-with? x "(") (str/starts-with? x "{"))))
+                   ;; (map build-rule)
+                   )]
     (with-open [w (io/writer outfile)]
       (.write w "{\n")
       (doseq [item items]
         ;; (printf "item: %s\n" item)
-        (let [a (first item)]
-          (.write w (cond
-                      (str/starts-with? a "(")  (get-context (rest item))
-                      (str/starts-with? a "{")  (get-context item)
-                      (str/starts-with? a "\"") (get-test item)
-                      true ""))))
-      (.write w "]\n}"))
+        (let [i (first item)]
+          (cond
+            (str/starts-with? i "{") (do
+                                       (.write w ":context ")
+                                       (.write w (convert-context i))
+                                       (.write w "\n :tests ["))
+            (str/starts-with? i "(") (do
+                                       (.write w (format ":checks [#clj-duckling/corpus %s]}\n" (str/escape (prn-str i) convert-form))))
+            true                     (do
+                                        (.write w "{:text ")
+                                        (.write w (prn-str (vec item))))
+            )))
+      (.write w "\n]}"))
     (spit outfile (reformat-string (slurp outfile)))))
-
 
 (defn convert-dir
   [dirpath]

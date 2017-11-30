@@ -1,0 +1,34 @@
+{:context {}
+
+ :tests [{:text ["0" "noll"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "en" "ett"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["2" "två" "ett par"]
+          :checks [#clj-duckling/corpus "(number 2)"]}
+         {:text ["7" "sju"]
+          :checks [#clj-duckling/corpus "(number 7)"]}
+         {:text ["14" "fjorton"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["16" "sexton"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "sjutton"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "arton"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["20" "tjugo"]
+          :checks [#clj-duckling/corpus "(number 20)"]}
+         {:text ["1,1" "1,10" "01,10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0,77" ",77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100.000" "100000" "100K" "100k"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["3M" "3000K" "3000000" "3.000.000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1.200.000" "1200000" "1,2M" "1200K" ",0012G"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["- 1.200.000" "-1200000" "minus 1.200.000" "negativ 1200000" "-1,2M" "-1200K" "-,0012G"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["5 tusen" "fem tusen"]
+          :checks [#clj-duckling/corpus "(number 5000)"]}]}

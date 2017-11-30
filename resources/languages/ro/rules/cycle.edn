@@ -14,6 +14,6 @@
  #clj-duckling.engine/rule {:name "<cycle> urmatoare", :pattern "[(dim :cycle) #\"(?i)(urm[aă]to(are|r)|viito(are|r))\"]", :production "(cycle-nth (:grain %2) 1)"}
  #clj-duckling.engine/rule {:name "ultimele n <cycle>", :pattern "[#\"(?i)ultim(ele|ii|a)\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
  #clj-duckling.engine/rule {:name "urmatoarele n <cycle>", :pattern "[#\"(?i)urm[aă]to(arele|rii|area)\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
- #clj-duckling.engine/rule {:name "<ordinal> trimestru", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3564#] (= :quarter (:grain p1__3564#))))]", :production "(cycle-nth-after :quarter (dec (:value %1)) (cycle-nth :year 0))"}
- #clj-duckling.engine/rule {:name "<ordinal> trimestru <year>", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3565#] (= :quarter (:grain p1__3565#)))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}
- #clj-duckling.engine/rule {:name "trimestru <number> <year>", :pattern "[(dim :cycle) (dim :number) (fn* [p1__3566#] (= :quarter (:grain p1__3566#))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}]
+ #clj-duckling.engine/rule {:name "<ordinal> trimestru", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3549#] (= :quarter (:grain p1__3549#))))]", :production "(cycle-nth-after :quarter (dec (:value %1)) (cycle-nth :year 0))"}
+ #clj-duckling.engine/rule {:name "<ordinal> trimestru <year>", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3550#] (= :quarter (:grain p1__3550#)))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}
+ #clj-duckling.engine/rule {:name "trimestru <number> <year>", :pattern "[(dim :cycle) (dim :number) (fn* [p1__3551#] (= :quarter (:grain p1__3551#))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}]

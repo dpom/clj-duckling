@@ -1,165 +1,76 @@
 {:context {}
- :tests [{:text ["0"
-                 "zero"
-                 "nici unul"
-                 "nici unu"
-                 "nici una"
-                 "nici o"
-                 "nimic"]
+
+ :tests [{:text ["0" "zero" "nici unul" "nici unu" "nici una" "nici o" "nimic"]
           :checks [#clj-duckling/corpus "(number 0)"]}
-         {:text ["1"
-                 "unu"
-                 "unul"
-                 "un"
-                 "o"
-                 "intai"
-                 "întâi"]
+         {:text ["1" "unu" "unul" "un" "o" "intai" "întâi"]
           :checks [#clj-duckling/corpus "(number 1)"]}
-         {:text ["primul"
-                 "prima"]
+         {:text ["primul" "prima"]
           :checks [#clj-duckling/corpus "(ordinal 1)"]}
-         {:text ["2"
-                 "doi"
-                 "doua"
-                 "două"]
+         {:text ["2" "doi" "doua" "două"]
           :checks [#clj-duckling/corpus "(number 2)"]}
-         {:text ["al doilea"
-                 "al doi-lea"
-                 "al doi lea"
-                 "al 2-lea"
-                 "al 2 lea"
-                 "a 2 a"
-                 "a 2-a"
-                 "a doua"]
+         {:text ["al doilea" "al doi-lea" "al doi lea" "al 2-lea" "al 2 lea" "a 2 a" "a 2-a" "a doua"]
           :checks [#clj-duckling/corpus "(ordinal 2)"]}
-         {:text ["3"
-                 "trei"]
+         {:text ["3" "trei"]
           :checks [#clj-duckling/corpus "(number 3)"]}
-         {:text ["al treilea"
-                 "al trei-lea"
-                 "a treia"]
+         {:text ["al treilea" "al trei-lea" "a treia"]
           :checks [#clj-duckling/corpus "(ordinal 3)"]}
-         {:text ["4"
-                 "patru"]
+         {:text ["4" "patru"]
           :checks [#clj-duckling/corpus "(number 4)"]}
-         {:text ["5"
-                 "cinci"]
+         {:text ["5" "cinci"]
           :checks [#clj-duckling/corpus "(number 5)"]}
-         {:text ["6"
-                 "sase"
-                 "șase"]
+         {:text ["6" "sase" "șase"]
           :checks [#clj-duckling/corpus "(number 6)"]}
-         {:text ["al saselea"
-                 "al șaselea"
-                 "al sase-lea"
-                 "al șase-lea"
-                 "a sasea"
-                 "a șase a"]
+         {:text ["al saselea" "al șaselea" "al sase-lea" "al șase-lea" "a sasea" "a șase a"]
           :checks [#clj-duckling/corpus "(ordinal 6)"]}
-         {:text ["7"
-                 "sapte"
-                 "șapte"]
+         {:text ["7" "sapte" "șapte"]
           :checks [#clj-duckling/corpus "(number 7)"]}
-         {:text ["8"
-                 "opt"]
+         {:text ["8" "opt"]
           :checks [#clj-duckling/corpus "(number 8)"]}
-         {:text ["9"
-                 "noua"
-                 "nouă"]
+         {:text ["9" "noua" "nouă"]
           :checks [#clj-duckling/corpus "(number 9)"]}
-         {:text ["al noualea"
-                 "al noua-lea"
-                 "al noua lea"
-                 "al nouălea"
-                 "al nouă lea"
-                 "a noua"]
+         {:text ["al noualea" "al noua-lea" "al noua lea" "al nouălea" "al nouă lea" "a noua"]
           :checks [#clj-duckling/corpus "(ordinal 9)"]}
-         {:text ["10"
-                 "zece"
-                 "zeci"]
+         {:text ["10" "zece" "zeci"]
           :checks [#clj-duckling/corpus "(number 10)"]}
-         {:text ["10"
-                 "zece"]
+         {:text ["10" "zece"]
           :checks [#clj-duckling/corpus "(number 10)"]}
-         {:text ["11"
-                 "unsprezece"
-                 "unspe"
-                 "unșpe"]
+         {:text ["11" "unsprezece" "unspe" "unșpe"]
           :checks [#clj-duckling/corpus "(number 11)"]}
-         {:text ["19"
-                 "nouasprezece"
-                 "nouaspe"
-                 "nouăsprezece"
-                 "nouășpe"]
+         {:text ["19" "nouasprezece" "nouaspe" "nouăsprezece" "nouășpe"]
           :checks [#clj-duckling/corpus "(number 19)"]}
-         {:text ["70"
-                 "sapte zeci"
-                 "7 zeci"
-                 "șapte zeci"]
+         {:text ["70" "sapte zeci" "7 zeci" "șapte zeci"]
           :checks [#clj-duckling/corpus "(number 70)"]}
-         {:text ["1,1"
-                 "1,10"
-                 "01,10"]
+         {:text ["1,1" "1,10" "01,10"]
           :checks [#clj-duckling/corpus "(number 1.1)"]}
-         {:text ["0,77"
-                 ",77"]
+         {:text ["0,77" ",77"]
           :checks [#clj-duckling/corpus "(number 0.77)"]}
-         {:text ["100.000"
-                 "100000"]
+         {:text ["100.000" "100000"]
           :checks [#clj-duckling/corpus "(number 100000)"]}
-         {:text ["3000000"
-                 "3.000.000"]
+         {:text ["3000000" "3.000.000"]
           :checks [#clj-duckling/corpus "(number 3000000)"]}
-         {:text ["1.200.000"
-                 "1200000"]
+         {:text ["1.200.000" "1200000"]
           :checks [#clj-duckling/corpus "(number 1200000)"]}
-         {:text ["-1.200.000"
-                 "-1200000"
-                 "minus 1.200.000"]
+         {:text ["-1.200.000" "-1200000" "minus 1.200.000"]
           :checks [#clj-duckling/corpus "(number -1200000)"]}
-         {:text ["-3"
-                 "3 negativ"]
+         {:text ["-3" "3 negativ"]
           :checks [#clj-duckling/corpus "(number -3)"]}
-         {:text ["5 mii"
-                 "cinci mii"]
+         {:text ["5 mii" "cinci mii"]
           :checks [#clj-duckling/corpus "(number 5000)"]}
-         {:text ["o mie"
-                 "1 mie"]
+         {:text ["o mie" "1 mie"]
           :checks [#clj-duckling/corpus "(number 1000)"]}
-         {:text ["o suta"
-                 "o sută"
-                 "1 suta"
-                 "1 sută"]
+         {:text ["o suta" "o sută" "1 suta" "1 sută"]
           :checks [#clj-duckling/corpus "(number 100)"]}
-         {:text ["3 sute"
-                 "trei sute"]
+         {:text ["3 sute" "trei sute"]
           :checks [#clj-duckling/corpus "(number 300)"]}
-         {:text ["un milion"
-                 "1 milion"]
+         {:text ["un milion" "1 milion"]
           :checks [#clj-duckling/corpus "(number 1000000)"]}
-         {:text ["7 milioane"
-                 "sapte milioane"
-                 "șapte milioane"]
+         {:text ["7 milioane" "sapte milioane" "șapte milioane"]
           :checks [#clj-duckling/corpus "(number 7000000)"]}
-         {:text ["un miliard"
-                 "1 miliard"]
+         {:text ["un miliard" "1 miliard"]
           :checks [#clj-duckling/corpus "(number 1000000000)"]}
-         {:text ["9 miliarde"
-                 "noua miliarde"
-                 "nouă miliarde"]
+         {:text ["9 miliarde" "noua miliarde" "nouă miliarde"]
           :checks [#clj-duckling/corpus "(number 9000000000)"]}
-         {:text ["20"
-                 "douazeci"
-                 "doua zeci"
-                 "douăzeci"
-                 "două zeci"]
+         {:text ["20" "douazeci" "doua zeci" "douăzeci" "două zeci"]
           :checks [#clj-duckling/corpus "(number 20)"]}
-         {:text ["23"
-                 "20 3"
-                 "douazeci 3"
-                 "douăzeci 3"
-                 "douăzeci trei"
-                 "douazeci si trei"
-                 "douăzeci și trei"]
-          :checks [#clj-duckling/corpus "(number 23)
-)"]}]}
+         {:text ["23" "20 3" "douazeci 3" "douăzeci 3" "douăzeci trei" "douazeci si trei" "douăzeci și trei"]
+          :checks [#clj-duckling/corpus "(number 23)"]}]}

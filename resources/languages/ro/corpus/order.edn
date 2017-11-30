@@ -1,8 +1,6 @@
 {:context {}
+
  :tests [{:text ["ultima comanda"]
-          :checks [#clj-duckling/corpus "(fn [token _] (and (= :order (:dim token))
-(= -1 (:value token))))"]}
+          :checks [#clj-duckling/corpus "(fn [token _] " (and "(= :order " (:dim token) ")" "(= -1 " (:value token) ")") ")"]}
          {:text ["comanda 123456789"]
-          :checks [#clj-duckling/corpus "(fn [token _] (and (= :order (:dim token))
-(= 123456789 (:value token))))
-)"]}]}
+          :checks [#clj-duckling/corpus "(fn [token _] " (and "(= :order " (:dim token) ")" "(= 123456789 " (:value token) ")") ")"]}]}

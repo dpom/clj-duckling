@@ -1,0 +1,24 @@
+[#clj-duckling.engine/rule {:name "intersect (X cents)", :pattern "[(dim :amount-of-money) (dim :amount-of-money (fn* [p1__3545#] (= (:unit p1__3545#) \"cent\")))]", :production "(compose-money %1 %2)"}
+ #clj-duckling.engine/rule {:name "intersect (and X cents)", :pattern "[(dim :amount-of-money) #\"(?i)and\" (dim :amount-of-money (fn* [p1__3546#] (= (:unit p1__3546#) \"cent\")))]", :production "(compose-money %1 %3)"}
+ #clj-duckling.engine/rule {:name "intersect", :pattern "[(dim :amount-of-money) (dim :number)]", :production "(compose-money %1 %2)"}
+ #clj-duckling.engine/rule {:name "intersect (and number)", :pattern "[(dim :amount-of-money) #\"(?i)and\" (dim :number)]", :production "(compose-money %1 %3)"}
+ #clj-duckling.engine/rule {:name "$", :pattern "#\"\\$|dollars?\"", :production "{:dim :unit, :unit \"$\"}"}
+ #clj-duckling.engine/rule {:name "€", :pattern "#\"(?i)€|([e€]uro?s?)\"", :production "{:dim :unit, :unit \"EUR\"}"}
+ #clj-duckling.engine/rule {:name "£", :pattern "#\"(?i)£|pounds?\"", :production "{:dim :unit, :unit \"£\"}"}
+ #clj-duckling.engine/rule {:name "AUD", :pattern "#\"(?i)AUD\"", :production "{:dim :unit, :unit \"AUD\"}"}
+ #clj-duckling.engine/rule {:name "USD", :pattern "#\"(?i)US[D\\$]\"", :production "{:dim :unit, :unit \"USD\"}"}
+ #clj-duckling.engine/rule {:name "GBP", :pattern "#\"(?i)GBP\"", :production "{:dim :unit, :unit \"GBP\"}"}
+ #clj-duckling.engine/rule {:name "PTS", :pattern "#\"(?i)pta?s?\"", :production "{:dim :unit, :unit \"PTS\"}"}
+ #clj-duckling.engine/rule {:name "cent", :pattern "#\"(?i)cents?|penn(y|ies)|c|¢\"", :production "{:dim :unit, :unit \"cent\"}"}
+ #clj-duckling.engine/rule {:name "INR", :pattern "#\"(?i)INR|Rs(. )?|(R|r)upees?\"", :production "{:dim :unit, :unit \"INR\"}"}
+ #clj-duckling.engine/rule {:name "AED", :pattern "#\"(?i)AED|(D|d)irhams?\"", :production "{:dim :unit, :unit \"AED\"}"}
+ #clj-duckling.engine/rule {:name "SAR", :pattern "#\"(?i)SAR|(S|s)audiriyal|(S|s)audi riyal?\"", :production "{:dim :unit, :unit \"SAR\"}"}
+ #clj-duckling.engine/rule {:name "QAR", :pattern "#\"(?i)QAR|(q|Q)ataririyal|(q|Q)atari riyal ?\"", :production "{:dim :unit, :unit \"QAR\"}"}
+ #clj-duckling.engine/rule {:name "EGP", :pattern "#\"(?i)EGP|(E|e)gyptianpound|(E|e)gyptian Pound ?\"", :production "{:dim :unit, :unit \"EGP\"}"}
+ #clj-duckling.engine/rule {:name "LBP", :pattern "#\"(?i)LBP|(L|l)ebanesepound|(L|l)ebanese Pound ?\"", :production "{:dim :unit, :unit \"LBP\"}"}
+ #clj-duckling.engine/rule {:name "KWD", :pattern "#\"(?i)KWD|(K|k)uwaitidinar|(K|k)uwaiti Dinar ?\"", :production "{:dim :unit, :unit \"KWD\"}"}
+ #clj-duckling.engine/rule {:name "unnamed currency", :pattern "#\"(?i)(buck|balle|pouloute)s?\"", :production "{:dim :unit}"}
+ #clj-duckling.engine/rule {:name "<unit> <amount>", :pattern "[(dim :unit) (dim :number)]", :production "{:dim :amount-of-money, :value (:value %2), :unit (:unit %1), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "<amount> <unit>", :pattern "[(dim :number) (dim :unit)]", :production "{:dim :amount-of-money, :value (:value %1), :unit (:unit %2), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "about <amount-of-money>", :pattern "[#\"(?i)about|approx(\\.|imately)?|close to|near( to)?|around|almost\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"approximate\")"}
+ #clj-duckling.engine/rule {:name "exactly <amount-of-money>", :pattern "[#\"(?i)exactly|precisely\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"exact\")"}]

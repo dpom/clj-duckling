@@ -1,0 +1,6 @@
+[#clj-duckling.engine/rule {:name "number as temp", :pattern "(dim :number)", :production "{:dim :temperature, :latent true, :value (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<latent temp> degrees", :pattern "[(dim :temperature) #\"度|°\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"degree\"}))"}
+ #clj-duckling.engine/rule {:name "<temp> Celcius", :pattern "[(dim :temperature) #\"[摄攝]氏[°度]|°C\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"celsius\"}))"}
+ #clj-duckling.engine/rule {:name "Celcius <temp>", :pattern "[#\"[摄攝]氏\" (dim :temperature) #\"度|°\"]", :production "(-> %2 (dissoc :latent) (merge {:unit \"celsius\"}))"}
+ #clj-duckling.engine/rule {:name "<temp> Fahrenheit", :pattern "[(dim :temperature) #\"[华華]氏[°度]|°F\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"fahrenheit\"}))"}
+ #clj-duckling.engine/rule {:name "Fahrenheit <temp>", :pattern "[#\"[华華]氏\" (dim :temperature) #\"度|°\"]", :production "(-> %2 (dissoc :latent) (merge {:unit \"fahrenheit\"}))"}]

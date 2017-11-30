@@ -1,44 +1,26 @@
-{:context {:reference-time #clj-duckling/time "(t -2 2013 2 12 4 30 0)"
-           :min #clj-duckling/time "(t -2 1900)"
-           :max #clj-duckling/time "(t -2 2100)"}
- :tests [{:text ["acum"
-                 "chiar acum"]
-          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 00)"]}
-         {:text ["azi"
-                 "astazi"
-                 "astăzi"]
+{:context {:reference-time #clj-duckling/time "(t -2 2013 2 12 4 30 0)", :min #clj-duckling/time "(t -2 1900)", :max #clj-duckling/time "(t -2 2100)"}
+
+ :tests [{:text ["acum" "chiar acum"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 0)"]}
+         {:text ["azi" "astazi" "astăzi"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 12)"]}
          {:text ["ieri"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 11)"]}
-         {:text ["maine"
-                 "mâine"]
+         {:text ["maine" "mâine"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 13)"]}
-         {:text ["luni"
-                 "lunea asta"
-                 "lunea aceasta"]
+         {:text ["luni" "lunea asta" "lunea aceasta"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
-         {:text ["Luni, 18 Feb"
-                 "Luni, 18 Februarie"]
+         {:text ["Luni, 18 Feb" "Luni, 18 Februarie"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1 :day 18 :month 2)"]}
-         {:text ["marti"
-                 "marți"
-                 "Marti 19"
-                 "Marti pe 19"
-                 "Marți 19"]
+         {:text ["marti" "marți" "Marti 19" "Marti pe 19" "Marți 19"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
-         {:text ["joi"
-                 "joia"]
+         {:text ["joi" "joia"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
          {:text ["vineri"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 15)"]}
-         {:text ["sambata"
-                 "sâmbătă"
-                 "sam"]
+         {:text ["sambata" "sâmbătă" "sam"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 16)"]}
-         {:text ["duminica"
-                 "duminică"]
+         {:text ["duminica" "duminică"]
           :checks [#clj-duckling/corpus "(datetime 2013 2 17)"]}
-         {:text ["1 martie"
-                 "intai martie"]
-          :checks [#clj-duckling/corpus "(datetime 2013 3 1 :day 1 :month 3)
-)"]}]}
+         {:text ["1 martie" "intai martie"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 1 :day 1 :month 3)"]}]}

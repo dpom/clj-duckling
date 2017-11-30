@@ -1,0 +1,11 @@
+[#clj-duckling.engine/rule {:name "soicind (unit-of-duration)", :pattern "#\"(?i)t?sh?oicind[íi]?\"", :production "{:dim :unit-of-duration, :grain :second}"}
+ #clj-duckling.engine/rule {:name "nóiméad (unit-of-duration)", :pattern "#\"(?i)n[óo]im[ée][ai]da?\"", :production "{:dim :unit-of-duration, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "uair (unit-of-duration)", :pattern "#\"(?i)([thn]-?)?uair(e|eanta)?\"", :production "{:dim :unit-of-duration, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "lá (unit-of-duration)", :pattern "#\"(?i)l(ae(thanta)?|[áa])\"", :production "{:dim :unit-of-duration, :grain :day}"}
+ #clj-duckling.engine/rule {:name "seachtain (unit-of-duration)", :pattern "#\"(?i)t?sh?eachtain(e|[íi])?\"", :production "{:dim :unit-of-duration, :grain :week}"}
+ #clj-duckling.engine/rule {:name "mí (unit-of-duration)", :pattern "#\"(?i)mh?[íi](sa|nna)?\"", :production "{:dim :unit-of-duration, :grain :month}"}
+ #clj-duckling.engine/rule {:name "bliain (unit-of-duration)", :pattern "#\"(?i)m?bh?lia(in|na|nta)\"", :production "{:dim :unit-of-duration, :grain :year}"}
+ #clj-duckling.engine/rule {:name "coicís", :pattern "#\"(?i)coic[íi]s[íie]?\"", :production "{:dim :duration, :value (duration :day 14)}"}
+ #clj-duckling.engine/rule {:name "leathuair", :pattern "#\"(?i)leathuair(e|eanta)?\"", :production "{:dim :duration, :value (duration :minute 30)}"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration> <integer>", :pattern "[(integer 0) (dim :unit-of-duration) (integer 0)]", :production "{:dim :duration, :value (if (and (re-matches #\"(?i)([thn]-?)?aon\" (:text %1)) (re-matches #\"(?i)amh[áa]in\" (:text %3))) (duration (:grain %2) (:value %1)) (duration (:grain %2) (+ (:value %1) (:value %3))))}"}]

@@ -1,0 +1,25 @@
+[#clj-duckling.engine/rule {:name "seconde (cycle)", :pattern "#\"(?i)secondes?\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (cycle)", :pattern "#\"(?i)minutes?\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "heure (cycle)", :pattern "#\"(?i)heures?\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "jour (cycle)", :pattern "#\"(?i)jour(n[ée]e?)?s?\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "semaine (cycle)", :pattern "#\"(?i)semaines?\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "mois (cycle)", :pattern "#\"(?i)mois\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "année (cycle)", :pattern "#\"(?i)an(n[ée]e?)?s?\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "ce|dans le <cycle>", :pattern "[#\"(?i)(cet?t?e?s?)|(dans l[ae']? ?)\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "le <cycle> dernier", :pattern "[#\"(?i)l[ae']? ?\" (dim :cycle) #\"(?i)derni[èe]re?|pass[ée]e?\"]", :production "(cycle-nth (:grain %2) -1)"}
+ #clj-duckling.engine/rule {:name "le <cycle> prochain|suivant|d'après", :pattern "[#\"(?i)l[ae']? ?|une? ?\" (dim :cycle) #\"(?i)prochaine?|suivante?|qui suit|(d'? ?)?apr[eèé]s\"]", :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "<cycle> dernier", :pattern "[(dim :cycle) #\"(?i)derni[èe]re?|pass[ée]e?|pr[eé]c[eé]dente?|(d')? ?avant\"]", :production "(cycle-nth (:grain %1) -1)"}
+ #clj-duckling.engine/rule {:name "<cycle> prochain|suivant|d'après", :pattern "[(dim :cycle) #\"(?i)prochaine?|suivante?|qui suit|(d')? ?apr[eèé]s\"]", :production "(cycle-nth (:grain %1) 1)"}
+ #clj-duckling.engine/rule {:name "n <cycle> avant", :pattern "[(integer 2 9999) (dim :cycle) #\"(?i)(d')? ?avant|plus t[oô]t\"]", :production "(cycle-nth (:grain %2) (- (:value %1)))"}
+ #clj-duckling.engine/rule {:name "n <cycle> après", :pattern "[(integer 2 9999) (dim :cycle) #\"(?i)(d')? ?apr[eèé]s|qui sui(t|ves?)|plus tard\"]", :production "(cycle-nth (:grain %2) (:value %1))"}
+ #clj-duckling.engine/rule {:name "le <cycle> après|suivant <time>", :pattern "[#\"(?i)l[ea']? ?\" (dim :cycle) #\"(?i)suivante?|apr[eèé]s\" (dim :time)]", :production "(cycle-nth-after (:grain %2) 1 %4)"}
+ #clj-duckling.engine/rule {:name "le <cycle> avant|précédent <time>", :pattern "[#\"(?i)l[ea']? ?\" (dim :cycle) #\"(?i)avant|pr[ée]c[ée]dent\" (dim :time)]", :production "(cycle-nth-after (:grain %2) -1 %4)"}
+ #clj-duckling.engine/rule {:name "n derniers <cycle>", :pattern "[(integer 2 9999) #\"(?i)derni.re?s?\" (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %1)))"}
+ #clj-duckling.engine/rule {:name "n prochains <cycle>", :pattern "[(integer 2 9999) #\"(?i)prochaine?s?|suivante?s?|apr[eèé]s\" (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %1))"}
+ #clj-duckling.engine/rule {:name "n <cycle> passes|precedents", :pattern "[(integer 2 9999) (dim :cycle) #\"(?i)pass[eèé][eèé]?s?|pr[eé]c[eé]dente?s?|(d')? ?avant|plus t[oô]t\"]", :production "(cycle-n-not-immediate (:grain %2) (- (:value %1)))"}
+ #clj-duckling.engine/rule {:name "n <cycle> suivants", :pattern "[(integer 2 9999) (dim :cycle) #\"(?i)prochaine?s?|suivante?s?|apr[eèé]s|qui sui(t|ves?)|plus tard\"]", :production "(cycle-n-not-immediate (:grain %2) (:value %1))"}
+ #clj-duckling.engine/rule {:name "<ordinal> <cycle> de <time>", :pattern "[(dim :ordinal) (dim :cycle) #\"(?i)d['eu]|en\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %2) (dec (:value %1)) %4)"}
+ #clj-duckling.engine/rule {:name "le <ordinal> <cycle> de <time>", :pattern "[#\"(?i)l[ea]\" (dim :ordinal) (dim :cycle) #\"(?i)d['eu]|en\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %3) (dec (:value %2)) %5)"}
+ #clj-duckling.engine/rule {:name "le <cycle> de <time>", :pattern "[#\"(?i)l[ea]\" (dim :cycle) #\"(?i)d['eu]|en\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %2) 0 %4)"}
+ #clj-duckling.engine/rule {:name "le lendemain du <time>", :pattern "[#\"(?i)(le|au)? ?lendemain du\" (dim :time)]", :production "(cycle-nth-after-not-immediate :day 1 %2)"}
+ #clj-duckling.engine/rule {:name "le veille du <time>", :pattern "[#\"(?i)(la )?veille du\" (dim :time)]", :production "(cycle-nth-after-not-immediate :day -1 %2)"}]

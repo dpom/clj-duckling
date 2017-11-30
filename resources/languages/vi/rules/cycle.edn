@@ -1,0 +1,17 @@
+[#clj-duckling.engine/rule {:name "second (cycle)", :pattern "#\"(?i)(giây|s|sec)\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (cycle)", :pattern "#\"(?i)(phút|m|min)\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (cycle)", :pattern "#\"(?i)(giờ|h|tiếng)\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (cycle)", :pattern "#\"(?i)ngày\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (cycle)", :pattern "#\"(?i)tuần\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (cycle)", :pattern "#\"(?i)tháng\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "quarter (cycle)", :pattern "#\"(?i)quý\"", :production "{:dim :cycle, :grain :quarter}"}
+ #clj-duckling.engine/rule {:name "year (cycle)", :pattern "#\"(?i)năm\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "this <cycle>", :pattern "[(dim :cycle) #\"(?i)nay|này|hiện tại|hôm nay|năm nay\"]", :production "(cycle-nth (:grain %1) 0)"}
+ #clj-duckling.engine/rule {:name "last <cycle>", :pattern "[(dim :cycle) #\"(?i)trước|qua|vừa rồi|ngoái\"]", :production "(cycle-nth (:grain %1) -1)"}
+ #clj-duckling.engine/rule {:name "next <cycle>", :pattern "[(dim :cycle) #\"(?i)(tới|kế|sau|tiếp)( theo)?( tiếp)?\"]", :production "(cycle-nth (:grain %1) 1)"}
+ #clj-duckling.engine/rule {:name "last n <cycle>", :pattern "[(integer 1 9999) (dim :cycle) #\"(?i)trước|qua|vừa rồi|ngoái|vừa qua\"]", :production "(cycle-n-not-immediate (:grain %2) (- (:value %1)))"}
+ #clj-duckling.engine/rule {:name "next n <cycle>", :pattern "[(integer 1 9999) (dim :cycle) #\"(?i)(tới|kế|sau|tiếp)( theo)?( tiếp)?\"]", :production "(cycle-n-not-immediate (:grain %2) (:value %1))"}
+ #clj-duckling.engine/rule {:name "<ordinal> <cycle> of <time>", :pattern "[(dim :cycle) (dim :ordinal) #\"(?i)của|trong\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %1) (dec (:value %2)) %4)"}
+ #clj-duckling.engine/rule {:name "quarter <number>", :pattern "[(dim :cycle (fn* [p1__3547#] (= :quarter (:grain p1__3547#)))) (dim :number)]", :production "(cycle-nth-after :quarter (dec (:value %2)) (cycle-nth :year 0))"}
+ #clj-duckling.engine/rule {:name "quarter <number> <year>", :pattern "[(dim :cycle (fn* [p1__3548#] (= :quarter (:grain p1__3548#)))) (dim :number) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %2)) %3)"}
+ #clj-duckling.engine/rule {:name "quarter <number> of <year>", :pattern "[(dim :cycle (fn* [p1__3549#] (= :quarter (:grain p1__3549#)))) (dim :number) #\"(?i)của|trong\" (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %2)) %4)"}]

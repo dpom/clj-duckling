@@ -1,0 +1,28 @@
+[#clj-duckling.engine/rule {:name "number as distance", :pattern "(dim :number)", :production "{:dim :distance, :latent true, :value (:value %1)}"}
+ #clj-duckling.engine/rule {:name "half", :pattern "#\"반\"", :production "{:dim :distance, :latent true, :value 0.5}"}
+ #clj-duckling.engine/rule {:name "<latent dist> km", :pattern "[(dim :distance) #\"(?i)km|(킬|키)로((미|메)터)?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"kilometre\", :normalized {:value (* 1000 (-> %1 :value)), :unit \"metre\"}}))"}
+ #clj-duckling.engine/rule {:name "<latent dist> feet", :pattern "[(dim :distance) #\"(?i)('|f(oo|ee)?ts?)|피트\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"foot\", :normalized {:value (* 0.3048 (-> %1 :value)), :unit \"metre\"}}))"}
+ #clj-duckling.engine/rule {:name "<latent dist> inch", :pattern "[(dim :distance) #\"(?i)(''|inch(es)?)|인치\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"inch\", :normalized {:value (* 0.0254 (-> %1 :value)), :unit \"metre\"}}))"}
+ #clj-duckling.engine/rule {:name "<latent dist> feet and <latent dist> inch ", :pattern "[(dim :distance) #\"(?i)('|f(oo|ee)?ts?)|피트\" (dim :distance) #\"(?i)(''|inch(es)?)|인치\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"foot\", :normalized {:value (+ (* 0.3048 (-> %1 :value)) (* 0.0254 (-> %3 :value))), :unit \"metre\"}}))"}
+ #clj-duckling.engine/rule {:name "<latent dist> yard", :pattern "[(dim :distance) #\"(?i)y(ar)?ds?|야드\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"yard\", :normalized {:value (* 0.9144 (-> %1 :value)), :unit \"metre\"}}))"}
+ #clj-duckling.engine/rule {:name "<dist> meters", :pattern "[(dim :distance) #\"(?i)m|(미|메|매)터\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"metre\"}))"}
+ #clj-duckling.engine/rule {:name "<dist> centimeters", :pattern "[(dim :distance) #\"(?i)cm|센(티|치)((미|메)터)?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"centimetre\", :normalized {:value (* 0.01 (-> %1 :value)), :unit \"metre\"}}))"}
+ #clj-duckling.engine/rule {:name "<dist> miles", :pattern "[(dim :distance) #\"(?i)miles?|마일즈?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"mile\", :normalized {:value (* 1609 (-> %1 :value)), :unit \"metre\"}}))"}
+ #clj-duckling.engine/rule {:name "number as volume", :pattern "(dim :number)", :production "{:dim :volume, :latent true, :value (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<latent vol> ml", :pattern "[(dim :volume) #\"(?i)ml|(밀|미)리리터\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"millilitre\", :normalized {:value (* 0.001 (-> %1 :value)), :unit \"litre\"}}))"}
+ #clj-duckling.engine/rule {:name "<vol> hectoliters", :pattern "[(dim :volume) #\"(핵|헥)토리터\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"hectolitre\", :normalized {:value (* 100 (-> %1 :value)), :unit \"litre\"}}))"}
+ #clj-duckling.engine/rule {:name "<vol> liters", :pattern "[(dim :volume) #\"(?i)l|리터\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"litre\"}))"}
+ #clj-duckling.engine/rule {:name "<latent vol> gallon", :pattern "[(dim :volume) #\"(?i)gal(l?ons?)?|갤(런|론)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"gallon\", :normalized {:value (* 3.785 (-> %1 :value)), :unit \"litre\"}}))"}
+ #clj-duckling.engine/rule {:name "<number> <units>", :pattern "[(dim :number) (dim :leven-unit)]", :production "{:dim :quantity, :value (:value %1), :unit (:value %2), :form :no-product}"}
+ #clj-duckling.engine/rule {:name "<quantity> of product", :pattern "[(dim :quantity (fn* [p1__3549#] (= :no-product (:form p1__3549#)))) #\"의\" (dim :leven-product)]", :production "(-> %1 (assoc :product (:value %3)) (dissoc :form))"}
+ #clj-duckling.engine/rule {:name "<quantity> of product", :pattern "[(dim :leven-product) (dim :quantity (fn* [p1__3550#] (= :no-product (:form p1__3550#))))]", :production "(-> %2 (assoc :product (:value %1)) (dissoc :form))"}
+ #clj-duckling.engine/rule {:name "pounds", :pattern "#\"파운(드|즈)\"", :production "{:dim :leven-unit, :value \"pound\"}"}
+ #clj-duckling.engine/rule {:name "gram", :pattern "#\"그(램|람)\"", :production "{:dim :leven-unit, :value \"그램\"}"}
+ #clj-duckling.engine/rule {:name "근", :pattern "#\"근\"", :production "{:dim :leven-unit, :value \"근\"}"}
+ #clj-duckling.engine/rule {:name "개", :pattern "#\"개\"", :production "{:dim :leven-unit, :value \"개\"}"}
+ #clj-duckling.engine/rule {:name "cup - 컵", :pattern "#\"컵\"", :production "{:dim :leven-unit, :value \"cup\"}"}
+ #clj-duckling.engine/rule {:name "Bowl - 그릇", :pattern "#\"그릇\"", :production "{:dim :leven-unit, :value \"bowl\"}"}
+ #clj-duckling.engine/rule {:name "dish - 접시", :pattern "#\"그릇\"", :production "{:dim :leven-unit, :value \"dish\"}"}
+ #clj-duckling.engine/rule {:name "판 - a pizza => 피자한판", :pattern "#\"판\"", :production "{:dim :leven-unit, :value \"판\"}"}
+ #clj-duckling.engine/rule {:name "삼겹살", :pattern "#\"삼겹살\"", :production "{:dim :leven-product, :value \"삼겹살\"}"}
+ #clj-duckling.engine/rule {:name "콜라", :pattern "#\"콜라\"", :production "{:dim :leven-product, :value \"콜라\"}"}]

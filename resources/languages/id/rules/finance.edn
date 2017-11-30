@@ -1,0 +1,15 @@
+[#clj-duckling.engine/rule {:name "intersect", :pattern "[(dim :amount-of-money) (dim :number)]", :production "(compose-money %1 %2)"}
+ #clj-duckling.engine/rule {:name "$", :pattern "#\"\\$|dolar?\"", :production "{:dim :unit, :unit \"$\"}"}
+ #clj-duckling.engine/rule {:name "€", :pattern "#\"(?i)€|([e€]uro?s?)\"", :production "{:dim :unit, :unit \"EUR\"}"}
+ #clj-duckling.engine/rule {:name "£", :pattern "#\"(?i)£|pound(sterling)?\"", :production "{:dim :unit, :unit \"£\"}"}
+ #clj-duckling.engine/rule {:name "USD", :pattern "#\"(?i)US[D\\$]\"", :production "{:dim :unit, :unit \"USD\"}"}
+ #clj-duckling.engine/rule {:name "SGD", :pattern "#\"(?i)SG[D\\$]\"", :production "{:dim :unit, :unit \"SGD\"}"}
+ #clj-duckling.engine/rule {:name "GBP", :pattern "#\"(?i)GBP\"", :production "{:dim :unit, :unit \"GBP\"}"}
+ #clj-duckling.engine/rule {:name "JPY", :pattern "#\"(?i)JPY|¥(. )?|(Y|y)en\"", :production "{:dim :unit, :unit \"JPY\"}"}
+ #clj-duckling.engine/rule {:name "PTS", :pattern "#\"(?i)pta?s?\"", :production "{:dim :unit, :unit \"PTS\"}"}
+ #clj-duckling.engine/rule {:name "INR", :pattern "#\"(?i)INR|Rs(. )?|(R|r)upee\"", :production "{:dim :unit, :unit \"INR\"}"}
+ #clj-duckling.engine/rule {:name "IDR", :pattern "#\"(?i)IDR|Rp(. )?|(R|r)upiah\"", :production "{:dim :unit, :unit \"IDR\"}"}
+ #clj-duckling.engine/rule {:name "<unit> <amount>", :pattern "[(dim :unit) (dim :number)]", :production "{:dim :amount-of-money, :value (:value %2), :unit (:unit %1), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "<amount> <unit>", :pattern "[(dim :number) (dim :unit)]", :production "{:dim :amount-of-money, :value (:value %1), :unit (:unit %2), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "about <amount-of-money>", :pattern "[#\"(?i)about|approx(\\.|imately)?|close to|near( to)?|around|almost\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"approximate\")"}
+ #clj-duckling.engine/rule {:name "exactly <amount-of-money>", :pattern "[#\"(?i)exactly|precisely\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"exact\")"}]

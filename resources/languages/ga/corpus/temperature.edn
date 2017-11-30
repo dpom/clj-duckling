@@ -1,0 +1,10 @@
+{:context {}
+
+ :tests [{:text ["37°C" "37 ° celsius" "37 céimeanna Celsius" "37 céimeanna C" "37 céimeanna ceinteagrád"]
+          :checks [#clj-duckling/corpus "(temperature 37 \"celsius\")"]}
+         {:text ["70°F" "70 ° Fahrenheit" "70 céimeanna F"]
+          :checks [#clj-duckling/corpus "(temperature 70 \"fahrenheit\")"]}
+         {:text ["45°" "45 céimeanna"]
+          :checks [#clj-duckling/corpus "(temperature 45 \"degree\")"]}
+         {:text ["-10°" "- 10 céimeanna" "10 céimeanna faoi bhun náid"]
+          :checks [#clj-duckling/corpus "(temperature -10 \"degree\")"]}]}

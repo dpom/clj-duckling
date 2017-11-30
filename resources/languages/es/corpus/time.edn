@@ -1,0 +1,206 @@
+{:context {:reference-time #clj-duckling/time "(t -2 2013 2 12 4 30)"}
+
+ :tests [{:text ["ahora" "ya" "ahorita" "cuanto antes"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 0)"]}
+         {:text ["hoy" "en este momento"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12)"]}
+         {:text ["ayer"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11)"]}
+         {:text ["anteayer" "antier"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10)"]}
+         {:text ["mañana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13)"]}
+         {:text ["pasado mañana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["lunes" "lu" "lun." "este lunes"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["lunes, 18 de febrero"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1 :day 18 :month 2)"]}
+         {:text ["martes" "ma" "ma."]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 :day-of-week 2)"]}
+         {:text ["miercoles" "miércoles" "mx" "mié."]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 :day-of-week 3)"]}
+         {:text ["jueves"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14 :day-of-week 4)"]}
+         {:text ["viernes"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15 :day-of-week 5)"]}
+         {:text ["sabado"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16 :day-of-week 6)"]}
+         {:text ["domingo"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17 :day-of-week 7)"]}
+         {:text ["el 5 de mayo" "el cinco de mayo"]
+          :checks [#clj-duckling/corpus "(datetime 2013 5 5 :day 5 :month 5)"]}
+         {:text ["el cinco de mayo de 2013" "mayo 5 del 2013" "5-5-2013"]
+          :checks [#clj-duckling/corpus "(datetime 2013 5 5 :day 5 :month 5 :year 2013)"]}
+         {:text ["el 4 de julio" "el 4/7"]
+          :checks [#clj-duckling/corpus "(datetime 2013 7 4 :day 4 :month 7)"]}
+         {:text ["el 3 de marzo" "3 de marzo" "el 3-3"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 3 :day 3 :month 3)"]}
+         {:text ["el 5 de abril" "5 de abril"]
+          :checks [#clj-duckling/corpus "(datetime 2013 4 5 :day 5 :month 4)"]}
+         {:text ["el 1 de marzo" "1 de marzo" "el primero de marzo" "el uno de marzo" "primero de marzo" "uno de marzo"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 1 :day 1 :month 3)"]}
+         {:text ["1-3-2013" "1.3.2013" "1/3/2013"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 1 :day 1 :month 3 :year 2013)"]}
+         {:text ["el 16" "16 de febrero"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16 - 17)"]}
+         {:text ["el 17" "17 de febrero" "17-2" "el 17/2"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17 :day 17 :month 2)"]}
+         {:text ["el 20" "20 de febrero" "20/2"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 20 :day 20 :month 2)"]}
+         {:text ["31/10/1974" "31/10/74"]
+          :checks [#clj-duckling/corpus "(datetime 1974 10 31 :day 31 :month 10 :year 1974)"]}
+         {:text ["el martes que viene"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 :day-of-week 2)"]}
+         {:text ["miércoles que viene" "el miércoles de la semana que viene" "miercoles de la próxima semana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 20 :day-of-week 3)"]}
+         {:text ["el lunes de esta semana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11 :day-of-week 1)"]}
+         {:text ["martes de esta semana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 :day-of-week 2)"]}
+         {:text ["el miércoles de esta semana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 :day-of-week 2)"]}
+         {:text ["esta semana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11 :grain :week)"]}
+         {:text ["la semana pasada"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 4 :grain :week)"]}
+         {:text ["la semana que viene" "la proxima semana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :grain :week)"]}
+         {:text ["el pasado mes"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1)"]}
+         {:text ["el mes que viene" "el proximo mes"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}
+         {:text ["el año pasado"]
+          :checks [#clj-duckling/corpus "(datetime 2012)"]}
+         {:text ["este ano"]
+          :checks [#clj-duckling/corpus "(datetime 2013)"]}
+         {:text ["el año que viene" "el proximo ano"]
+          :checks [#clj-duckling/corpus "(datetime 2014)"]}
+         {:text ["el domingo pasado" "el domingo de la semana pasada"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 :day-of-week 7)"]}
+         {:text ["el martes pasado"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5 :day-of-week 2)"]}
+         {:text ["a las tres de la tarde" "a las tres" "a las 3 pm" "a las 15 horas"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15)"]}
+         {:text ["a las ocho de la tarde"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 20)"]}
+         {:text ["15:00" "15.00"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 0)"]}
+         {:text ["medianoche"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 0)"]}
+         {:text ["mediodía" "las doce"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 12)"]}
+         {:text ["las doce y cuarto"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 12 15 :hour 12 :minute 15)"]}
+         {:text ["las doce menos cinco"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 11 55 :hour 11 :minute 55)"]}
+         {:text ["las doce y media"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 12 30 :hour 12 :minute 30)"]}
+         {:text ["las tres de la manana" "las tres en la manana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 3 :hour 3)"]}
+         {:text ["a las tres y quince" "a las 3 y cuarto" "a las tres y cuarto de la tarde" "a las tres y cuarto en la tarde" "15:15" "15.15"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 15 :hour 15 :minute 15)"]}
+         {:text ["a las tres y media" "a las 3 y treinta" "a las tres y media de la tarde" "a las 3 y treinta del mediodía" "15:30" "15.30"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 30 :hour 15 :minute 30)"]}
+         {:text ["las doce menos cuarto" "11:45" "las once y cuarenta y cinco" "hoy a las doce menos cuarto" "hoy a las once y cuarenta y cinco"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 11 45 :hour 11 :minute 45)"]}
+         {:text ["5 y cuarto"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 15 :hour 17 :minute 15)"]}
+         {:text ["6 de la mañana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 6 - 7)"]}
+         {:text ["miércoles a las once de la mañana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 11 :hour 11 :day-of-week 3)"]}
+         {:text ["mañana a las once" "mañana a 11"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 11 :hour 11)"]}
+         {:text ["viernes, el 12 de septiembre de 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 9 12 :day-of-week 5 :day 12 :month 9 :year 2014)"]}
+         {:text ["en un segundo"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 1)"]}
+         {:text ["en un minuto" "en 1 min"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 31 0)"]}
+         {:text ["en 2 minutos" "en dos minutos"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 32 0)"]}
+         {:text ["en 60 minutos"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 30 0)"]}
+         {:text ["en una hora"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 30)"]}
+         {:text ["hace dos horas"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 2 30)"]}
+         {:text ["en 24 horas" "en veinticuatro horas"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 4 30)"]}
+         {:text ["en un dia"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 4)"]}
+         {:text ["en 7 dias"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 4)"]}
+         {:text ["en una semana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
+         {:text ["hace tres semanas"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1 22)"]}
+         {:text ["en dos meses"]
+          :checks [#clj-duckling/corpus "(datetime 2013 4 12)"]}
+         {:text ["hace tres meses"]
+          :checks [#clj-duckling/corpus "(datetime 2012 11 12)"]}
+         {:text ["en un ano" "en 1 año"]
+          :checks [#clj-duckling/corpus "(datetime 2014 2)"]}
+         {:text ["hace dos años"]
+          :checks [#clj-duckling/corpus "(datetime 2011 2)"]}
+         {:text ["este verano"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 6 21] [2013 9 24])"]}
+         {:text ["este invierno"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2012 12 21] [2013 3 21])"]}
+         {:text ["Navidad" "la Navidad"]
+          :checks [#clj-duckling/corpus "(datetime 2013 12 25)"]}
+         {:text ["Nochevieja"]
+          :checks [#clj-duckling/corpus "(datetime 2013 12 31)"]}
+         {:text ["ano nuevo" "año nuevo"]
+          :checks [#clj-duckling/corpus "(datetime 2014 1 1)"]}
+         {:text ["esta noche"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 18] [2013 2 13 0])"]}
+         {:text ["mañana por la noche"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13 18] [2013 2 14 0])"]}
+         {:text ["ayer por la noche"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 11 18] [2013 2 12 0])"]}
+         {:text ["este weekend" "este fin de semana"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 15 18] [2013 2 18 0])"]}
+         {:text ["lunes por la mañana"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 4] [2013 2 18 12])"]}
+         {:text ["el 15 de febrero por la mañana"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 15 4] [2013 2 15 12])"]}
+         {:text ["a las 8 de la tarde"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 20)"]}
+         {:text ["pasados 2 segundos"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 29 58] [2013 2 12 4 30 0])"]}
+         {:text ["proximos 3 segundos"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 1] [2013 2 12 4 30 4])"]}
+         {:text ["pasados 2 minutos"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 28] [2013 2 12 4 30])"]}
+         {:text ["proximos 3 minutos"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 31] [2013 2 12 4 34])"]}
+         {:text ["proximas 3 horas"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 5] [2013 2 12 8])"]}
+         {:text ["pasados 2 dias"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 10] [2013 2 12])"]}
+         {:text ["proximos 3 dias"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13] [2013 2 16])"]}
+         {:text ["pasadas dos semanas"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 1 28 :grain :week] [2013 2 11 :grain :week])"]}
+         {:text ["3 proximas semanas" "3 semanas que vienen"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 :grain :week] [2013 3 11 :grain :week])"]}
+         {:text ["pasados 2 meses" "dos pasados meses"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2012 12] [2013 2])"]}
+         {:text ["3 próximos meses" "proximos tres meses" "tres meses que vienen"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 3] [2013 6])"]}
+         {:text ["pasados 2 anos" "dos pasados años"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2011] [2013])"]}
+         {:text ["3 próximos años" "proximo tres años" "3 años que vienen"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2014] [2017])"]}
+         {:text ["13 a 15 de julio" "13 - 15 de julio de 2013"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 7 13] [2013 7 16])"]}
+         {:text ["9:30 - 11:00"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 9 30] [2013 2 12 11])"]}
+         {:text ["21 de Dic. a 6 de Ene"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 12 21] [2014 1 7])"]}
+         {:text ["dentro de tres horas"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 0] [2013 2 12 7 30])"]}
+         {:text ["a las cuatro de la tarde PST"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 16 :hour 16 :timezone \"PST\")"]}]}

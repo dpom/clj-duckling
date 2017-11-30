@@ -1,0 +1,126 @@
+{:context {:reference-time #clj-duckling/time "(t -2 2013 2 12 4 30 0)", :min #clj-duckling/time "(t -2 1900)", :max #clj-duckling/time "(t -2 2100)"}
+
+ :tests [{:text ["עכשיו" "מייד"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 0)"]}
+         {:text ["היום"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12)"]}
+         {:text ["אתמול"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11)"]}
+         {:text ["מחר"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13)"]}
+         {:text ["ראשון" "יום ראשון" "בראשון הזה"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17 :day-of-week 7)"]}
+         {:text ["יום שני" "שני" "שני הזה"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["שני 18 לפברואר"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1 :day 18 :month 2)"]}
+         {:text ["שלישי" "יום שלישי התשעה עשר"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
+         {:text ["חמישי"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["שישי"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15)"]}
+         {:text ["שבת"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16)"]}
+         {:text ["ראשון"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17)"]}
+         {:text ["1 למרץ"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 1 :day 1 :month 3)"]}
+         {:text ["במרץ 3"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 3 :day 3 :month 3)"]}
+         {:text ["באמצע מרץ"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 15 :month 3)"]}
+         {:text ["3 למרץ 2015" "שלושה במרץ 2015" "3/3/2015" "3/3/15" "2015-3-3" "2015-03-03"]
+          :checks [#clj-duckling/corpus "(datetime 2015 3 3 :day 3 :month 3 :year 2015)"]}
+         {:text ["ה15 בפברואר" "15 לפברואר" "2/15" "ב 2/15" "פברואר 15"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15 :day 15 :month 2)"]}
+         {:text ["אוגוסט 8"]
+          :checks [#clj-duckling/corpus "(datetime 2013 8 8 :day 8 :month 8)"]}
+         {:text ["אוקטובר 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 :year 2014 :month 10)"]}
+         {:text ["10/31/1974" "10/31/74" "10-31-74"]
+          :checks [#clj-duckling/corpus "(datetime 1974 10 31 :day 31 :month 10 :year 1974)"]}
+         {:text ["14 לאפריל 2015" "אפריל 14, 2015"]
+          :checks [#clj-duckling/corpus "(datetime 2015 4 14 :day 14 :month 4 :years 2015)"]}
+         {:text ["שישי הבא"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 22 :day-of-week 2)"]}
+         {:text ["מרץ הבא"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}
+         {:text ["ראשון, 10 לפברואר"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 :day-of-week 7 :day 10 :month 2)"]}
+         {:text ["בשבוע הזה"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11 :grain :week)"]}
+         {:text ["שבוע שעבר" "שבוע האחרון"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 4 :grain :week)"]}
+         {:text ["שבוע הבא"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :grain :week)"]}
+         {:text ["חודש שעבר"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1)"]}
+         {:text ["חודש הבא"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}
+         {:text ["שנה הבאה"]
+          :checks [#clj-duckling/corpus "(datetime 2014)"]}
+         {:text ["ראשון בשבוע שעבר"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 :day-of-week 7)"]}
+         {:text ["שלישי האחרון"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5 :day-of-week 2)"]}
+         {:text ["רביעי שבוע הבא" "רביעי הבא"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 20 :day-of-week 3)"]}
+         {:text ["שישי הבא"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 22 :day-of-week 5)"]}
+         {:text ["רביעי הזה"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 :day-of-week 3)"]}
+         {:text ["שני האחרון של מרץ"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 25 :day-of-week 1)"]}
+         {:text ["ראשון האחרון של מרץ 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 3 30 :day-of-week 7)"]}
+         {:text ["השלישי באוקטובר"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 3)"]}
+         {:text ["3:18am" "3:18a"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 3 18)"]}
+         {:text ["ב 3pm" "3PM" "3pm"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 :hour 3 :meridiem :pm)"]}
+         {:text ["15:15" "3:15pm" "3:15PM" "3:15p"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 15 :hour 3 :minute 15 :meridiem :pm)"]}
+         {:text ["3:20p"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 20 :hour 3 :minute 20 :meridiem :pm)"]}
+         {:text ["15:30" "3:30pm" "3:30PM" "330 p.m." "3:30 p m"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 30 :hour 3 :minute 30 :meridiem :pm)"]}
+         {:text ["15:23:24"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 23 24 :hour 15 :minute 23 :second 24)"]}
+         {:text ["רבע ל12" "11:45am"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 11 45 :hour 11 :minute 45)"]}
+         {:text ["בתשע בבוקר בשבת"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16 9 :day-of-week 6 :hour 9 :meridiem :am)"]}
+         {:text ["שישי, יולי 18, 2014 07:00 PM"]
+          :checks [#clj-duckling/corpus "(datetime 2014 7 18 19 0 :day-of-week 5 :hour 7 :meridiem :pm)"]}
+         {:text ["בעוד 2 דקות"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 32 0)"]}
+         {:text ["בעוד 60 דקות"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 30 0)"]}
+         {:text ["בעוד רבע שעה"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 45 0)"]}
+         {:text ["בעוד חצי שעה"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 0 0)"]}
+         {:text ["בעוד 24 שעות" "בעוד עשרים וארבע שעות"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 4 30)"]}
+         {:text ["בעוד שבעה ימים"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 4)"]}
+         {:text ["לפני שבעה ימים"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5 4)"]}
+         {:text ["1954"]
+          :checks [#clj-duckling/corpus "(datetime 1954)"]}
+         {:text ["הערב" "היום בערב"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 18] [2013 2 13 0])"]}
+         {:text ["בסופ״ש האחרון"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 8 18] [2013 2 11 0])"]}
+         {:text ["מחר בערב"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13 18] [2013 2 14 0])"]}
+         {:text ["מחר בצהריים" "מחר צהריים"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13 12] [2013 2 13 14])"]}
+         {:text ["אתמול בערב"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 11 18] [2013 2 12 0])"]}
+         {:text ["בסופ״ש הזה"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 15 18] [2013 2 18 0])"]}
+         {:text ["שני בבוקר"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 4] [2013 2 18 12])"]}]}

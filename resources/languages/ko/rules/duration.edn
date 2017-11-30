@@ -1,0 +1,18 @@
+[#clj-duckling.engine/rule {:name "second (unit-of-duration)", :pattern "#\"초\"", :production "{:dim :unit-of-duration, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (unit-of-duration)", :pattern "#\"분\"", :production "{:dim :unit-of-duration, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (unit-of-duration)", :pattern "#\"시간?\"", :production "{:dim :unit-of-duration, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (unit-of-duration)", :pattern "#\"날|일(간|동안)?\"", :production "{:dim :unit-of-duration, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (unit-of-duration)", :pattern "#\"주일?\"", :production "{:dim :unit-of-duration, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (unit-of-duration)", :pattern "#\"(달)(간|동안)?\"", :production "{:dim :unit-of-duration, :grain :month}"}
+ #clj-duckling.engine/rule {:name "year (unit-of-duration)", :pattern "#\"해|연간|년(간|동안)?\"", :production "{:dim :unit-of-duration, :grain :year}"}
+ #clj-duckling.engine/rule {:name "half an hour", :pattern "[(dim :cycle (fn* [p1__3546#] (= :hour (:grain p1__3546#)))) #\"반\"]", :production "{:dim :duration, :value (duration :minute 30)}"}
+ #clj-duckling.engine/rule {:name "a day - 하루", :pattern "#\"하루\"", :production "{:dim :duration, :value (duration :day 1)}"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "number.number hours", :pattern "[#\"(\\d+)\\.(\\d+)\" #\"시간\"]", :production "{:dim :duration, :value (duration :minute (int (+ (quot (* 6 (Long/parseLong (second (:groups %1)))) (java.lang.Math/pow 10 (- (count (second (:groups %1))) 1))) (* 60 (Long/parseLong (first (:groups %1)))))))}"}
+ #clj-duckling.engine/rule {:name "<integer> and an half hours", :pattern "[(integer 0) #\"시간반\"]", :production "{:dim :duration, :value (duration :minute (+ 30 (* 60 (:value %1))))}"}
+ #clj-duckling.engine/rule {:name "in <duration>", :pattern "[(dim :duration) #\"(안|내)에?\"]", :production "(in-duration (:value %1))"}
+ #clj-duckling.engine/rule {:name "after <duration>", :pattern "[(dim :duration) #\"이?후\"]", :production "(merge (in-duration (:value %1)) {:direction :after})"}
+ #clj-duckling.engine/rule {:name "<duration> from now", :pattern "[#\"지금부터\" (dim :duration)]", :production "(in-duration (:value %1))"}
+ #clj-duckling.engine/rule {:name "<duration> ago", :pattern "[(dim :duration) #\"이?전\"]", :production "(duration-ago (:value %1))"}
+ #clj-duckling.engine/rule {:name "about <duration>", :pattern "[#\"대충|약\" (dim :duration)]", :production "(-> %2 (merge {:precision \"approximate\"}))"}
+ #clj-duckling.engine/rule {:name "exactly <duration>", :pattern "[#\"정확히\" (dim :duration)]", :production "(-> %2 (merge {:precision \"exact\"}))"}]

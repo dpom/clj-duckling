@@ -1,0 +1,16 @@
+[#clj-duckling.engine/rule {:name "intersect (X cents)", :pattern "[(dim :amount-of-money) (dim :amount-of-money (fn* [p1__3545#] (= (:unit p1__3545#) \"cent\")))]", :production "(compose-money %1 %2)"}
+ #clj-duckling.engine/rule {:name "intersect (and X cents)", :pattern "[(dim :amount-of-money) #\"(?i)agus|is\" (dim :amount-of-money (fn* [p1__3546#] (= (:unit p1__3546#) \"cent\")))]", :production "(compose-money %1 %3)"}
+ #clj-duckling.engine/rule {:name "intersect", :pattern "[(dim :amount-of-money) (dim :number)]", :production "(compose-money %1 %2)"}
+ #clj-duckling.engine/rule {:name "intersect (agus number)", :pattern "[(dim :amount-of-money) #\"(?i)agus|is\" (dim :number)]", :production "(compose-money %1 %3)"}
+ #clj-duckling.engine/rule {:name "thart ar <amount-of-money>", :pattern "[#\"(?i)thart( ar)?|beagnach|breis (is|agus)\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"approximate\")"}
+ #clj-duckling.engine/rule {:name "<amount-of-money> glan", :pattern "[(dim :amount-of-money) #\"(?i)glan|baileach|(go )?d[íi]reach\"]", :production "(assoc %1 :precision \"exact\")"}
+ #clj-duckling.engine/rule {:name "$", :pattern "#\"\\$|n?dh?oll?ai?rs?\"", :production "{:dim :unit, :unit \"$\"}"}
+ #clj-duckling.engine/rule {:name "€", :pattern "#\"(?i)€|([e€]uro?s?)\"", :production "{:dim :unit, :unit \"EUR\"}"}
+ #clj-duckling.engine/rule {:name "£", :pattern "#\"(?i)£|pounds?|b?ph?unt\"", :production "{:dim :unit, :unit \"£\"}"}
+ #clj-duckling.engine/rule {:name "USD", :pattern "#\"(?i)US[D\\$]\"", :production "{:dim :unit, :unit \"USD\"}"}
+ #clj-duckling.engine/rule {:name "GBP", :pattern "#\"(?i)GBP\"", :production "{:dim :unit, :unit \"GBP\"}"}
+ #clj-duckling.engine/rule {:name "PTS", :pattern "#\"(?i)pta?s?\"", :production "{:dim :unit, :unit \"PTS\"}"}
+ #clj-duckling.engine/rule {:name "cent", :pattern "#\"(?i)cents?|g?ch?eint(eanna)?|c|¢\"", :production "{:dim :unit, :unit \"cent\"}"}
+ #clj-duckling.engine/rule {:name "INR", :pattern "#\"(?i)INR|Rs(. )?|(R|r)upees?|(R|r)[úu]pa[íi]\"", :production "{:dim :unit, :unit \"INR\"}"}
+ #clj-duckling.engine/rule {:name "<unit> <amount>", :pattern "[(dim :unit) (dim :number)]", :production "{:dim :amount-of-money, :value (:value %2), :unit (:unit %1), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "<amount> <unit>", :pattern "[(dim :number) (dim :unit)]", :production "{:dim :amount-of-money, :value (:value %1), :unit (:unit %2), :fields {(:unit %1) (:value %2)}}"}]

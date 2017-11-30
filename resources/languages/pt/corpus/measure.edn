@@ -1,0 +1,24 @@
+{:context {}
+
+ :tests [{:text ["3 kilómetros" "3 kilometros" "3 km" "3km" "3k"]
+          :checks [#clj-duckling/corpus "(distance 3 \"kilometre\" {:value 3000, :unit \"metre\"})"]}
+         {:text ["3,0 km"]
+          :checks [#clj-duckling/corpus "(distance 3.0 \"kilometre\" {:value 3000.0, :unit \"metre\"})"]}
+         {:text ["8 milhas"]
+          :checks [#clj-duckling/corpus "(distance 8 \"mile\" {:value 12872, :unit \"metre\"})"]}
+         {:text ["9m" "9 metros"]
+          :checks [#clj-duckling/corpus "(distance 9 \"metre\")"]}
+         {:text ["2cm" "2 centímetros"]
+          :checks [#clj-duckling/corpus "(distance 2 \"centimetre\" {:value 0.02, :unit \"metre\"})"]}
+         {:text ["250 mililitros" "250ml" "250 ml"]
+          :checks [#clj-duckling/corpus "(volume 250 \"millilitre\" {:value 0.25, :unit \"litre\"})"]}
+         {:text ["2 litros"]
+          :checks [#clj-duckling/corpus "(volume 2 \"litre\")"]}
+         {:text ["1 galão"]
+          :checks [#clj-duckling/corpus "(volume 1 \"gallon\" {:value 3.785, :unit \"litre\"})"]}
+         {:text ["3 galões"]
+          :checks [#clj-duckling/corpus "(volume 3 \"gallon\" {:value 11.355, :unit \"litre\"})"]}
+         {:text ["3 hectolitros"]
+          :checks [#clj-duckling/corpus "(volume 300 \"litre\" {:value 30, :unit \"litre\"})"]}
+         {:text ["meio litro"]
+          :checks [#clj-duckling/corpus "(volume 0.5 \"litre\")"]}]}

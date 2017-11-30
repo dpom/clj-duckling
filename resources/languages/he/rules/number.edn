@@ -1,0 +1,54 @@
+[#clj-duckling.engine/rule {:name "intersect numbers", :pattern "[(dim :number :grain (fn* [p1__3547#] (> (:grain p1__3547#) 1))) (dim :number)]", :production "(compose-numbers %1 %2)"}
+ #clj-duckling.engine/rule {:name "intersect (with and)", :pattern "[(dim :number :grain (fn* [p1__3548#] (> (:grain p1__3548#) 0))) #\"(?i)ו\" (dim :number)]", :production "(compose-numbers %1 %3)"}
+ #clj-duckling.engine/rule {:name "integer 0", :pattern "#\"(?i)(אפס|כלום)\"", :production "{:dim :number, :integer true, :value 0, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 1", :pattern "#\"(?i)(אחד|אחת)\"", :production "{:dim :number, :integer true, :value 1, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 2", :pattern "#\"(?i)(שתיים|שניים)\"", :production "{:dim :number, :integer true, :value 2, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 3", :pattern "#\"(?i)(שלושה?)\"", :production "{:dim :number, :integer true, :value 3, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 4", :pattern "#\"(?i)(ארבעה?)\"", :production "{:dim :number, :integer true, :value 4, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 5", :pattern "#\"(?i)(חמש|חמישה)\"", :production "{:dim :number, :integer true, :value 5, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 6", :pattern "#\"(?i)(ששה?)\"", :production "{:dim :number, :integer true, :value 6, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 7", :pattern "#\"(?i)(שבעה?)\"", :production "{:dim :number, :integer true, :value 7, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 8", :pattern "#\"(?i)(שמונה)\"", :production "{:dim :number, :integer true, :value 8, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 9", :pattern "#\"(?i)(תשעה?)\"", :production "{:dim :number, :integer true, :value 9, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 10", :pattern "#\"(?i)(עשרה?)\"", :production "{:dim :number, :integer true, :value 10, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 10", :pattern "#\"(?i)(עשרה?)\"", :production "{:dim :number, :integer true, :value 10, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 12", :pattern "#\"(?i)(שניים עשר|תרי עשר)\"", :production "{:dim :number, :integer true, :value 10, :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 11..19", :pattern "[(integer 1 9) (integer 10 10)]", :production "{:dim :number, :integer true, :value (+ (:value %1) (:value %2)), :grain (:grain %1)}"}
+ #clj-duckling.engine/rule {:name "single", :pattern "#\"(?i)יחיד\"", :production "{:dim :number, :integer true, :value 1, :grain 1}"}
+ #clj-duckling.engine/rule {:name "couple", :pattern "#\"(?i)זוג( של)?\"", :production "{:dim :number, :integer true, :value 2, :grain 1}"}
+ #clj-duckling.engine/rule {:name "hundred", :pattern "#\"(?i)(מאה|מאות)\"", :production "{:dim :number, :integer true, :value 100, :grain 2}"}
+ #clj-duckling.engine/rule {:name "thousand", :pattern "#\"(?i)(אלף|אלפים)\"", :production "{:dim :number, :integer true, :value 1000, :grain 3}"}
+ #clj-duckling.engine/rule {:name "million", :pattern "#\"(?i)(מיליון|מיליונים)\"", :production "{:dim :number, :integer true, :value 1000000, :grain 6}"}
+ #clj-duckling.engine/rule {:name "integer (20..90)", :pattern "#\"(?i)(עשרים|שלושים|ארבעים|חמישים|שישים|שבעים|שמונים|תשעים)\"", :production "{:dim :number, :integer true, :value (get {\"עשרים\" 20, \"שלושים\" 30, \"ארבעים\" 40, \"חמישים\" 50, \"שישים\" 60, \"שבעים\" 70, \"שמונים\" 80, \"תשעים\" 90} (-> %1 :groups first clojure.string/lower-case)), :grain 1}"}
+ #clj-duckling.engine/rule {:name "integer 101..999", :pattern "[(integer 100 900 (fn* [p1__3549#] (#{300 600 500 100 800 200 900 700 400} (:value p1__3549#)))) (integer 1 99)]", :production "{:dim :number, :integer true, :value (+ (:value %1) (:value %2))}"}
+ #clj-duckling.engine/rule {:name "integer (numeric)", :pattern "#\"(\\d{1,18})\"", :production "{:dim :number, :integer true, :value (Long/parseLong (first (:groups %1)))}"}
+ #clj-duckling.engine/rule {:name "integer with thousands separator ,", :pattern "#\"(\\d{1,3}(,\\d\\d\\d){1,5})\"", :production "{:dim :number, :integer true, :value (-> (:groups %1) first (clojure.string/replace #\",\" \"\") Long/parseLong)}"}
+ #clj-duckling.engine/rule {:name "number hundreds", :pattern "[(integer 1 99) (integer 100 100)]", :production "{:dim :number, :integer true, :value (* (:value %1) (:value %2)), :grain (:grain %2)}"}
+ #clj-duckling.engine/rule {:name "number thousands", :pattern "[(integer 1 999) (integer 1000 1000)]", :production "{:dim :number, :integer true, :value (* (:value %1) (:value %2)), :grain (:grain %2)}"}
+ #clj-duckling.engine/rule {:name "number millions", :pattern "[(integer 1 99) (integer 1000000 1000000)]", :production "{:dim :number, :integer true, :value (* (:value %1) (:value %2)), :grain (:grain %2)}"}
+ #clj-duckling.engine/rule {:name "decimal number", :pattern "#\"(\\d*\\.\\d+)\"", :production "{:dim :number, :value (Double/parseDouble (first (:groups %1)))}"}
+ #clj-duckling.engine/rule {:name "number dot number", :pattern "[(dim :number (fn* [p1__3550#] (not (:number-prefixed p1__3550#)))) #\"(?i)נקודה\" (dim :number (fn* [p1__3551#] (not (:number-suffixed p1__3551#))))]", :production "{:dim :number, :value (+ (* 0.1 (:value %3)) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "decimal with thousands separator", :pattern "#\"(\\d+(,\\d\\d\\d)+\\.\\d+)\"", :production "{:dim :number, :value (-> (:groups %1) first (clojure.string/replace #\",\" \"\") Double/parseDouble)}"}
+ #clj-duckling.engine/rule {:name "numbers prefix with -, negative or minus", :pattern "[#\"(?i)-|מינוס\\s?\" (dim :number (fn* [p1__3552#] (not (:number-prefixed p1__3552#))))]", :production "(let [multiplier -1 value (* (:value %2) multiplier) int? (zero? (mod value 1)) value (if int? (long value) value)] (assoc %2 :value value :integer int? :number-prefixed true))"}
+ #clj-duckling.engine/rule {:name "ordinal 1", :pattern "#\"(?i)(אחד|ראשון)\"", :production "{:dim :ordinal, :integer true, :value 1, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 2", :pattern "#\"(?i)(שתיים|שניים|שני)\"", :production "{:dim :ordinal, :integer true, :value 2, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 3", :pattern "#\"(?i)(שלושה|שלישי)\"", :production "{:dim :ordinal, :integer true, :value 3, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 4", :pattern "#\"(?i)(ארבעה|רביעי)\"", :production "{:dim :ordinal, :integer true, :value 4, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 5", :pattern "#\"(?i)(חמישי|חמישה)\"", :production "{:dim :ordinal, :integer true, :value 5, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 6", :pattern "#\"(?i)(ששה|שישי)\"", :production "{:dim :ordinal, :integer true, :value 6, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 7", :pattern "#\"(?i)(שבעה|שביעי)\"", :production "{:dim :ordinal, :integer true, :value 7, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 8", :pattern "#\"(?i)(שמונה|שמיני)\"", :production "{:dim :ordinal, :integer true, :value 8, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 9", :pattern "#\"(?i)(תשעה|תשיעי)\"", :production "{:dim :ordinal, :integer true, :value 9, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 10", :pattern "#\"(?i)(עשרה|עשירי)\"", :production "{:dim :ordinal, :integer true, :value 10, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 11", :pattern "#\"(?i)(אחד עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 11, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 12", :pattern "#\"(?i)(שניים עשר|תרי עשר)\"", :production "{:dim :ordinal, :integer true, :value 12, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 13", :pattern "#\"(?i)(שלושה? עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 13, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 14", :pattern "#\"(?i)(ארבעה? עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 14, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 15", :pattern "#\"(?i)(חמישה עשר|חמש עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 15, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 16", :pattern "#\"(?i)(ששה? עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 16, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 17", :pattern "#\"(?i)(שבעה? עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 17, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 18", :pattern "#\"(?i)(שמונה עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 18, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 19", :pattern "#\"(?i)(תשעה? עשרה?)\"", :production "{:dim :ordinal, :integer true, :value 19, :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal 20..90", :pattern "#\"(?i)(עשרים|שלושים|ארבעים|חמישים|שישים|שבעים|שמונים|תשעים)\"", :production "{:dim :ordinal, :integer true, :value (get {\"עשרים\" 20, \"שלושים\" 30, \"ארבעים\" 40, \"חמישים\" 50, \"שישים\" 60, \"שבעים\" 70, \"שמונים\" 80, \"תשעים\" 90} (-> %1 :groups first clojure.string/lower-case)), :grain 1}"}
+ #clj-duckling.engine/rule {:name "ordinal intersect (with and)", :pattern "[(dim :ordinal) #\"(?i)ו\" (dim :ordinal)]", :production "(compose-numbers %1 %3)"}
+ #clj-duckling.engine/rule {:name "ordinal (digits)", :pattern "#\"0*(\\d+) \"", :production "{:dim :ordinal, :value (read-string (first (:groups %1)))}"}]
