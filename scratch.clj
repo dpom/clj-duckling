@@ -774,3 +774,26 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
   :end 26,
   :label "budget",
   :body "sub 300 lei"}]
+
+;; 2017-11-30
+
+(require 
+ '[clj-duckling.engine.core :as eng]
+ '[clj-duckling.model.core :as modl]
+ '[clj-duckling.tool.core :as core]
+ '[clj-duckling.tool.duckling :as tl])  
+
+(def tool (get system tl/ukey)) 
+(def model (:model tool)) 
+(def rules (:rules tool)) 
+(def logger @(:logger tool)) 
+
+(tl/parse "Vreau un cadou sub 300 lei pentru un baiat de 5 ani" [:gender :budget :duration] {} (modl/get-model model) (eng/get-rules rules) logger)
+
+(tl/parse "Vreau un cadou sub 300 lei pentru un baiat de 5 ani" [] {} (modl/get-model model) (eng/get-rules rules) logger)
+
+(core/apply-tool tool "Vreau un cadou sub 300 lei pentru un baiat de 5 ani" {:dims [:gender :budget :duration]}) 
+
+
+(core/apply-tool tool "Vreau un cadou sub 300 lei pentru un baiat de 5 ani" {:dims [:time :gender :budget :duration]}) 
+

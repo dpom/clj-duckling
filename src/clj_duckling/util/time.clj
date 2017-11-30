@@ -49,7 +49,7 @@
   (cond (:start timezone) (.getZone ^DateTime (:start timezone))
         (instance? DateTime timezone) (.getZone ^DateTime timezone)
         (integer? timezone) (time/time-zone-for-offset timezone)
-        :else (throw (ex-info "Invalid timezone" {:tz timezone}))))
+        :else (DateTimeZone/forOffsetHours 0)))
 
 (defn t
   "Builds a time object with timezone, start and grain.

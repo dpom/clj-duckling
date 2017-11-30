@@ -68,7 +68,7 @@
 
 
 (defn analyze
-  "Parse a sentence, returns the stash and a curated list of winners.
+  "Analyze a sentence, returns the stash and a curated list of winners.
 
   Args:
   s (string):
@@ -77,10 +77,10 @@
                   kept, and they receive a :label key = the label provided.
                   If no targets specified, all winners are returned.
   model (Model):
-  rules (Enginef):
+  rules (Engine):
   logger (): current logger
 
-  Returns:f
+  Returns:
   (map): a map with 2 keys :stash and :winners
   "
   [s targets context model rules logger]
@@ -111,14 +111,33 @@
     ;; (log/debugf "winners: %s" (with-out-str (clojure.pprint/pprint winners)))
     {:stash stash :winners winners}))
 
+(defn parse
+  "Parse a sentence, returns a curated list of winners.
+
+  Args:
+  s (string):
+  context (map):
+  dims (coll): a coll of dims, only winners of these dims are kept.
+               If no targets specified, all winners are returned.
+  model (Model): the tool's model (classifier)
+  rules (Engine): the tool's rules (engine)
+  logger (): current logger
+
+  Returns:
+  (collection): a collection of winners tokens"
+  [s dims context model rules logger]
+  (->> (analyze s (map (fn [dim] {:dim dim :label dim}) dims) context model rules logger)
+       :winners
+       (map (fn [x] (assoc x :value (engine/export-value x context))))
+       (map (fn [x] (select-keys x [:dim :body :value :start :end :latent])))
+       distinct))
+
 (defrecord DucklingTool [id model rules logger]
   core/Tool
   (build-tool! [this]
     (log @logger :error ::build-tool! {:error :not-implemented :id id}))
-  (apply-tool
-    ([this text dims context] text)
-    ([this text dims] (core/apply-tool this text dims {}))
-    ([this text] (core/apply-tool this text [] {})))
+  (apply-tool [this text opts]
+    (parse text (get opts :dims []) (get opts :context {}) (modl/get-model model) (eng/get-rules rules) logger))
   (get-id [this] id)
   (set-logger! [this newlogger] (reset! logger newlogger)))
 
