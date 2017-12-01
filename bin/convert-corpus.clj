@@ -11,17 +11,20 @@
 (require '[cljfmt.core :refer [reformat-string]])
 
 (defn convert-form [c]
-  (case c
-    \" "\\\""
-    \( "\"("
-    \)  ")\""
-    nil))
+  (-> c
+      (str/escape (fn [x]
+                    (case x
+                      \" "\\\""
+                      nil)))
+      (str/replace #"^\(" "\"(")
+      (str/replace #"\)$" ")\"")
+      ))
 
 (defn convert-context [x]
   (-> x
       prn-str
-      (str/replace #"\(time/t" "#clj-duckling/time (t")
-      (str/escape convert-form)))
+      (str/replace #"\(time/t" "#clj-duckling/time \"(t")
+      (str/replace #"\)" ")\"")))
 
 
 (defn convert-file
@@ -41,7 +44,7 @@
                                        (.write w (convert-context i))
                                        (.write w "\n :tests ["))
             (str/starts-with? i "(") (do
-                                       (.write w (format ":checks [#clj-duckling/corpus %s]}\n" (str/escape (prn-str i) convert-form))))
+                                       (.write w (format ":checks [#clj-duckling/corpus %s]}\n" (convert-form (prn-str i)))))
             true                     (do
                                         (.write w "{:text ")
                                         (.write w (prn-str (vec item))))

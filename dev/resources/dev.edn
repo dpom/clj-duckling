@@ -7,6 +7,8 @@
 
  :clj-duckling.model/classifier {:id "dev-classifier"
                                  :language "ro"
+                                 :binfile "test/classifier.bin"
+                                 :loadbin? false
                                  :corpus #ig/ref :clj-duckling.corpus/edn
                                  :rules #ig/ref :clj-duckling.engine/edn
                                  :logger   #ig/ref :duct.logger/timbre}

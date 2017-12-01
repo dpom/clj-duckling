@@ -1,0 +1,46 @@
+{:context {}
+
+ :tests [{:text ["0" "صفر"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "واحد"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["4" "أربعة"]
+          :checks [#clj-duckling/corpus "(number 4)"]}
+         {:text ["6" "ستة"]
+          :checks [#clj-duckling/corpus "(number 6)"]}
+         {:text ["33" "ثلاث و ثلاثون"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["11" "إحدى عشرة"]
+          :checks [#clj-duckling/corpus "(number 11)"]}
+         {:text ["12" "إثنتى عشر"]
+          :checks [#clj-duckling/corpus "(number 12)"]}
+         {:text ["14" "أربع عشر"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["16" "ستة عشر"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "سبع عشر"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "ثمان عشرة"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["خمسمائة و خمسة و عشرون" "525"]
+          :checks [#clj-duckling/corpus "(number 525)"]}
+         {:text ["واحدة و عشرون" "21"]
+          :checks [#clj-duckling/corpus "(number 21)"]}
+         {:text ["أربعة و عشرون" "24"]
+          :checks [#clj-duckling/corpus "(number 24)"]}
+         {:text ["ستة و عشرون" "26"]
+          :checks [#clj-duckling/corpus "(number 26)"]}
+         {:text ["1.1" "1.10" "01.10" "1 فاصلة 1" "واحد فاصلة واحد"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0.77" ".77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["الثاني"]
+          :checks [#clj-duckling/corpus "(ordinal 2)"]}
+         {:text ["100000" "100 الف"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["10000" "10 آلاف"]
+          :checks [#clj-duckling/corpus "(number 10000)"]}
+         {:text ["3 ملايين" "3000000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["-1200000"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}]}

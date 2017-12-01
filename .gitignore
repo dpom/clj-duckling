@@ -20,3 +20,4 @@ dev/src/local.clj
 /logs
 /tmp.edn
 /tmp
+/err.log

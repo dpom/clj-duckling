@@ -2,6 +2,7 @@
   "The classifier model"
   (:require
    [integrant.core :as ig]
+   [taoensso.nippy :as nippy]
    [duct.logger :refer [log]]
    [clj-duckling.util.learn :as learn]
    [clj-duckling.engine.core :as eng]
@@ -14,10 +15,11 @@
 
 
 
-(defrecord ClassifierModel [id classifier language rules corpus logger]
+(defrecord ClassifierModel [id classifier language rules corpus binfile logger]
   core/Model
     (load-model! [this]
-      (log @logger :error ::load-model {:error :not-implemented :id id}))
+      (log @logger :error ::load-model {:file binfile :id id})
+      (reset! classifier (nippy/thaw-from-file binfile)))
     (train-model! [this]
       (reset! classifier (learn/train-classifiers
                           (corp/get-corpus corpus)
@@ -25,16 +27,19 @@
                           learn/extract-route-features
                           @logger)))
     (save-model! [this]
-      (log @logger :error ::save-model {:error :not-implemented :id id}))
+      (log @logger :error ::save-model {:file binfile :id id})
+      (nippy/freeze-to-file binfile @classifier))
     (get-model [this] @classifier)
     (get-id [this] id)
     (set-logger! [this newlogger] (reset! logger newlogger)))
 
 
 (defmethod ig/init-key ukey [_ spec]
-  (let [{:keys [id language rules corpus logger]} spec
-        classifier (->ClassifierModel id (atom nil) language rules corpus (atom nil))]
+  (let [{:keys [id language rules corpus logger loadbin? binfile] :or {loadbin? false}} spec
+        classifier (->ClassifierModel id (atom nil) language rules corpus binfile (atom nil))]
     (log logger :info ::init {:id id :lang language :rules (eng/get-id rules) :corpus (corp/get-id corpus)})
     (core/set-logger! classifier logger)
-    (core/train-model! classifier)
+    (if loadbin?
+      (core/load-model! classifier)
+      (core/train-model! classifier))
     classifier))

@@ -29,6 +29,7 @@
                    :dependencies [[integrant/repl "0.2.0"]
                                   [org.clojure/tools.trace "0.7.9"]
                                   [fipp "0.6.12"]
+                                  [digest "1.4.6"]
                                   [criterium "0.4.4"]
                                   [cheshire "5.8.0"]]}
              :uberjar {:aot [clj-duckling.core]}}

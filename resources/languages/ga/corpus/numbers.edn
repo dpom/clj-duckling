@@ -1,0 +1,8 @@
+{:context {}
+
+ :tests [{:text ["0" "a náid"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "aon" "a haon" "amháin"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["20" "fiche"]
+          :checks [#clj-duckling/corpus "(number 20)"]}]}

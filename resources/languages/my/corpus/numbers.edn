@@ -1,0 +1,26 @@
+{:context {}
+
+ :tests [{:text ["၀" "သုံည" "မရှိ"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["၁" "တစ်" "ပထမ"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["၂" "နှစ်" "ဒုတိယ"]
+          :checks [#clj-duckling/corpus "(number 2)"]}
+         {:text ["၃" "သုံး" "တတိယ"]
+          :checks [#clj-duckling/corpus "(number 3)"]}
+         {:text ["သုံးဆယ်"]
+          :checks [#clj-duckling/corpus "(number 30)"]}
+         {:text ["သုံးဆယ့်သုံး"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["ဆယ့်လေး"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["ဆယ့်ခုနှစ်"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["နှစ်ရာ"]
+          :checks [#clj-duckling/corpus "(number 200)"]}
+         {:text ["ကိုးရာ"]
+          :checks [#clj-duckling/corpus "(number 900)"]}
+         {:text ["ငါးထောင်"]
+          :checks [#clj-duckling/corpus "(number 5000)"]}
+         {:text ["ရှစ်သောင်း"]
+          :checks [#clj-duckling/corpus "(number 80000)"]}]}

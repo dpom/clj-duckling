@@ -797,3 +797,15 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 
 (core/apply-tool tool "Vreau un cadou sub 300 lei pentru un baiat de 5 ani" {:dims [:time :gender :budget :duration]}) 
 
+;; 2017-12-01
+
+(require 
+ '[clj-duckling.engine.core :as eng]
+ '[clj-duckling.model.core :as modl]
+ '[clj-duckling.tool.core :as core]
+ '[clj-duckling.model.classifier :as cla]
+ '[clj-duckling.tool.duckling :as tl]) 
+
+(def classif (get system cla/ukey)) 
+
+(modl/save-model! classif) 
