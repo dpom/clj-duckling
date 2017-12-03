@@ -8,6 +8,8 @@
    [clojure.edn :as edn]
    [duct.logger :refer [log Logger]]
    clj-duckling.util.corpus
+   clj-duckling.util.time
+   [clj-duckling.spec :as ds]
    [clj-duckling.corpus.core :as core])
   (:import [java.io File]))
 
@@ -58,9 +60,13 @@
                                 (file-seq (io/file dirpath))))))
   (get-corpus [this] @corpus)
   (get-id [this] id)
-  (set-logger! [this newlogger] (reset! logger newlogger))
-  )
+  (set-logger! [this newlogger] (reset! logger newlogger)))
 
+(defmethod ig/pre-init-spec ukey [_]
+  (ds/known-keys :req-un [:gen/id
+                          :gen/language
+                          :gen/dirpath
+                          :gen/logger]))
 
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id language dirpath logger]} spec

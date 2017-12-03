@@ -9,6 +9,8 @@
 (s/def :gen/datetime (s/keys :req-un [:gen/start :gen/grain]))
 (s/def :gen/dirpath string?)
 (s/def :gen/logger map?)
+(s/def :gen/id string?)
+(s/def :gen/language #(re-matches #"[a-z]{2}" %))
 
 (def dimensions #{:amount-of-money
                   :budget

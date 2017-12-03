@@ -804,8 +804,19 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
  '[clj-duckling.model.core :as modl]
  '[clj-duckling.tool.core :as core]
  '[clj-duckling.model.classifier :as cla]
+ '[digest :as dig]
  '[clj-duckling.tool.duckling :as tl]) 
 
 (def classif (get system cla/ukey)) 
 
+
 (modl/save-model! classif) 
+
+
+(def model1 (modl/get-model classif)) 
+
+(modl/load-model! classif) 
+
+(def model2 (modl/get-model classif)) 
+
+(= model1 model2) 

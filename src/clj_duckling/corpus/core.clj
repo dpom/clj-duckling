@@ -7,7 +7,7 @@
   (get-id [this] "Get corpus id")
   (build-corpus! [this] "Build and save corpus.")
   (get-corpus [this] "Get corpus")
-  (set-logger! [this newlogger] "Set logger"))
+  (set-logger! [this newlogger] "Set current logger"))
 
 
 
