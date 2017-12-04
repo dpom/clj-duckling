@@ -1,7 +1,7 @@
 (ns clj-duckling.dims.duration
   (:require
-   [clj-duckling.engine :refer [export-value]]
-   [clj-duckling.dims.time.obj :as t]))
+   [clj-duckling.util.engine :refer [export-value]]
+   [clj-duckling.util.time :as t]))
 
 (defmethod export-value :duration [{:keys [value unit] :as token} _]
   (let [[[unit val] & more] (seq value)

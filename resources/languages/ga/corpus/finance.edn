@@ -1,0 +1,28 @@
+{:context {}
+
+ :tests [{:text ["$10" "10$" "deich dollair"]
+          :checks [#clj-duckling/corpus "(money 10 \"$\")"]}
+         {:text ["deich ceinteanna"]
+          :checks [#clj-duckling/corpus "(money 10 \"cent\")"]}
+         {:text ["$10,000" "10K$" "$10k"]
+          :checks [#clj-duckling/corpus "(money 10000 \"$\")"]}
+         {:text ["€10,000" "10K€" "€10k"]
+          :checks [#clj-duckling/corpus "(money 10000 \"EUR\")"]}
+         {:text ["USD1.23"]
+          :checks [#clj-duckling/corpus "(money 1.23 \"USD\")"]}
+         {:text ["2 dhollair agus 23 ceinteanna" "dhá dhollair 23 ceinteanna" "2 dhollair 23" "dhá dhollair agus 23"]
+          :checks [#clj-duckling/corpus "(money 2.23 \"$\")"]}
+         {:text ["20€" "20 euros" "20 Euro" "20 Euros" "EUR 20"]
+          :checks [#clj-duckling/corpus "(money 20 \"EUR\")"]}
+         {:text ["EUR29.99"]
+          :checks [#clj-duckling/corpus "(money 29.99 \"EUR\")"]}
+         {:text ["Rs. 20" "Rs 20" "20 Rúpaí" "20Rs" "Rs20"]
+          :checks [#clj-duckling/corpus "(money 20 \"INR\")"]}
+         {:text ["20 Rupees 43" "fiche rúpaí 43"]
+          :checks [#clj-duckling/corpus "(money 20.43 \"INR\")"]}
+         {:text ["INR33"]
+          :checks [#clj-duckling/corpus "(money 33 \"INR\")"]}
+         {:text ["£9" "naoi bpunt"]
+          :checks [#clj-duckling/corpus "(money 9 \"£\")"]}
+         {:text ["GBP3.01" "GBP 3.01"]
+          :checks [#clj-duckling/corpus "(money 3.01 \"GBP\")"]}]}

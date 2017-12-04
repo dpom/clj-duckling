@@ -1,0 +1,12 @@
+{:context {}
+
+ :tests [{:text ["37°C" "37 ° celsius" "37 ° centigradi" "37 gradi Celsius" "37 gradi Centigradi" "trentasette celsius" "trentasette gradi centigradi"]
+          :checks [#clj-duckling/corpus "(temperature 37 \"celsius\")"]}
+         {:text ["1 grado centigrado"]
+          :checks [#clj-duckling/corpus "(temperature 1 \"celsius\")"]}
+         {:text ["70°F" "70 ° Fahrenheit" "70 gradi F" "70 gradi Fahreneit" "settanta Fahrenheit"]
+          :checks [#clj-duckling/corpus "(temperature 70 \"fahrenheit\")"]}
+         {:text ["45°" "45 gradi"]
+          :checks [#clj-duckling/corpus "(temperature 45 \"degree\")"]}
+         {:text ["1 grado"]
+          :checks [#clj-duckling/corpus "(temperature 1 \"degree\")"]}]}

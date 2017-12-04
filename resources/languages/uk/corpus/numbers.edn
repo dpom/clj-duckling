@@ -1,0 +1,52 @@
+{:context {}
+
+ :tests [{:text ["0" "нуль"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "один"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["2" "02" "два"]
+          :checks [#clj-duckling/corpus "(number 2)"]}
+         {:text ["3" "три" "03"]
+          :checks [#clj-duckling/corpus "(number 3)"]}
+         {:text ["4" "чотири" "04"]
+          :checks [#clj-duckling/corpus "(number 4)"]}
+         {:text ["п‘ять" "5" "05"]
+          :checks [#clj-duckling/corpus "(number 5)"]}
+         {:text ["33" "тридцять три" "0033"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["14" "чотирнадцять"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["16" "шістнадцять"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "сімнадцять"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "вісімнадцять"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["п‘ятсот двадцять п‘ять" "525"]
+          :checks [#clj-duckling/corpus "(number 525)"]}
+         {:text ["1.1" "1.10" "01.10" "1 крапка 1" "один крапка один"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0.77" ".77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100000" "100к" "100К"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["3М" "3000К" "3000000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1200000" "1.2М" "1200К" ".0012Г"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["-1200000" "мінус 1200000" "-1.2М" "-1200К" "-.0012Г"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["перший" "перша" "перше" "1а" "1-а" "1ий" "1-ий" "1е" "1-е"]
+          :checks [#clj-duckling/corpus "(ordinal 1)"]}
+         {:text ["четвертий" "четверта" "четверте" "4ий" "4а" "4е" "4-ий" "4-а" "4-е"]
+          :checks [#clj-duckling/corpus "(ordinal 4)"]}
+         {:text ["п‘ятнадцятий" "15й" "15-й"]
+          :checks [#clj-duckling/corpus "(ordinal 15)"]}
+         {:text ["21й" "21-й" "двадцять перший"]
+          :checks [#clj-duckling/corpus "(ordinal 21)"]}
+         {:text ["31ий" "31-ий" "тридцять перший"]
+          :checks [#clj-duckling/corpus "(ordinal 31)"]}
+         {:text ["48е" "48-е" "сорок восьме"]
+          :checks [#clj-duckling/corpus "(ordinal 48)"]}
+         {:text ["99ий" "99-й" "дев‘яносто дев‘ятий"]
+          :checks [#clj-duckling/corpus "(ordinal 99)"]}]}

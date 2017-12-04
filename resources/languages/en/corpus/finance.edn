@@ -1,0 +1,28 @@
+{:context {}
+
+ :tests [{:text ["$10" "10$" "ten dollars"]
+          :checks [#clj-duckling/corpus "(money 10 \"$\")"]}
+         {:text ["ten cents"]
+          :checks [#clj-duckling/corpus "(money 10 \"cent\")"]}
+         {:text ["$10,000" "10K$" "$10k"]
+          :checks [#clj-duckling/corpus "(money 10000 \"$\")"]}
+         {:text ["USD1.23"]
+          :checks [#clj-duckling/corpus "(money 1.23 \"USD\")"]}
+         {:text ["2 dollar and 23 cents" "two dollar 23 cents" "2 dollar 23" "two dollar and 23"]
+          :checks [#clj-duckling/corpus "(money 2.23 \"$\")"]}
+         {:text ["20€" "20 euros" "20 Euro" "20 Euros" "EUR 20"]
+          :checks [#clj-duckling/corpus "(money 20 \"EUR\")"]}
+         {:text ["EUR29.99"]
+          :checks [#clj-duckling/corpus "(money 29.99 \"EUR\")"]}
+         {:text ["Rs. 20" "Rs 20" "20 Rupees" "20Rs" "Rs20"]
+          :checks [#clj-duckling/corpus "(money 20 \"INR\")"]}
+         {:text ["20 Rupees 43" "twenty rupees 43"]
+          :checks [#clj-duckling/corpus "(money 20.43 \"INR\")"]}
+         {:text ["INR33"]
+          :checks [#clj-duckling/corpus "(money 33 \"INR\")"]}
+         {:text ["3 bucks"]
+          :checks [#clj-duckling/corpus "(money 3)"]}
+         {:text ["£9" "nine pounds"]
+          :checks [#clj-duckling/corpus "(money 9 \"£\")"]}
+         {:text ["GBP3.01" "GBP 3.01"]
+          :checks [#clj-duckling/corpus "(money 3.01 \"GBP\")"]}]}

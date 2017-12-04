@@ -1,10 +1,10 @@
 (ns clj-duckling.dims.time.pred
   (:refer-clojure :exclude [cycle resolve])
-  (:use
-   [plumbing.core])
   (:require
+   [clojure.spec.alpha :as s]
+   [plumbing.core :as p]
    [duct.logger :refer [log]] 
-   [clj-duckling.dims.time.obj :as t]))
+   [clj-duckling.util.time :as t]))
 
 ;; Contains the time semantics.
 ;; Knows nothing  about tokens, morphology, syntax, forms.
@@ -143,12 +143,13 @@
   "A sequence of each year, or month, or week, etc.
   Used for 'this year', 'next month', 'last week'.."
   [grain]
-  {:pre [#{:year :quarter :month :week :day :hour :minute :second} grain]}
   (fn& grain [t _]
        (let [anchor (t/round t grain)]
          [(iterate #(t/plus % grain 1) anchor)
           (next (iterate #(t/minus % grain 1) anchor))])))
 
+(s/fdef cycle
+        :args (s/cat :grain #{:year :quarter :month :week :day :hour :minute :second}))
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Second order functions
 
@@ -299,7 +300,7 @@
                                                       (map #(f % ctx))
                                                       (remove nil?)
                                                       (take-while #(t/start-before-the-end-of? t %))
-                                                      (?>> (not dont-reverse?) reverse))
+                                                      (p/?>> (not dont-reverse?) reverse))
 
                  ; times remaining ahead
                                            ah-ah (->> seq1-f
@@ -317,7 +318,7 @@
                                                       (map #(f % ctx))
                                                       (remove nil?)
                                                       (take-while #(not (t/start-before-the-end-of? t %)))
-                                                      (?>> (not dont-reverse?) reverse))
+                                                      (p/?>> (not dont-reverse?) reverse))
 
                  ; times remaining behing
                                            bh-bh (->> seq1-b
@@ -356,53 +357,3 @@
                           (t/plus-period duration)))]
     (seq-map f base-pred)))
 
-(defn- print-token [{:keys [text rule route] :as token} & [prefix]]
-  (printf "%s\"%s\" as %s\n" (or prefix "") text (:name rule))
-  (doseq [child route]
-    (print-token child (str "--" (or prefix "")))))
-
-(defn resolve ; TODO not immediate + expain two ways
-  "Turns a token into a list of actual possible time values.
-  Behavior depends on the ref-time in context, and token fields like
-  :not-immediate."
-  [{:keys [dim pred not-immediate timezone] :as token} {:keys [reference-time] :as context}]
-  (try
-    (case dim
-      :time
-      (do
-        (assert pred (format "Cannot resolve token without pred: %s" token))
-
-        ; we use ref-time twice
-        ; as the first arg of pred, it's just as a lookup starting point
-        (let [reference-time (or reference-time (t/now))
-              ctx (assoc context :max (t/plus reference-time :year 2000)
-                         :min (t/minus reference-time :year 2000))
-              [[first-ahead second-ahead :as all-ahead] [first-behind]] (pred reference-time ctx)
-              ahead (if (and not-immediate (t/intersect first-ahead reference-time))
-                      second-ahead
-                      first-ahead)]
-          (->> (vector ahead first-behind)
-               (remove nil?)
-               ; FIXME use timezone in resolution instead of just adding the field
-               (?>> timezone (map #(assoc % :timezone timezone)))
-               (map #(assoc token :value %))
-               ; TEMP also assoc a 'values' key with the 3 future hypotheses
-               ; this key will be used in api/export-value
-               (map #(assoc % :values (take 3 all-ahead))))))
-
-      [token]) ; default for other dims
-    (catch Throwable e
-      ;; (log/errorf e "Error while resolving %s" (dissoc token :route))
-      (print-token token)
-      (throw (ex-info (format "Error while resolving %s" (dissoc token :route)) {})))))
-
-; Debug utlity
-
-(defn show [f]
-  (time
-   (let [now (t/t 2013 2 12 4 30)
-         ctx {:reference-time (t/t 2013 2 12 4 30)
-              :min (t/t 2000)
-              :max (t/t 2018)}]
-     (prn (take 5 (first (f now ctx))))
-     (prn (take 5 (second (f now ctx)))))))

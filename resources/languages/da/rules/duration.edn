@@ -1,0 +1,24 @@
+[#clj-duckling.engine/rule {:name "second (unit-of-duration)", :pattern "#\"(?i)sek(und(er)?)?\"", :production "{:dim :unit-of-duration, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (unit-of-duration)", :pattern "#\"(?i)min(ut(ter)?)?\"", :production "{:dim :unit-of-duration, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (unit-of-duration)", :pattern "#\"(?i)t(imer?)?\"", :production "{:dim :unit-of-duration, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (unit-of-duration)", :pattern "#\"(?i)dage?\"", :production "{:dim :unit-of-duration, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (unit-of-duration)", :pattern "#\"(?i)uger?\"", :production "{:dim :unit-of-duration, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (unit-of-duration)", :pattern "#\"(?i)måned(er)?\"", :production "{:dim :unit-of-duration, :grain :month}"}
+ #clj-duckling.engine/rule {:name "year (unit-of-duration)", :pattern "#\"(?i)år\"", :production "{:dim :unit-of-duration, :grain :year}"}
+ #clj-duckling.engine/rule {:name "half an hour", :pattern "[#\"(?i)(1/2|en halv) time\"]", :production "{:dim :duration, :value (duration :minute 30)}"}
+ #clj-duckling.engine/rule {:name "fortnight", :pattern "#\"(?i)(a|one)? fortnight\"", :production "{:dim :duration, :value (duration :day 14)}"}
+ #clj-duckling.engine/rule {:name "a <duration>", :pattern "[#\"(?i)(om )?en|et|én|ét\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "<integer> more <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration) #\"(?i)mere|mindre\"]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "number.number hours", :pattern "[#\"(\\d+)\\,(\\d+)\" #\"(?i)timer?\"]", :production "{:dim :duration, :value (duration :minute (int (+ (quot (* 6 (Long/parseLong (second (:groups %1)))) (java.lang.Math/pow 10 (- (count (second (:groups %1))) 1))) (* 60 (Long/parseLong (first (:groups %1)))))))}"}
+ #clj-duckling.engine/rule {:name "<integer> and an half hours", :pattern "[(integer 0) #\"(?i)og (en )?halv timer?\"]", :production "{:dim :duration, :value (duration :minute (+ 30 (* 60 (:value %1))))}"}
+ #clj-duckling.engine/rule {:name "a <unit-of-duration>", :pattern "[#\"(?i)en|et?\" (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) 1)}"}
+ #clj-duckling.engine/rule {:name "in <duration>", :pattern "[#\"(?i)om\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "after <duration>", :pattern "[#\"(?i)efter\" (dim :duration)]", :production "(merge (in-duration (:value %2)) {:direction :after})"}
+ #clj-duckling.engine/rule {:name "<duration> from now", :pattern "[(dim :duration) #\"(?i)fra (i dag|nu)\"]", :production "(in-duration (:value %1))"}
+ #clj-duckling.engine/rule {:name "<duration> ago", :pattern "[(dim :duration) #\"(?i)siden\"]", :production "(duration-ago (:value %1))"}
+ #clj-duckling.engine/rule {:name "<duration> hence", :pattern "[(dim :duration) #\"(?i)hence\"]", :production "(in-duration (:value %1))"}
+ #clj-duckling.engine/rule {:name "<duration> after <time>", :pattern "[(dim :duration) #\"(?i)efter\" (dim :time)]", :production "(duration-after (:value %1) %3)"}
+ #clj-duckling.engine/rule {:name "<duration> before <time>", :pattern "[(dim :duration) #\"(?i)før\" (dim :time)]", :production "(duration-before (:value %1) %3)"}
+ #clj-duckling.engine/rule {:name "about <duration>", :pattern "[#\"(?i)(omkring|cirka|ca.)\" (dim :duration)]", :production "(-> %2 (merge {:precision \"approximate\"}))"}
+ #clj-duckling.engine/rule {:name "exactly <duration>", :pattern "[#\"(?i)præcis\" (dim :duration)]", :production "(-> %2 (merge {:precision \"exact\"}))"}]

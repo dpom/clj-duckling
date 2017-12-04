@@ -1,0 +1,11 @@
+[#clj-duckling.engine/rule {:name "second (unit-of-duration)", :pattern "#\"秒間?\"", :production "{:dim :unit-of-duration, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (unit-of-duration)", :pattern "#\"分間?\"", :production "{:dim :unit-of-duration, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (unit-of-duration)", :pattern "#\"時間?\"", :production "{:dim :unit-of-duration, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (unit-of-duration)", :pattern "#\"日間?\"", :production "{:dim :unit-of-duration, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (unit-of-duration)", :pattern "#\"週間?\"", :production "{:dim :unit-of-duration, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (unit-of-duration)", :pattern "#\"月間?\"", :production "{:dim :unit-of-duration, :grain :month}"}
+ #clj-duckling.engine/rule {:name "year (unit-of-duration)", :pattern "#\"年間?\"", :production "{:dim :unit-of-duration, :grain :year}"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "in <duration>", :pattern "[#\"再\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "<duration> from now", :pattern "[(dim :duration) #\"後\"]", :production "(in-duration (:value %1))"}
+ #clj-duckling.engine/rule {:name "<duration> ago", :pattern "[(dim :duration) #\"前\"]", :production "(duration-ago (:value %1))"}]

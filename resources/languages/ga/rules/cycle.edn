@@ -1,0 +1,23 @@
+[#clj-duckling.engine/rule {:name "soicind (cycle)", :pattern "#\"(?i)t?sh?oicind[íi]?\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "nóiméad (cycle)", :pattern "#\"(?i)n[óo]im[ée][ai]da?\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "uair (cycle)", :pattern "#\"(?i)([thn]-?)?uair(e|eanta)?\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "lá (cycle)", :pattern "#\"(?i)l(ae(thanta)?|[áa])\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "seachtain (cycle)", :pattern "#\"(?i)t?sh?eachtain(e|[íi])?\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "mí (cycle)", :pattern "#\"(?i)mh?[íi](sa|nna)\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "ráithe (cycle)", :pattern "#\"(?i)r[áa]ith(e|[íi])\"", :production "{:dim :cycle, :grain :quarter}"}
+ #clj-duckling.engine/rule {:name "bliain (cycle)", :pattern "#\"(?i)m?bh?lia(in|na|nta)\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "an <cycle> seo", :pattern "[#\"(?i)an\" (dim :cycle) #\"(?i)seo\"]", :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "<cycle> ó shin", :pattern "[(dim :cycle) #\"(?i)[óo] shin\"]", :production "(cycle-nth (:grain %1) -1)"}
+ #clj-duckling.engine/rule {:name "an <cycle> i ndiaidh <time>", :pattern "[#\"(?i)the\" (dim :cycle) #\"(?i)(i ndiaidh|tar [ée]is)\" (dim :time)]", :production "(cycle-nth-after (:grain %2) 1 %4)"}
+ #clj-duckling.engine/rule {:name "<cycle> i ndiaidh <time>", :pattern "[(dim :cycle) #\"(?i)(i ndiaidh|tar [ée]is)\" (dim :time)]", :production "(cycle-nth-after (:grain %1) 1 %3)"}
+ #clj-duckling.engine/rule {:name "(an|na) <cycle> roimh <time>", :pattern "[#\"(?i)the\" (dim :cycle) #\"(?i)roimh\" (dim :time)]", :production "(cycle-nth-after (:grain %2) -1 %4)"}
+ #clj-duckling.engine/rule {:name "<cycle> roimh <time>", :pattern "[(dim :cycle) #\"(?i)roimhe?\" (dim :time)]", :production "(cycle-nth-after (:grain %1) -1 %3)"}
+ #clj-duckling.engine/rule {:name "<cycle> ó inniu", :pattern "[(integer 1 9999) (dim :cycle) #\"(?i)[óo](n l[áa] (at[áa] )?)?inniu\"]", :production "(cycle-n-not-immediate (:grain %2) (:value %1))"}
+ #clj-duckling.engine/rule {:name "i gceann <cycle>", :pattern "[#\"(?i)(i|faoi) g?ch?eann\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
+ #clj-duckling.engine/rule {:name "<ordinal> <cycle> de <time>", :pattern "[(dim :ordinal) (dim :cycle) #\"(?i)d[e']\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %2) (dec (:value %1)) %4)"}
+ #clj-duckling.engine/rule {:name "an <ordinal> <cycle> de <time>", :pattern "[#\"(?i)an\" (dim :ordinal) (dim :cycle) #\"(?i)d[e']\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %3) (dec (:value %2)) %5)"}
+ #clj-duckling.engine/rule {:name "an <cycle> de <time>", :pattern "[#\"(?i)an\" (dim :cycle) #\"(?i)d[e']\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %2) 0 %4)"}
+ #clj-duckling.engine/rule {:name "<ordinal> <cycle> i ndiaidh <time>", :pattern "[(dim :ordinal) (dim :cycle) #\"(?i)(i ndiaidh|tar [ée]is)\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %2) (dec (:value %1)) %4)"}
+ #clj-duckling.engine/rule {:name "an <ordinal> <cycle> i ndiaidh <time>", :pattern "[#\"(?i)an\" (dim :ordinal) (dim :cycle) #\"(?i)(i ndiaidh|tar [ée]is)\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %3) (dec (:value %2)) %5)"}
+ #clj-duckling.engine/rule {:name "<ordinal> ráithe", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3547#] (= :quarter (:grain p1__3547#))))]", :production "(cycle-nth-after :quarter (dec (:value %1)) (cycle-nth :year 0))"}
+ #clj-duckling.engine/rule {:name "<ordinal> ráithe <year>", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3548#] (= :quarter (:grain p1__3548#)))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}]

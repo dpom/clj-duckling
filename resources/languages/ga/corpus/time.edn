@@ -1,0 +1,20 @@
+{:context {:reference-time #clj-duckling/time "(t -2 2013 2 12 4 30 0)", :min #clj-duckling/time "(t -2 1900)", :max #clj-duckling/time "(t -2 2100)"}
+
+ :tests [{:text ["anois"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 0)"]}
+         {:text ["inniu"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12)"]}
+         {:text ["inné"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11)"]}
+         {:text ["arú inné"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10)"]}
+         {:text ["amárach"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13)"]}
+         {:text ["arú amárach"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["dé luain" "an luan" "an luan seo"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["an luan seo chugainn" "an luan seo atá ag teacht" "dé luain seo chugainn"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["18/2/2013"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18)"]}]}

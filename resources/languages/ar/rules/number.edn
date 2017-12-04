@@ -1,0 +1,45 @@
+[#clj-duckling.engine/rule {:name "integer 0", :pattern "#\"(?i)(صفر)\"", :production "{:dim :number, :integer true, :value 0}"}
+ #clj-duckling.engine/rule {:name "integer 1", :pattern "#\"(?i)(واحدة|واحده|واحد)\"", :production "{:dim :number, :integer true, :value 1}"}
+ #clj-duckling.engine/rule {:name "integer 2", :pattern "#\"(?i)(اثنان|اثنين)\"", :production "{:dim :number, :integer true, :value 2}"}
+ #clj-duckling.engine/rule {:name "integer 3", :pattern "#\"(?i)(ثلاث|ثلاثة)\"", :production "{:dim :number, :integer true, :value 3}"}
+ #clj-duckling.engine/rule {:name "integer 4", :pattern "#\"(?i)(أربع)\"", :production "{:dim :number, :integer true, :value 4}"}
+ #clj-duckling.engine/rule {:name "integer 4", :pattern "#\"(?i)(أربعة)\"", :production "{:dim :number, :integer true, :value 4}"}
+ #clj-duckling.engine/rule {:name "integer 5", :pattern "#\"(?i)(خمس)\"", :production "{:dim :number, :integer true, :value 5}"}
+ #clj-duckling.engine/rule {:name "integer 5", :pattern "#\"(?i)(خمسة)\"", :production "{:dim :number, :integer true, :value 5}"}
+ #clj-duckling.engine/rule {:name "integer 6", :pattern "#\"(?i)(ستة)\"", :production "{:dim :number, :integer true, :value 6}"}
+ #clj-duckling.engine/rule {:name "integer 6", :pattern "#\"(?i)(ست)\"", :production "{:dim :number, :integer true, :value 6}"}
+ #clj-duckling.engine/rule {:name "integer 7", :pattern "#\"(?i)(سبعة|سبع)\"", :production "{:dim :number, :integer true, :value 7}"}
+ #clj-duckling.engine/rule {:name "integer 8", :pattern "#\"(?i)(ثمانية|ثمان)\"", :production "{:dim :number, :integer true, :value 8}"}
+ #clj-duckling.engine/rule {:name "integer 9", :pattern "#\"(?i)(تسعة|تسع)\"", :production "{:dim :number, :integer true, :value 9}"}
+ #clj-duckling.engine/rule {:name "integer 10", :pattern "#\"(?i)(عشرة|عشر)\"", :production "{:dim :number, :integer true, :value 10}"}
+ #clj-duckling.engine/rule {:name "integer 11", :pattern "#\"(?i)(إحدى عشرة)\"", :production "{:dim :number, :integer true, :value 11}"}
+ #clj-duckling.engine/rule {:name "integer 11", :pattern "#\"(?i)(إحدى عشر)\"", :production "{:dim :number, :integer true, :value 11}"}
+ #clj-duckling.engine/rule {:name "integer 12", :pattern "#\"(?i)(إثنتى عشر)\"", :production "{:dim :number, :integer true, :value 12}"}
+ #clj-duckling.engine/rule {:name "integer 12", :pattern "#\"(?i)(إثنى عشر)\"", :production "{:dim :number, :integer true, :value 12}"}
+ #clj-duckling.engine/rule {:name "integer (20..90)", :pattern "#\"(?i)(عشرون|ثلاثون|أربعون|خمسون|ستون|سبعون|ثمانون|تسعون)\"", :production "{:dim :number, :integer true, :value (get {\"عشرون\" 20, \"ثلاثون\" 30, \"أربعون\" 40, \"خمسون\" 50, \"ستون\" 60, \"سبعون\" 70, \"ثمانون\" 80, \"تسعون\" 90} (-> %1 :groups first clojure.string/lower-case))}"}
+ #clj-duckling.engine/rule {:name "integer (100..900)", :pattern "#\"(?i)(مائة|مائتان|ثلاثمائة|أربعمائة|خمسمائة|ستمائة|سبعمائة|ثمانمائة|تسعمائة)\"", :production "{:dim :number, :integer true, :value (get {\"مائة\" 100, \"سبعمائة\" 700, \"خمسمائة\" 500, \"أربعمائة\" 400, \"ستمائة\" 600, \"مائتان\" 200, \"ثلاثمائة\" 300, \"ثمانمائة\" 800, \"تسعمائة\" 900} (-> %1 :groups first clojure.string/lower-case))}"}
+ #clj-duckling.engine/rule {:name "integer (13..19)", :pattern "[(integer 3 9) (integer 10 10)]", :production "{:dim :number, :integer true, :value (+ (:value %1) 10)}"}
+ #clj-duckling.engine/rule {:name "integer 21..99", :pattern "[(integer 1 9) #\"(?i)و\" (integer 20 90 (fn* [p1__3545#] (#{70 20 60 50 40 90 30 80} (:value p1__3545#))))]", :production "{:dim :number, :integer true, :value (+ (:value %1) (:value %3))}"}
+ #clj-duckling.engine/rule {:name "integer 101..999", :pattern "[(integer 100 900 (fn* [p1__3546#] (#{300 600 500 100 800 200 900 700 400} (:value p1__3546#)))) #\"(?i)و\" (integer 1 99)]", :production "{:dim :number, :integer true, :value (+ (:value %1) (:value %3))}"}
+ #clj-duckling.engine/rule {:name "integer (numeric)", :pattern "#\"(\\d{1,18})\"", :production "{:dim :number, :integer true, :value (Long/parseLong (first (:groups %1)))}"}
+ #clj-duckling.engine/rule {:name "integer with thousands separator ,", :pattern "#\"(\\d{1,3}(,\\d\\d\\d){1,5})\"", :production "{:dim :number, :integer true, :value (-> (:groups %1) first (clojure.string/replace #\",\" \"\") Long/parseLong)}"}
+ #clj-duckling.engine/rule {:name "decimal number", :pattern "#\"(\\d*\\.\\d+)\"", :production "{:dim :number, :value (Double/parseDouble (first (:groups %1)))}"}
+ #clj-duckling.engine/rule {:name "number dot number", :pattern "[(dim :number (fn* [p1__3547#] (not (:number-prefixed p1__3547#)))) #\"(?i)فاصلة\" (dim :number (fn* [p1__3548#] (not (:number-suffixed p1__3548#))))]", :production "{:dim :number, :value (+ (* 0.1 (:value %3)) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "decimal with thousands separator", :pattern "#\"(\\d+(,\\d\\d\\d)+\\.\\d+)\"", :production "{:dim :number, :value (-> (:groups %1) first (clojure.string/replace #\",\" \"\") Double/parseDouble)}"}
+ #clj-duckling.engine/rule {:name "numbers prefix with -, minus", :pattern "[#\"(?i)-\" (dim :number (fn* [p1__3549#] (not (:number-prefixed p1__3549#))))]", :production "(let [multiplier -1 value (* (:value %2) multiplier) int? (zero? (mod value 1)) value (if int? (long value) value)] (assoc %2 :value value :integer int? :number-prefixed true))"}
+ #clj-duckling.engine/rule {:name "hundreds", :pattern "#\"(?i)(مائة|مئات)\"", :production "{:dim :number, :integer true, :value 100, :grain 2}"}
+ #clj-duckling.engine/rule {:name "number hundreds", :pattern "[(integer 1 99) (integer 100 100)]", :production "{:dim :number, :integer true, :value (* (:value %1) (:value %2)), :grain (:grain %2)}"}
+ #clj-duckling.engine/rule {:name "thousands", :pattern "#\"(?i)(ألف|الف|آلاف)\"", :production "{:dim :number, :integer true, :value 1000, :grain 3}"}
+ #clj-duckling.engine/rule {:name "number thousands", :pattern "[(integer 1 999) (integer 1000 1000)]", :production "{:dim :number, :integer true, :value (* (:value %1) (:value %2)), :grain (:grain %2)}"}
+ #clj-duckling.engine/rule {:name "million", :pattern "#\"(?i)ملايين?\"", :production "{:dim :number, :integer true, :value 1000000, :grain 6}"}
+ #clj-duckling.engine/rule {:name "number millions", :pattern "[(integer 1 999) (integer 1000000 1000000)]", :production "{:dim :number, :integer true, :value (* (:value %1) (:value %2)), :grain (:grain %2)}"}
+ #clj-duckling.engine/rule {:name "ordinals first", :pattern "#\"(?i)(أول|الأول|أولى|الأولى)\"", :production "{:dim :ordinal, :integer true, :value 1}"}
+ #clj-duckling.engine/rule {:name "ordinals second", :pattern "#\"(?i)(ثاني|ثانية|الثاني|الثانية)\"", :production "{:dim :ordinal, :integer true, :value 2}"}
+ #clj-duckling.engine/rule {:name "ordinals first", :pattern "#\"(?i)(ثالث|ثالثة|الثالث|الثالثة)\"", :production "{:dim :ordinal, :integer true, :value 3}"}
+ #clj-duckling.engine/rule {:name "ordinals first", :pattern "#\"(?i)(رابع|رابعة | الرابع|الرابعة)\"", :production "{:dim :ordinal, :integer true, :value 4}"}
+ #clj-duckling.engine/rule {:name "ordinals first", :pattern "#\"(?i)(خامس | الخامس | خامسة | الخامسة)\"", :production "{:dim :ordinal, :integer true, :value 5}"}
+ #clj-duckling.engine/rule {:name "ordinals first", :pattern "#\"(?i)(سادس | سادسة | السادس | السادسة)\"", :production "{:dim :ordinal, :integer true, :value 6}"}
+ #clj-duckling.engine/rule {:name "ordinals 7th", :pattern "#\"(?i)(سابع | سابعة | السابع | السابعة)\"", :production "{:dim :ordinal, :integer true, :value 7}"}
+ #clj-duckling.engine/rule {:name "ordinals 8th", :pattern "#\"(?i)(ثامن | ثامنة | الثامن | الثامنة)\"", :production "{:dim :ordinal, :integer true, :value 8}"}
+ #clj-duckling.engine/rule {:name "ordinals 9th", :pattern "#\"(?i)(تاسع | تاسعة | التاسع | التاسعة)\"", :production "{:dim :ordinal, :integer true, :value 9}"}
+ #clj-duckling.engine/rule {:name "ordinals 10th", :pattern "#\"(?i)(عاشر | عاشرة | العاشر | العاشرة)\"", :production "{:dim :ordinal, :integer true, :value 10}"}]

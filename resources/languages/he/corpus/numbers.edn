@@ -1,0 +1,32 @@
+{:context {}
+
+ :tests [{:text ["0" "אפס"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "אחד" "אחת" "יחיד"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["2" "שתיים" "שניים" "זוג"]
+          :checks [#clj-duckling/corpus "(number 2)"]}
+         {:text ["33" "שלושים ושלוש" "שלושים ושלושה" "0033"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["14" "ארבעה עשר" "ארבע עשרה"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["16" "ששה עשר" "שש עשרה"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "שבעה עשר" "שבע עשרה"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "שמונה עשר" "שמונה עשרה"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["1.1" "1.10" "01.10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0.77" ".77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100,000" "100000"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["3000000" "3,000,000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1,200,000" "1200000"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["- 1,200,000" "-1200000" "מינוס 1,200,000"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["ארבעה"]
+          :checks [#clj-duckling/corpus "(ordinal 4)"]}]}

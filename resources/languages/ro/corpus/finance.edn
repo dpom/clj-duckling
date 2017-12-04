@@ -1,0 +1,26 @@
+{:context {}
+
+ :tests [{:text ["10 lei" "10 de lei" "10 ron" "10 RON"]
+          :checks [#clj-duckling/corpus "(money 10 \"RON\")"]}
+         {:text ["50 bani" "50 de bani" "50 BANI"]
+          :checks [#clj-duckling/corpus "(money 50 \"ban\")"]}
+         {:text ["10,5 lei" "10,5 ron" "10 lei si 50 bani"]
+          :checks [#clj-duckling/corpus "(money 10.5 \"RON\")"]}
+         {:text ["10$" "zece dolari"]
+          :checks [#clj-duckling/corpus "(money 10 \"USD\")"]}
+         {:text ["zece centi" "zece cenți"]
+          :checks [#clj-duckling/corpus "(money 10 \"cent\")"]}
+         {:text ["2 dolari"]
+          :checks [#clj-duckling/corpus "(money 2 \"USD\")"]}
+         {:text ["2 centi"]
+          :checks [#clj-duckling/corpus "(money 2 \"cent\")"]}
+         {:text ["23 centi"]
+          :checks [#clj-duckling/corpus "(money 23 \"cent\")"]}
+         {:text ["2 dolari si 23 centi" "2 dolari și 23 cenți" "doi dolari si douăzeci si trei centi" "doi dolari și douăzeci și trei cenți"]
+          :checks [#clj-duckling/corpus "(money 2.23 \"USD\")"]}
+         {:text ["20€" "20 euro" "20 Euro"]
+          :checks [#clj-duckling/corpus "(money 20 \"EUR\")"]}
+         {:text ["noua lire" "nouă lire"]
+          :checks [#clj-duckling/corpus "(money 9 \"GBP\")"]}
+         {:text ["aprox 50 lei" "aprox 50 de lei"]
+          :checks [#clj-duckling/corpus "(money 50 \"RON\" \"approximate\")"]}]}

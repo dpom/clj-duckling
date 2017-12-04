@@ -1,0 +1,22 @@
+[#clj-duckling.engine/rule {:name "second (unit-of-duration)", :pattern "#\"(?i)שנייה|שניות\"", :production "{:dim :unit-of-duration, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (unit-of-duration)", :pattern "#\"(?i)דקה|דקות\"", :production "{:dim :unit-of-duration, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (unit-of-duration)", :pattern "#\"(?i)שעה|שעות\"", :production "{:dim :unit-of-duration, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (unit-of-duration)", :pattern "#\"(?i)יום|ימים\"", :production "{:dim :unit-of-duration, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (unit-of-duration)", :pattern "#\"(?i)שבוע|שבועות\"", :production "{:dim :unit-of-duration, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (unit-of-duration)", :pattern "#\"(?i)חודש|חודשים\"", :production "{:dim :unit-of-duration, :grain :month}"}
+ #clj-duckling.engine/rule {:name "year (unit-of-duration)", :pattern "#\"(?i)שנה|שנים\"", :production "{:dim :unit-of-duration, :grain :year}"}
+ #clj-duckling.engine/rule {:name "quarter of an hour", :pattern "[#\"(?i)(1/4/s שעה|רבע שעה)\"]", :production "{:dim :duration, :value (duration :minute 15)}"}
+ #clj-duckling.engine/rule {:name "half an hour", :pattern "[#\"(?i)(1/2/s שעה|חצי שעה)\"]", :production "{:dim :duration, :value (duration :minute 30)}"}
+ #clj-duckling.engine/rule {:name "three-quarters of an hour", :pattern "[#\"(?i)(3/4/s שעה|שלושת רבעי שעה)\"]", :production "{:dim :duration, :value (duration :minute 45)}"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "number.number hours", :pattern "[#\"(\\d+)\\.(\\d+)\" #\"(?i)שעה|שעות\"]", :production "{:dim :duration, :value (duration :minute (int (+ (quot (* 6 (Long/parseLong (second (:groups %1)))) (java.lang.Math/pow 10 (- (count (second (:groups %1))) 1))) (* 60 (Long/parseLong (first (:groups %1)))))))}"}
+ #clj-duckling.engine/rule {:name "<integer> and an half hours", :pattern "[(integer 0) #\"(?i)וחצי (שעות|שעה)\"]", :production "{:dim :duration, :value (duration :minute (+ 30 (* 60 (:value %1))))}"}
+ #clj-duckling.engine/rule {:name "in <duration>", :pattern "[#\"(?i)בעוד\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "for <duration>", :pattern "[#\"(?i)תוך\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "after <duration>", :pattern "[#\"(?i)אחרי\" (dim :duration)]", :production "(merge (in-duration (:value %2)) {:direction :after})"}
+ #clj-duckling.engine/rule {:name "<duration> from now", :pattern "[(dim :duration) #\"(?i)מעכשיו\"]", :production "(in-duration (:value %1))"}
+ #clj-duckling.engine/rule {:name "<duration> ago", :pattern "[#\"(?i)לפני\" (dim :duration)]", :production "(duration-ago (:value %2))"}
+ #clj-duckling.engine/rule {:name "<duration> after <time>", :pattern "[(dim :duration) #\"(?i)אחרי|לאחר\" (dim :time)]", :production "(duration-after (:value %1) %3)"}
+ #clj-duckling.engine/rule {:name "<duration> before <time>", :pattern "[(dim :duration) #\"(?i)לפני\" (dim :time)]", :production "(duration-before (:value %1) %3)"}
+ #clj-duckling.engine/rule {:name "about <duration>", :pattern "[#\"(?i)(בערך|סביבות|בקירוב)\" (dim :duration)]", :production "(-> %2 (merge {:precision \"approximate\"}))"}
+ #clj-duckling.engine/rule {:name "exactly <duration>", :pattern "[#\"(?i)בדיוק\" (dim :duration)]", :production "(-> %2 (merge {:precision \"exact\"}))"}]

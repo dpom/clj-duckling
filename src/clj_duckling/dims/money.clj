@@ -1,6 +1,6 @@
 (ns clj-duckling.dims.money
   (:require
-   [clj-duckling.engine :refer [export-value]]))
+   [clj-duckling.util.engine :refer [export-value]]))
 
 (defmethod export-value :amount-of-money [{:keys [value unit] :as token} _]
   {:type "value" :value value :unit unit})

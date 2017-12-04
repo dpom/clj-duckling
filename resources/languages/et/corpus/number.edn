@@ -1,0 +1,40 @@
+{:context {}
+
+ :tests [{:text ["0" "null"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "üks"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["33" "kolmkümmend kolm"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["14" "neliteist"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["16" "kuusteist"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "seitseteist"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "kaheksateist"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["1.1" "1.10" "01.10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0.77" ".77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100,000" "100000" "100K" "100k" "100 000"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["3M" "3000K" "3000000" "3,000,000" "3 000 000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1,200,000" "1200000" "1.2M" "1200K" ".0012G" "1 200 000"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["- 1,200,000" "-1200000" "miinus 1,200,000" "-1.2M" "-1200K" "-.0012G"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["viis tuhat"]
+          :checks [#clj-duckling/corpus "(number 5000)"]}
+         {:text ["kakssada tuhat"]
+          :checks [#clj-duckling/corpus "(number 200000)"]}
+         {:text ["kakskümmend üks tuhat üksteist"]
+          :checks [#clj-duckling/corpus "(number 21011)"]}
+         {:text ["seitsesada kakskümmend üks tuhat kaksteist"]
+          :checks [#clj-duckling/corpus "(number 721012)"]}
+         {:text ["kolmkümmend üks miljonit kakssada viiskümmend kuus tuhat seitsesada kakskümmend üks"]
+          :checks [#clj-duckling/corpus "(number 31256721)"]}
+         {:text ["4." "neljas"]
+          :checks [#clj-duckling/corpus "(ordinal 4)"]}]}

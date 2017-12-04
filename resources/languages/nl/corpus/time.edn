@@ -1,0 +1,174 @@
+{:context {:reference-time #clj-duckling/time "(t -2 2017 1 27 4 30)"}
+
+ :tests [{:text ["nu" "op dit moment" "zo snel mogelijk"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 4 30 0)"]}
+         {:text ["vandaag" "momenteel"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27)"]}
+         {:text ["gisteren"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 26)"]}
+         {:text ["morgen"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 28)"]}
+         {:text ["morgenavond"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 28 18] [2017 1 29 0])"]}
+         {:text ["morgenochtend"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 28 4] [2017 1 28 12])"]}
+         {:text ["eergisteren"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 25)"]}
+         {:text ["overmorgen"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 29)"]}
+         {:text ["maandag ochtend"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 30 4] [2017 1 30 12])"]}
+         {:text ["gisterochtend"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 26 4] [2017 1 26 12])"]}
+         {:text ["gisteravond"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 26 18] [2017 1 27 0])"]}
+         {:text ["deze zomer"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 6 21] [2017 9 24])"]}
+         {:text ["deze winter"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2016 12 21] [2017 3 21])"]}
+         {:text ["kerstmis"]
+          :checks [#clj-duckling/corpus "(datetime 2017 12 25)"]}
+         {:text ["oudejaarsavond"]
+          :checks [#clj-duckling/corpus "(datetime 2017 12 31)"]}
+         {:text ["nieuwjaarsdag"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 1)"]}
+         {:text ["vanavond"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 18] [2017 1 28 0])"]}
+         {:text ["dit weekend"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 18] [2017 1 30 0])"]}
+         {:text ["morgenmiddag eten" "morgen tijdens de lunch"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 28 12] [2017 1 28 14])"]}
+         {:text ["na de lunch"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 13] [2017 1 27 17])"]}
+         {:text ["laatste twee seconden" "laatste 2 seconden"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 4 29 58] [2017 1 27 4 30 0])"]}
+         {:text ["over drie seconden" "over 3 seconden"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 4 30 1] [2017 1 27 4 30 4])"]}
+         {:text ["laatste twee minuten" "laatste 2 minuten"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 4 28] [2017 1 27 4 30])"]}
+         {:text ["over drie minuten" "over 3 minuten"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 4 31] [2017 1 27 4 34])"]}
+         {:text ["over drie uur" "over 3 uur"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 5] [2017 1 27 8])"]}
+         {:text ["deze week"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 23 :grain :week)"]}
+         {:text ["afgelopen week"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 16 :grain :week)"]}
+         {:text ["volgende week"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 30 :grain :week)"]}
+         {:text ["vorige maand"]
+          :checks [#clj-duckling/corpus "(datetime 2016 12)"]}
+         {:text ["volgende maand"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2)"]}
+         {:text ["vorig jaar"]
+          :checks [#clj-duckling/corpus "(datetime 2016)"]}
+         {:text ["dit jaar"]
+          :checks [#clj-duckling/corpus "(datetime 2017)"]}
+         {:text ["volgend jaar"]
+          :checks [#clj-duckling/corpus "(datetime 2018)"]}
+         {:text ["zondag"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 29 :day-of-week 7)"]}
+         {:text ["dinsdag"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 31 :day-of-week 2)"]}
+         {:text ["om drie uur" "om 3 uur"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 15)"]}
+         {:text ["om 8 uur in de avond" "om 8 uur 's avonds" "om acht uur in de avond"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 20)"]}
+         {:text ["15:00" "15.00"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 15 0)"]}
+         {:text ["half één" "half een"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 12 30 :hour 12 :minute 30)"]}
+         {:text ["kwart over drie" "15:15" "15.15"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 15 15 :hour 15 :minute 15)"]}
+         {:text ["half vier"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 15 30 :hour 15 :minute 30)"]}
+         {:text ["11:45" "kwart voor twaalf"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 11 45 :hour 11 :minute 45)"]}
+         {:text ["kwart over vijf"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 5 15 :hour 17 :minute 15)"]}
+         {:text ["middernacht"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 28 0)"]}
+         {:text ["middag"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 12] [2017 1 27 19])"]}
+         {:text ["kwart over twaalf"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 12 15 :hour 12 :minute 15)"]}
+         {:text ["maandag" "ma" "deze maandag"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 30 :day-of-week 1)"]}
+         {:text ["ma, feb 27" "ma, februari 27"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 27 :day-of-week 1 :day 27 :month 2)"]}
+         {:text ["dinsdag"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 31)"]}
+         {:text ["woensdag" "wo" "woe"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 1)"]}
+         {:text ["donderdag" "do"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2)"]}
+         {:text ["vrijdag" "vr" "vrij"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 3)"]}
+         {:text ["zaterdag" "za" "zat"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 28)"]}
+         {:text ["zondag" "zo"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 29)"]}
+         {:text ["een maart" "één maart"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3 1 :day 1 :month 3)"]}
+         {:text ["maart 3"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3 3 :day 3 :month 3)"]}
+         {:text ["maart 3 2015" "maart 3de 2015" "maart derde 2015" "3/3/2015" "3/3/15" "2015-3-3" "2015-03-03"]
+          :checks [#clj-duckling/corpus "(datetime 2015 3 3 :day 3 :month 3 :year 2015)"]}
+         {:text ["15 februari" "2/15" "op 2/15" "februari 15"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 15 :day 15 :month 2)"]}
+         {:text ["aug 8"]
+          :checks [#clj-duckling/corpus "(datetime 2017 8 8 :day 8 :month 8)"]}
+         {:text ["oktober 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 :year 2014 :month 10)"]}
+         {:text ["10/31/1974" "10/31/74" "10-31-74"]
+          :checks [#clj-duckling/corpus "(datetime 1974 10 31 :day 31 :month 10 :year 1974)"]}
+         {:text ["morgen om elf uur" "morgen om 11 uur"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 28 11 :hour 11)"]}
+         {:text ["vrijdag middag"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 27 12] [2017 1 27 19])"]}
+         {:text ["vrijdag, 12 september 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 9 12 :day-of-week 5 :day 12 :month 9 :year 2014)"]}
+         {:text ["volgende dinsdag"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 31 :day-of-week 2)"]}
+         {:text ["volgende woensdag"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 1 :day-of-week 3)"]}
+         {:text ["maandag van deze week"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 23 :day-of-week 1)"]}
+         {:text ["dinsdag van deze week"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 24 :day-of-week 2)"]}
+         {:text ["woensdag van deze week"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 25 :day-of-week 2)"]}
+         {:text ["1 uur geleden" "een uur geleden" "één uur geleden"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 3 30)"]}
+         {:text ["24 uur geleden" "vierentwintig uur geleden"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 26 4 30)"]}
+         {:text ["in 3 uur" "in drie uur"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 7 30)"]}
+         {:text ["2 dagen geleden" "twee dagen geleden"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 25 4)"]}
+         {:text ["in 3 dagen" "in drie dagen"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 30 4)"]}
+         {:text ["2 weken geleden" "twee weken geleden"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 13)"]}
+         {:text ["in 3 weken" "in drie weken"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 17)"]}
+         {:text ["2 maanden geleden" "twee maanden geleden"]
+          :checks [#clj-duckling/corpus "(datetime 2016 11 27)"]}
+         {:text ["in 3 maanden" "in drie maanden"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4 27)"]}
+         {:text ["2 jaar geleden" "twee jaar geleden"]
+          :checks [#clj-duckling/corpus "(datetime 2015 1)"]}
+         {:text ["in 3 jaar" "in drie jaar"]
+          :checks [#clj-duckling/corpus "(datetime 2020 1)"]}
+         {:text ["van 9:30 - 11:00 op donderdag" "tussen 9:30 en 11:00 op donderdag" "9:30 - 11:00 op donderdag" "later dan 9:30 maar voor 11:00 op donderdag" "donderdag van 9:30 tot 11:00" "van 9:30 tot en met 11:00 op donderdag" "donderdag van 9:30 tot en met 11:00" "9:30 tot 11:00 op donderdag"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 9 30] [2017 2 2 11 1])"]}
+         {:text ["4pm CET"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 27 16 :hour 4 :meridiem :pm :timezone \"CET\")"]}
+         {:text ["donderdag 8:00 GMT"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 8 0 :timezone \"GMT\")"]}
+         {:text ["om 7:30 PM op vr, sep 22"]
+          :checks [#clj-duckling/corpus "(datetime 2017 9 22 19 30 :hour 7 :minute 30 :meridiem :pm)"]}
+         {:text ["om 9am op zaterdag" "op zaterdag voor 9am"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 28 9 :day-of-week 6 :hour 9 :meridiem :am)"]}
+         {:text ["vr, jul 18, 2014 07:00 PM"]
+          :checks [#clj-duckling/corpus "(datetime 2014 7 18 19 0 :day-of-week 5 :hour 7 :meridiem :pm)"]}]}

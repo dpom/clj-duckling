@@ -1,0 +1,5 @@
+[#clj-duckling.engine/rule {:name "number as temp", :pattern "(dim :number)", :production "{:dim :temperature, :latent true, :value (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<latent temp> céim", :pattern "[(dim :temperature) #\"(?i)g?ch?[ée]im(e(anna)?)?|°\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"degree\"}))"}
+ #clj-duckling.engine/rule {:name "<temp> Celsius", :pattern "[(dim :temperature) #\"(?i)ceinteagr[áa]d|c(el[cs]?(ius)?)?\\.?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"celsius\"}))"}
+ #clj-duckling.engine/rule {:name "<temp> Fahrenheit", :pattern "[(dim :temperature) #\"(?i)f(ah?reh?n(h?eit)?)?\\.?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"fahrenheit\"}))"}
+ #clj-duckling.engine/rule {:name "<latent temp> faoi bhun náid", :pattern "[(dim :temperature) #\"(?i)faoi bhun (0|n[aá]id)\"]", :production "(-> %1 (dissoc :latent) (merge {:value (* -1 (-> %1 :value))}))"}]

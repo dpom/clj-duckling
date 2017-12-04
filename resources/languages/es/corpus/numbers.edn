@@ -1,0 +1,38 @@
+{:context {}
+
+ :tests [{:text ["1" "uno" "una"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["once"]
+          :checks [#clj-duckling/corpus "(number 11)"]}
+         {:text ["dieciséis" "dieciseis" "diesiseis" "diez y seis"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["veintiuno" "veinte y uno"]
+          :checks [#clj-duckling/corpus "(number 21)"]}
+         {:text ["veintitrés" "veinte y tres"]
+          :checks [#clj-duckling/corpus "(number 23)"]}
+         {:text ["setenta"]
+          :checks [#clj-duckling/corpus "(number 70)"]}
+         {:text ["setenta y ocho"]
+          :checks [#clj-duckling/corpus "(number 78)"]}
+         {:text ["ochenta"]
+          :checks [#clj-duckling/corpus "(number 80)"]}
+         {:text ["33" "treinta y tres" "treinta y 3"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["1,1" "1,10" "01,10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0,77" ",77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100.000" "100000" "100K" "100k"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["trescientos"]
+          :checks [#clj-duckling/corpus "(number 300)"]}
+         {:text ["243"]
+          :checks [#clj-duckling/corpus "(number 243)"]}
+         {:text ["3M" "3000K" "3000000" "3.000.000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1.200.000" "1200000" "1,2M" "1200K" ",0012G"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["- 1.200.000" "-1200000" "menos 1.200.000" "-1,2M" "-1200K" "-,0012G"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["1 punto cinco" "una punto cinco" "1,5"]
+          :checks [#clj-duckling/corpus "(number 1.5)"]}]}

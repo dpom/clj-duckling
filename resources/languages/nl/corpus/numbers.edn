@@ -1,0 +1,34 @@
+{:context {}
+
+ :tests [{:text ["0" "nul" "geen" "niks"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "een" "één"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["2" "twee"]
+          :checks [#clj-duckling/corpus "(number 2)"]}
+         {:text ["33" "3 en 30" "drieendertig" "drieëndertig" "drie en dertig" "0033"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["14" "veertien"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["16" "zestien"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "zeventien"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "achtien"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["1,1" "1,10" "01,10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0,77" ",77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["3 honderd" "drie honderd"]
+          :checks [#clj-duckling/corpus "(number 300)"]}
+         {:text ["5 duizend" "vijf duizend"]
+          :checks [#clj-duckling/corpus "(number 5000)"]}
+         {:text ["honderd tweeëntwintig" "honderd tweeentwintig" "honderd twee en twintig"]
+          :checks [#clj-duckling/corpus "(number 122)"]}
+         {:text ["twintig duizend"]
+          :checks [#clj-duckling/corpus "(number 20000)"]}
+         {:text ["1ste" "eerste"]
+          :checks [#clj-duckling/corpus "(ordinal 1)"]}
+         {:text ["4de" "vierde"]
+          :checks [#clj-duckling/corpus "(ordinal 4)"]}]}

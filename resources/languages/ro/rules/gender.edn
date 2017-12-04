@@ -1,0 +1,2 @@
+[#clj-duckling.engine/rule {:name "male", :pattern "#\"(?i)b[aă]rba[tţ]i?|b[aă]i[ae][tţ](i|el)?|so[tţ]i?|fiu|frate|fra[tţ]i?|feciori?|tat[aă]|bunic\"", :production "{:dim :gender, :value :male}"}
+ #clj-duckling.engine/rule {:name "female", :pattern "#\"(?i)femeie|feti[tţ][aăe]|muiere|so[tţ]i[ie]|fica|mam[aă]|bunic[aă]\"", :production "{:dim :gender, :value :female}"}]

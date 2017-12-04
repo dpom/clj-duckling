@@ -1,0 +1,31 @@
+[#clj-duckling.engine/rule {:name "intersect by \"di\", \"della\", \"del\"", :pattern "[(dim :time (fn* [p1__3545#] (not (:latent p1__3545#)))) #\"(?i)di|del(la)?\" (dim :time (fn* [p1__3546#] (not (:latent p1__3546#))))]", :production "(intersect %1 %3)"}
+ #clj-duckling.engine/rule {:name "seconde (cycle)", :pattern "#\"(?i)second[oi]\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (cycle)", :pattern "#\"(?i)minut[oi]\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "heure (cycle)", :pattern "#\"(?i)or[ae]\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "jour (cycle)", :pattern "#\"(?i)giorn[oi]\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "semaine (cycle)", :pattern "#\"(?i)settiman[ae]\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "mois (cycle)", :pattern "#\"(?i)mes[ei]\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "année (cycle)", :pattern "#\"(?i)ann?[oi]\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "trimestre (cycle)", :pattern "#\"(?i)trimestr[ei]\"", :production "{:dim :cycle, :grain :quarter}"}
+ #clj-duckling.engine/rule {:name "this <cycle>", :pattern "[#\"(?i)(in )?quest['oa]|per (il|l['a])\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "the <cycle> last", :pattern "[#\"(?i)l'|il|la|[nd]el(la)?\" (dim :cycle) #\"(?i)(scors|passat)[oa]\"]", :production "(cycle-nth (:grain %2) -1)"}
+ #clj-duckling.engine/rule {:name "the last <cycle>", :pattern "[#\"(?i)(([nd]el)?l' ?ultim|(il|la) passat|([nd]el)?l[ao] scors)[oa]\" (dim :cycle)]", :production "(cycle-nth (:grain %2) -1)"}
+ #clj-duckling.engine/rule {:name "the <cycle> next", :pattern "[#\"(?i)l'|il|la|[nd]el(la)?\" (dim :cycle) #\"(?i)prossim[oa]\"]", :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "<cycle> next", :pattern "[(dim :cycle) #\"(?i)prossim[oa]\"]", :production "(cycle-nth (:grain %1) 1)"}
+ #clj-duckling.engine/rule {:name "next <cycle> ", :pattern "[#\"(?i)((il|la|[nd]el(la)?) )?prossim[oa]\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "il <cycle> dopo <time>", :pattern "[#\"(?i)l[a']|il|[nd]el\" (dim :cycle) #\"(?i)dopo\" (dim :time)]", :production "(cycle-nth-after (:grain %2) 1 %4)"}
+ #clj-duckling.engine/rule {:name "i|le n <cycle> passati|passate", :pattern "[#\"(?i)([nd]e)?i|([nd]el)?le\" (integer 2 9999) (dim :cycle) #\"(?i)(scors|passat)[ie]\"]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
+ #clj-duckling.engine/rule {:name "gli ultimi <n> <cycle>", :pattern "[#\"(?i)((([nd]el)?le|([nd]e)?gli) )?(scors|ultim)[ei]\" (integer 2 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
+ #clj-duckling.engine/rule {:name "gli <n> ultimi <cycle>", :pattern "[#\"(?i)([nd]e)?i|([nd]el)?le\" (integer 2 9999) #\"(?i)(scors|ultim)[ei]\" (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %4) (- (:value %2)))"}
+ #clj-duckling.engine/rule {:name "next n <cycle>", :pattern "[#\"(?i)((([nd]e)?i|([nd]el)?le) )?prossim[ei]\" (integer 2 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
+ #clj-duckling.engine/rule {:name "next n <cycle>", :pattern "[#\"(?i)([nd]e)?i|([nd]el)?le\" (integer 2 9999) #\"(?i)prossim[ei]\" (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %4) (:value %2))"}
+ #clj-duckling.engine/rule {:name "last <day-of-week> of <time>", :pattern "[#\"(?i)(([nd]el)?l')?ultim[oa]\" {:form :day-of-week} #\"(?i)di|del(l[a'])?\" (dim :time)]", :production "(pred-last-of %2 %4)"}
+ #clj-duckling.engine/rule {:name "the nth <time> of <time>", :pattern "[#\"(?i)il|l[a']|[nd]el(l[a'])?\" (dim :ordinal) (dim :time) #\"(?i)di|del(l[a'])?\" (dim :time)]", :production "(pred-nth (intersect %5 %3) (dec (:value %2)))"}
+ #clj-duckling.engine/rule {:name "nth <time> of <time>", :pattern "[(dim :ordinal) (dim :time) #\"(?i)di|del(l[a'])?\" (dim :time)]", :production "(pred-nth (intersect %4 %2) (dec (:value %1)))"}
+ #clj-duckling.engine/rule {:name "<ordinal> <cycle> of <time>", :pattern "[(dim :ordinal) (dim :cycle) #\"(?i)di|del(l[a'])?\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %2) (dec (:value %1)) %4)"}
+ #clj-duckling.engine/rule {:name "the <ordinal> <cycle> of <time>", :pattern "[#\"(?i)il|l[a']|[nd]el(l[a'])?\" (dim :ordinal) (dim :cycle) #\"(?i)di|del(l[a'])?\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %3) (dec (:value %2)) %5)"}
+ #clj-duckling.engine/rule {:name "the <cycle> of <time>", :pattern "[#\"(?i)il|la\" (dim :cycle) #\"(?i)del\" (dim :time)]", :production "(cycle-nth-after-not-immediate (:grain %2) 0 %4)"}
+ #clj-duckling.engine/rule {:name "<ordinal> quarter", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3547#] (= :quarter (:grain p1__3547#))))]", :production "(cycle-nth-after :quarter (dec (:value %1)) (cycle-nth :year 0))"}
+ #clj-duckling.engine/rule {:name "the <ordinal> quarter", :pattern "[#\"(?i)il|[nd]el(l')?|l'\" (dim :ordinal) (dim :cycle (fn* [p1__3548#] (= :quarter (:grain p1__3548#))))]", :production "(cycle-nth-after :quarter (dec (:value %2)) (cycle-nth :year 0))"}
+ #clj-duckling.engine/rule {:name "<ordinal> quarter <year>", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3549#] (= :quarter (:grain p1__3549#)))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}
+ #clj-duckling.engine/rule {:name "the <ordinal> quarter", :pattern "[#\"(?i)il|[nd]el(l')?|l'\" (dim :ordinal) (dim :cycle (fn* [p1__3550#] (= :quarter (:grain p1__3550#)))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %2)) %4)"}]

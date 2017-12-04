@@ -1,0 +1,14 @@
+[#clj-duckling.engine/rule {:name "second (cycle)", :pattern "#\"秒毎?\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (cycle)", :pattern "#\"分毎?\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (cycle)", :pattern "#\"時毎?\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (cycle)", :pattern "#\"日毎?\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (cycle)", :pattern "#\"週毎?\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (cycle)", :pattern "#\"月毎?\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "year (cycle)", :pattern "#\"年毎?\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "this <cycle>", :pattern "[#\"毎\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "last <cycle>", :pattern "[#\"上[个|個]?\" (dim :cycle)]", :production "(cycle-nth (:grain %2) -1)"}
+ #clj-duckling.engine/rule {:name "next <cycle>", :pattern "[#\"下[个|個]?\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "the <cycle> after <time>", :pattern "[#\"那\" (dim :cycle) #\"之?[后後]\" (dim :time)]", :production "(cycle-nth-after (:grain %2) 1 %4)"}
+ #clj-duckling.engine/rule {:name "the <cycle> before <time>", :pattern "[#\"那\" (dim :cycle) #\"之?前\" (dim :time)]", :production "(cycle-nth-after (:grain %2) -1 %4)"}
+ #clj-duckling.engine/rule {:name "last n <cycle>", :pattern "[#\"上|前\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
+ #clj-duckling.engine/rule {:name "next n <cycle>", :pattern "[#\"下|后|後\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}]

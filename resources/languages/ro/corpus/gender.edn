@@ -1,0 +1,6 @@
+{:context {}
+
+ :tests [{:text ["barbat" "bărbat" "baiat" "baietel" "băiat" "băieţel" "sot" "soţ" "fiu" "frate" "fecior" "tata" "bunic"]
+          :checks [#clj-duckling/corpus "(fn [token _] (and (= :gender (:dim token)) (= :male (:value token))))"]}
+         {:text ["femeie" "muiere" "sotie" "soţie" "fica" "fetita" "fetiţa" "mama" "bunica"]
+          :checks [#clj-duckling/corpus "(fn [token _] (and (= :gender (:dim token)) (= :female (:value token))))"]}]}

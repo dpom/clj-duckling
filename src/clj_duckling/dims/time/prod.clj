@@ -1,7 +1,7 @@
 (ns clj-duckling.dims.time.prod
   (:require
    [clj-duckling.dims.time.pred :as p]
-   [clj-duckling.dims.time.obj :as t])
+   [clj-duckling.util.time :as t])
   (:import
    [java.text NumberFormat]
    [java.util Locale]))
@@ -57,11 +57,8 @@
   (let [grain1 (-> tok1 :pred meta :grain)
         grain2 (-> tok2 :pred meta :grain)
         incl (or (= :day grain1 grain2) to-inclusive?)]
-  ;(prn "interval called")
-    (if true;(=  )
-      (ti (p/intervals (:pred tok1) (:pred tok2) incl)
-          {:timezone (or (:timezone tok1) (:timezone tok2))})
-      {:dim :invalid})))
+    (ti (p/intervals (:pred tok1) (:pred tok2) incl)
+        {:timezone (or (:timezone tok1) (:timezone tok2))})))
 
 ;; if we say "Monday" and today is Monday, we mean next Monday
 ;; hence the :not-immediate that modifies resolution
@@ -124,8 +121,9 @@
   (let [[p meridiem] (if (= "a" ampm-first-letter)
                        [[(hour 0) (hour 12) false] :am]
                        [[(hour 12) (hour 0) false] :pm])]
-    (-> (intersect tod (apply interval p))
-        (assoc :form :time-of-day :ampm meridiem))))
+     (assoc (intersect tod (apply interval p))
+            :form :time-of-day
+            :ampm meridiem)))
 
 (defn cycle-nth [grain n]
   (ti (p/take-the-nth (p/cycle grain) n)))

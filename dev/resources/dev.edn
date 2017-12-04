@@ -1,6 +1,29 @@
 {
- :clj-duckling.core/load {:languages ["ro" "en" "fr"]
-                          :logger   #ig/ref :duct.logger/timbre}
+ :clj-duckling.tool/duckling {:id "dev-tool"
+                              :model #ig/ref :clj-duckling.model/classifier
+                              :rules #ig/ref :clj-duckling.engine/edn
+                              :logger   #ig/ref :duct.logger/timbre}
+
+
+ :clj-duckling.model/classifier {:id "dev-classifier"
+                                 :language "ro"
+                                 :binfile "test/classifier.bin"
+                                 :loadbin? false
+                                 :corpus #ig/ref :clj-duckling.corpus/edn
+                                 :rules #ig/ref :clj-duckling.engine/edn
+                                 :logger   #ig/ref :duct.logger/timbre}
+
+
+ :clj-duckling.corpus/edn {:id "dev-corpus-edn"
+                           :language "ro"
+                           :dirpath "resources/languages/ro/corpus"
+                           :logger   #ig/ref :duct.logger/timbre}
+
+ :clj-duckling.engine/edn {:id "dev-rules-edn"
+                           :language "ro"
+                           :dirpath "resources/languages/ro/rules"
+                           :logger   #ig/ref :duct.logger/timbre}
+
 
  :duct.logger/timbre {:level    :debug
                       :set-root-config? true

@@ -7,6 +7,8 @@
 (s/def :gen/grain keyword?)
 (s/def :gen/start #(= org.joda.time.DateTime (class %)))
 (s/def :gen/datetime (s/keys :req-un [:gen/start :gen/grain]))
+(s/def :gen/dirpath string?)
+(s/def :gen/binfile string?)
 
 (def dimensions #{:amount-of-money
                   :budget
@@ -145,4 +147,5 @@
 ;; classifier
 ;; (s/def :classifier/classifier (s/cat :name string? ))
 ;; (s/def :classifier/classifiers-map (s/map-of ::module-key (s/col-of :classifier/classifier)))
+
 

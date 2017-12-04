@@ -1,0 +1,44 @@
+{:context {}
+
+ :tests [{:text ["0" "nol" "kosong"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "satu"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["2" "dua"]
+          :checks [#clj-duckling/corpus "(number 2)"]}
+         {:text ["10" "sepuluh"]
+          :checks [#clj-duckling/corpus "(number 10)"]}
+         {:text ["33" "tiga puluh tiga" "0033"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["100" "seratus"]
+          :checks [#clj-duckling/corpus "(number 100)"]}
+         {:text ["17" "tujuh belas"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["28" "dua puluh delapan"]
+          :checks [#clj-duckling/corpus "(number 28)"]}
+         {:text ["1,1" "1,10" "01,10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0,77" ",77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100.000" "100000" "100K" "100k"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["3M" "3000K" "3000000" "3.000.000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1.200.000" "1200000" "1,2M" "1200K" ",0012G"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["- 1.200.000" "-1200000" "minus 1.200.000" "negatif 1200000" "-1,2M" "-1200K" "-,0012G" "-0,0012G"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["5 ribu" "lima ribu"]
+          :checks [#clj-duckling/corpus "(number 5000)"]}
+         {:text ["seratus dua puluh dua"]
+          :checks [#clj-duckling/corpus "(number 122)"]}
+         {:text ["dua ratus ribu"]
+          :checks [#clj-duckling/corpus "(number 200000)"]}
+         {:text ["sepuluh ribu sebelas"]
+          :checks [#clj-duckling/corpus "(number 10011)"]}
+         {:text ["tujuh ratus dua puluh satu ribu dua belas"]
+          :checks [#clj-duckling/corpus "(number 721012)"]}
+         {:text ["tiga puluh satu juta dua ratus lima puluh enam ribu tujuh ratus dua puluh satu"]
+          :checks [#clj-duckling/corpus "(number 31256721)"]}
+         {:text ["ke-4" "keempat"]
+          :checks [#clj-duckling/corpus "(ordinal 4)"]}]}

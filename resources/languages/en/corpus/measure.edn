@@ -1,0 +1,30 @@
+{:context {}
+
+ :tests [{:text ["3 kilometers" "3 km" "3km" "3k"]
+          :checks [#clj-duckling/corpus "(distance 3 \"kilometre\" {:value 3000, :unit \"metre\"})"]}
+         {:text ["3.0 km"]
+          :checks [#clj-duckling/corpus "(distance 3.0 \"kilometre\" {:value 3000.0, :unit \"metre\"})"]}
+         {:text ["8 miles"]
+          :checks [#clj-duckling/corpus "(distance 8 \"mile\" {:value 12872, :unit \"metre\"})"]}
+         {:text ["9m"]
+          :checks [#clj-duckling/corpus "(distance 9 \"m\")"]}
+         {:text ["2cm" "2 centimeters"]
+          :checks [#clj-duckling/corpus "(distance 2 \"centimetre\" {:value 0.02, :unit \"metre\"})"]}
+         {:text ["250 milliliters" "250ml" "250 ml"]
+          :checks [#clj-duckling/corpus "(volume 250 \"millilitre\" {:value 0.25, :unit \"litre\"})"]}
+         {:text ["2 liters"]
+          :checks [#clj-duckling/corpus "(volume 2 \"litre\")"]}
+         {:text ["3 gallons" "3 gal"]
+          :checks [#clj-duckling/corpus "(volume 3 \"gallon\" {:value 11.355, :unit \"litre\"})"]}
+         {:text ["3 hectoliters"]
+          :checks [#clj-duckling/corpus "(volume 300 \"litre\" {:value 30, :unit \"litre\"})"]}
+         {:text ["half liter"]
+          :checks [#clj-duckling/corpus "(volume 0.5 \"litre\")"]}
+         {:text ["two pounds of meat"]
+          :checks [#clj-duckling/corpus "(quantity 2 \"pound\" \"meat\")"]}
+         {:text ["a pound"]
+          :checks [#clj-duckling/corpus "(quantity 1 \"pound\")"]}
+         {:text ["a meat"]
+          :checks [#clj-duckling/corpus "(quantity 1 nil \"meat\")"]}
+         {:text ["3 cups of sugar"]
+          :checks [#clj-duckling/corpus "(quantity 3 \"cup\" \"sugar\")"]}]}

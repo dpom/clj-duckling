@@ -1,0 +1,10 @@
+[#clj-duckling.engine/rule {:name "seconde (unit-of-duration)", :pattern "#\"(?i)seg(undo)?s?\"", :production "{:dim :unit-of-duration, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (unit-of-duration)", :pattern "#\"(?i)min(uto)?s?\"", :production "{:dim :unit-of-duration, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (unit-of-duration)", :pattern "#\"(?i)h(ora)?s?\"", :production "{:dim :unit-of-duration, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (unit-of-duration)", :pattern "#\"(?i)d(í|i)as?\"", :production "{:dim :unit-of-duration, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (unit-of-duration)", :pattern "#\"(?i)semanas?\"", :production "{:dim :unit-of-duration, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (unit-of-duration)", :pattern "#\"(?i)mes(es)?\"", :production "{:dim :unit-of-duration, :grain :month}"}
+ #clj-duckling.engine/rule {:name "year (unit-of-duration)", :pattern "#\"(?i)a(n|ñ)os?\"", :production "{:dim :unit-of-duration, :grain :year}"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "en <duration>", :pattern "[#\"(?i)en\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "hace <duration>", :pattern "[#\"hace\" (dim :duration)]", :production "(duration-ago (:value %2))"}]
