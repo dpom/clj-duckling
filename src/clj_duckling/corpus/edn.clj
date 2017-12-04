@@ -7,10 +7,11 @@
    [clojure.spec.alpha :as s]
    [clojure.edn :as edn]
    [duct.logger :refer [log Logger]]
+   [nlpcore.spec :as nsp]
+   [nlpcore.protocols :as core]
    clj-duckling.util.corpus
    clj-duckling.util.time
-   [clj-duckling.spec :as ds]
-   [clj-duckling.corpus.core :as core])
+   [clj-duckling.spec :as dsp])
   (:import [java.io File]))
 
 (def ukey
@@ -58,15 +59,17 @@
                                               (merge-with into res item)))
                                 {:context {} :tests []}
                                 (file-seq (io/file dirpath))))))
-  (get-corpus [this] @corpus)
-  (get-id [this] id)
-  (set-logger! [this newlogger] (reset! logger newlogger)))
+  (get-corpus [this] @corpus))
+
+(extend EdnCorpus
+  core/Module
+  core/default-module-impl)
 
 (defmethod ig/pre-init-spec ukey [_]
-  (ds/known-keys :req-un [:gen/id
-                          :gen/language
+  (nsp/known-keys :req-un [:nlpcore/id
+                          :nlpcore/language
                           :gen/dirpath
-                          :gen/logger]))
+                          :nlpcore/logger]))
 
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id language dirpath logger]} spec

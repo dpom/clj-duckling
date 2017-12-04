@@ -8,9 +8,6 @@
 (s/def :gen/start #(= org.joda.time.DateTime (class %)))
 (s/def :gen/datetime (s/keys :req-un [:gen/start :gen/grain]))
 (s/def :gen/dirpath string?)
-(s/def :gen/logger map?)
-(s/def :gen/id string?)
-(s/def :gen/language #(re-matches #"[a-z]{2}" %))
 
 (def dimensions #{:amount-of-money
                   :budget
@@ -150,10 +147,4 @@
 ;; (s/def :classifier/classifier (s/cat :name string? ))
 ;; (s/def :classifier/classifiers-map (s/map-of ::module-key (s/col-of :classifier/classifier)))
 
-(defmacro known-keys
-  [& {:keys [req req-un opt opt-un gen] :as args}]
-  (letfn [(known-spec? [k] (boolean (s/get-spec k)))]
-    (doseq [e (concat req req-un opt opt-un)]
-      (when-not (known-spec? e)
-        (throw (ex-info (str e " is not a currently registered spec.") args)))))
-  `(s/keys ~@(interleave (keys args) (vals args))))
+

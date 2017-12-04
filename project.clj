@@ -1,4 +1,4 @@
-(defproject dpom/clj-duckling "0.7-dev06"
+(defproject dpom/clj-duckling "0.7-dev07"
   :description "A Clojure library that parses text into structured data"
   :license {:url "https://github.com/wit-ai/duckling"
             :comments "see LICENSE"}
@@ -11,7 +11,8 @@
                  [duct/logger "0.2.1"]
                  [duct/logger.timbre "0.4.1" :exclusions [com.taoensso/encore com.taoensso/truss]]
                  [com.taoensso/nippy "2.13.0"] 
-                 [prismatic/plumbing "0.5.5"]]
+                 [prismatic/plumbing "0.5.5"]
+                 [dpom/nlpcore "1.0"]]
   :pedantic? :warning
   :plugins [[s3-wagon-private "1.1.2" :exclusions [commons-logging commons-codec]]
             [lein-ancient "0.6.10" :exclusions [commons-logging org.clojure/clojure]]
@@ -29,7 +30,6 @@
                    :dependencies [[integrant/repl "0.2.0"]
                                   [org.clojure/tools.trace "0.7.9"]
                                   [fipp "0.6.12"]
-                                  [digest "1.4.6"]
                                   [criterium "0.4.4"]
                                   [cheshire "5.8.0"]]}
              :uberjar {:aot [clj-duckling.core]}}

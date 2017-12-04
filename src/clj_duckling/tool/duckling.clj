@@ -4,12 +4,12 @@
    [integrant.core :as ig]
    [duct.logger :refer [log]]
    [plumbing.core :as p]
+   [nlpcore.spec :as nsp]
+   [nlpcore.protocols :as core]
    [clj-duckling.util.learn :as learn]
    [clj-duckling.util.engine :as engine]
    [clj-duckling.engine.core :as eng]
-   [clj-duckling.model.core :as modl]
-   [clj-duckling.util.core :as util]
-   [clj-duckling.tool.core :as core])
+   [clj-duckling.util.core :as util])
 )
 
 (def ukey
@@ -137,14 +137,17 @@
   (build-tool! [this]
     (log @logger :error ::build-tool! {:error :not-implemented :id id}))
   (apply-tool [this text opts]
-    (parse text (get opts :dims []) (get opts :context {}) (modl/get-model model) (eng/get-rules rules) logger))
-  (get-id [this] id)
-  (set-logger! [this newlogger] (reset! logger newlogger)))
+    (parse text (get opts :dims []) (get opts :context {}) (core/get-model model) (eng/get-rules rules) logger)))
+
+(extend DucklingTool
+  core/Module
+  core/default-module-impl)
+
 
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id rules model logger]} spec
         tool (->DucklingTool id model rules (atom nil))]
-    (log logger :info ::init {:id id :rules (eng/get-id rules) :model (modl/get-id model)})
+    (log logger :info ::init {:id id :rules (core/get-id rules) :model (core/get-id model)})
     (core/set-logger! tool logger)
     tool))
 

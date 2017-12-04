@@ -7,9 +7,10 @@
    [clojure.edn :as edn]
    [clojure.string :as str]
    [duct.logger :refer [log Logger]]
+   [nlpcore.protocols :as core]
    [clj-duckling.dims.time.prod]
    [clj-duckling.util.core :as util]
-   [clj-duckling.engine.core :as core])
+   [clj-duckling.engine.core :as eng])
 (:import [java.io File]))
 
 (def ukey
@@ -117,7 +118,7 @@
   (edn/read-string {:readers edn-readers} (slurp (io/as-file rules-file))))
 
 (defrecord EdnEngine [id rules language dirpath logger]
-  core/Engine
+  eng/Engine
   (load-rules! [this]
     (log @logger :debug ::load-rules {:path dirpath :lang language})
     (let [grammar-matcher (.getPathMatcher
@@ -129,16 +130,16 @@
               (map #(.getAbsolutePath ^File %))
               (map #(read-rules-file % @logger)))]
       (reset! rules (flatten (into [] xf (file-seq (io/file dirpath)))))))
-  (get-rules [this] @rules)
-  (get-id [this] id)
-  (set-logger! [this newlogger] (reset! logger newlogger))
-  )
+  (get-rules [this] @rules))
 
+(extend EdnEngine
+  core/Module
+  core/default-module-impl)
 
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id language dirpath logger]} spec
         engine (->EdnEngine id (atom nil) language dirpath (atom nil))]
     (log logger :info ::init {:id id :lang language :dirpath dirpath })
     (core/set-logger! engine logger)
-    (core/load-rules! engine)
+    (eng/load-rules! engine)
     engine))

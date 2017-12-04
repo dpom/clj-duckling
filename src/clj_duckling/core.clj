@@ -11,7 +11,6 @@
    [environ.core :refer [env]]
    [clojure.test :refer :all]
    [clj-duckling.system :as sys]
-   [clj-duckling.corpus.core :as corpus]
    clj-duckling.spec
    [clj-duckling.util.engine :as engine]
    [clj-duckling.util.learn :as learn]

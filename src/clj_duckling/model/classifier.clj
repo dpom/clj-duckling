@@ -4,10 +4,10 @@
    [integrant.core :as ig]
    [taoensso.nippy :as nippy]
    [duct.logger :refer [log]]
+   [nlpcore.spec :as nsp]
+   [nlpcore.protocols :as core]
    [clj-duckling.util.learn :as learn]
-   [clj-duckling.engine.core :as eng]
-   [clj-duckling.corpus.core :as corp]
-   [clj-duckling.model.core :as core]))
+   [clj-duckling.engine.core :as eng]))
 
 (def ukey
   "this unit key"
@@ -22,22 +22,23 @@
       (reset! classifier (nippy/thaw-from-file binfile)))
     (train-model! [this]
       (reset! classifier (learn/train-classifiers
-                          (corp/get-corpus corpus)
+                          (core/get-corpus corpus)
                           (eng/get-rules rules)
                           learn/extract-route-features
                           @logger)))
     (save-model! [this]
       (log @logger :error ::save-model {:file binfile :id id})
       (nippy/freeze-to-file binfile @classifier))
-    (get-model [this] @classifier)
-    (get-id [this] id)
-    (set-logger! [this newlogger] (reset! logger newlogger)))
+    (get-model [this] @classifier))
 
+(extend ClassifierModel
+  core/Module
+  core/default-module-impl)
 
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id language rules corpus logger loadbin? binfile] :or {loadbin? false}} spec
         classifier (->ClassifierModel id (atom nil) language rules corpus binfile (atom nil))]
-    (log logger :info ::init {:id id :lang language :rules (eng/get-id rules) :corpus (corp/get-id corpus)})
+    (log logger :info ::init {:id id :lang language :rules (core/get-id rules) :corpus (core/get-id corpus)})
     (core/set-logger! classifier logger)
     (if loadbin?
       (core/load-model! classifier)
