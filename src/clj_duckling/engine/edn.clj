@@ -8,8 +8,10 @@
    [clojure.string :as str]
    [duct.logger :refer [log Logger]]
    [nlpcore.protocols :as core]
+   [nlpcore.spec :as nsp]
    [clj-duckling.dims.time.prod]
    [clj-duckling.util.core :as util]
+   [clj-duckling.spec :as dspec]
    [clj-duckling.engine.core :as eng])
 (:import [java.io File]))
 
@@ -135,6 +137,12 @@
 (extend EdnEngine
   core/Module
   core/default-module-impl)
+
+(defmethod ig/pre-init-spec ukey [_]
+  (nsp/known-keys :req-un [:nlpcore/id
+                           :nlpcore/language
+                           :gen/dirpath
+                           :nlpcore/logger]))
 
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id language dirpath logger]} spec

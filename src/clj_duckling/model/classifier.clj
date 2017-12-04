@@ -4,6 +4,7 @@
    [integrant.core :as ig]
    [taoensso.nippy :as nippy]
    [duct.logger :refer [log]]
+   [clojure.spec.alpha :as s]
    [nlpcore.spec :as nsp]
    [nlpcore.protocols :as core]
    [clj-duckling.util.learn :as learn]
@@ -34,6 +35,19 @@
 (extend ClassifierModel
   core/Module
   core/default-module-impl)
+
+
+(s/def ::loadbin? boolean?)
+
+(defmethod ig/pre-init-spec ukey [_]
+  (nsp/known-keys :req-un [:nlpcore/id
+                           :nlpcore/language
+                           :nlpcore/logger]
+                  :opt-un [::loadbin?
+                           :nlpcore/corpus
+                           :engine/rules
+                           :gen/binfile]))
+
 
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id language rules corpus logger loadbin? binfile] :or {loadbin? false}} spec
