@@ -76,6 +76,10 @@
                   coll)]
     [(splitted true) (splitted false)]))
 
+(deftest split-by-partial-max-test
+  (is (= [[6] [1 2]]
+         (split-by-partial-max compare [1 2 6] [1 2 3 4]))))
+
 (defn merge-according-to
   "Merges a list of maps from left to right.
   When 2 conflicting keys are found, lookup the merging function to use.
@@ -89,6 +93,10 @@
                           (assoc m k v))
                         (assoc m k v)))]
     (reduce #(reduce merge-entry %1 (seq %2)) {} maps)))
+
+(deftest merge-according-to-test
+  (is (= {:foo 2 :bar 2} (merge-according-to {:foo +} {:foo 1 :bar 2} {:foo 1}))))
+
 
 (defn compare-intervals
   "Compares two intervals. i1 > i2 if i1 recovers i2."
@@ -108,25 +116,9 @@
     (pprint/pprint m w)
     (str w)))
 
-(defn get-default-logger
-  []
-  (let [config {::logger/timbre  {:level :info, :appenders {:prn (ig/ref ::timbre/println)}}
-                ::timbre/println {}}
-        logger (::logger/timbre (ig/init config))]
-    logger))
 
-(deftest get-default-logger-test
-  (let [logger (get-default-logger)]
-    (is (re-matches
-         #"(?x)\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d\ [^\s]+
-           \ INFO\ \[duckling\.util:\d\d\]\ -
-           \ :duckling\.util/testing\n"
-         (with-out-str (logger/log logger :info ::testing))))
-    (is (re-matches
-         #"(?x)\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d\ [^\s]+
-          \ WARN\ \[duckling\.util:\d\d\]\ -
-          \ :duckling\.util/testing\ \{:foo\ \"bar\"\}\n"
-         (with-out-str (logger/log logger :warn ::testing {:foo "bar"}))))))
+
+
 
 
 

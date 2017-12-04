@@ -1,7 +1,10 @@
 (ns clj-duckling.util.time
   (:require [clj-time.core :as time]
-            [clj-time.local :as local])
-  (:import [org.joda.time DateTimeFieldType DateTime DateTimeZone]))
+            [clj-time.local :as local]
+            [clojure.test :refer :all])
+  (:import [org.joda.time DateTimeFieldType
+                          DateTime
+                          DateTimeZone]))
 
 ; This ns constructs and operates time objects. It's a wall between Picsou and
 ; the actual implementation of time (here, clj-time).
@@ -13,6 +16,7 @@
 ;
 ; Some fn like 'round', 'year' (and all the field getters) operate on the :start
 ; instant. If you use them, make sure it's what you want.
+
 
 
 ; week is a special case (it's not a field byitself), it's managed as a special
@@ -159,6 +163,10 @@
 (defn ->fields [{:keys [start] :as t}]
   [(time/year start) (time/month start) (time/day start) (time/hour start) (time/minute start) (time/second start)])
 
+
+
+(def test-today (t 0 2014 8 30 5 30 18))
+
 (defn plus
   "Add n grain to tt.
   Set the grain to the finest between tt's and the added one."
@@ -172,6 +180,13 @@
     (if-not (:end tt)
       new-t
       (assoc new-t :end (time/plus (end tt) duration)))))
+
+(deftest plus-test
+  (is (= (t 0 2014 8 30 6 30 18)
+         (plus test-today :hour 1)))
+  (is (= (t 0 2014 9 13 5 30 18)
+         (plus test-today :week 2)))
+  )
 
 (defn minus [tt grain n]
   (plus tt grain (- n)))
@@ -205,6 +220,11 @@
                       fields-to-reset)
        :grain grain})))
 
+(deftest round-test
+  (is (= (t 0 2014) (round test-today :year)))
+  (is (= (t 0 2014 8 30) (round test-today :day)))
+  )
+
 (defn start-before-the-end-of? [t1 t2] ; TODO equality?
   {:pre [(valid? t1) (valid? t2)]}
   (let [t2-end (end t2)]
@@ -217,6 +237,10 @@
   "Returns the number of days in the month of tt"
  [tt]
   (time/day (time/last-day-of-the-month (:start tt))))
+
+(deftest days-in-month-test
+  (is (= 31 (days-in-month test-today))))
+
 
 (defn now []
   {:start (local/local-now) :grain :second})
@@ -252,15 +276,30 @@
       (recur more (plus acc grain value))
       acc)))
 
+(deftest plus-period-test
+  (is (= (t 0 2014 8 30 6 30 18)
+         (plus-period test-today {:hour 1}))))
+
 (defn period-grain
   "Returns the grain of the period (the finest of its grains)"
   [period]
   (apply max-key grain-order (keys period)))
 
+(deftest period-grain-test
+  (is (= :second
+         (period-grain {:week 1 :day 3 :second 18}))))
+
 (defn negative-period
   "Turn a period into its opposite sign"
   [period]
   (into {} (map (fn [[k v]] [k (- v)]) period)))
+
+
+(deftest negative-period-test
+  (is (= {:week -1 :day -3 :second -18}
+         (negative-period {:week 1 :day 3 :second 18}))))
+
+
 
 (defn period->duration ; TODO use context to get an exact duration
   "Convert a period into an amount of seconds. This is approximate, since for
