@@ -820,3 +820,143 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 (def model2 (modl/get-model classif)) 
 
 (= model1 model2) 
+
+;; 2017-12-04
+
+(def lang "ro") 
+
+(def corpus-dir (-> (str "languages/" lang "/corpus" )
+                    io/resource
+                    io/as-file
+                    (.getAbsolutePath))) 
+
+
+(def rules-dir (-> (str "languages/" lang "/rules" )
+                   io/resource
+                   io/as-file
+                   (.getAbsolutePath))) 
+
+(require 
+ '[clj-duckling.corpus.edn :as corp]
+ '[clj-duckling.engine.edn :as eng]
+ '[clj-duckling.engine.core :as engcore]
+ '[clj-duckling.model.classifier :as modl]
+ '[clj-duckling.tool.duckling :as tool]
+ '[nlpcore.protocols :as core]
+ '[clj-duckling.system :as sys]
+ ) 
+
+(def config-test {tool/ukey {:id (str lang "-tool-test")
+                        :language lang
+                        :model (ig/ref modl/ukey)
+                        :rules (ig/ref eng/ukey)
+                        :logger (ig/ref :duct.logger/timbre)}
+             modl/ukey {:id (str lang "-model-test")
+                        :language lang
+                        :loadbin? false
+                        :corpus (ig/ref corp/ukey)
+                        :rules (ig/ref eng/ukey)
+                        :logger (ig/ref :duct.logger/timbre)}
+             corp/ukey {:id (str lang "-corpus-test")
+                        :language lang
+                        :dirpath corpus-dir
+                        :logger (ig/ref :duct.logger/timbre)}
+             eng/ukey {:id (str lang "-engine-test")
+                       :language lang
+                       :dirpath rules-dir
+                       :logger (ig/ref :duct.logger/timbre)}
+             :duct.logger/timbre {:level    :error
+                                  :appenders {:duct.logger.timbre/brief (ig/ref :duct.logger.timbre/brief)}}
+             :duct.logger.timbre/brief {}}) 
+
+(def system-test (ig/init (sys/prep config-test)))  
+
+(def tool (tool/ukey system-test)) 
+
+(def model (core/get-model (:model tool))) 
+(def rules (engcore/get-rules (:rules tool))) 
+(def logger @(:logger tool)) 
+
+;; 2017-12-05
+
+(require 
+ '[clojure.string :as str]
+ '[nlpcore.protocols :as core]
+ '[clj-duckling.system :as sys]
+ '[clj-duckling.util.analyze :as anlz]
+ '[clj-duckling.util.learn :as learn]
+ '[clj-duckling.core :as dcore]
+ '[clj-duckling.tool.duckling :as tool]
+ '[clj-duckling.engine.core :as engcore]
+ '[clj-duckling.corpus.edn :as corp]
+ ) 
+
+(def config-test (dcore/make-config "ro" :debug)) 
+
+
+(def system-test (ig/init (sys/prep config-test)))  
+(def tool (tool/ukey system-test)) 
+
+(def model (core/get-model (:model tool))) 
+(def rules (engcore/get-rules (:rules tool))) 
+(def logger @(:logger tool)) 
+
+(def corpus (corp/ukey system-test)) 
+
+
+(defn print-stash2
+  "Print stash to STDOUT"
+  [stash classifiers winners]
+  (let [width (count (:text (first stash)))
+        winners-indices (map :index winners)]
+    (doseq [[tok i] (reverse (map vector stash (iterate inc 0)))]
+      (let [pos (:pos tok)
+            end (:end tok)]
+        (if pos
+          (printf "%s %s%s%s %2d | %-9s | %-25s | P = %04.4f | %.20s\n"
+                  (if (some #{(:index tok)} winners-indices) "W" " ")
+                  (str/join (repeat pos \space))
+                  (str/join (repeat (- end pos) \-))
+                  (str/join (repeat (- width end -1) \space))
+                  (when-let [x (:dim tok)] (name x))
+                  (when-let [x (-> tok :rule :name)] (name x))
+                  (float (learn/route-prob tok classifiers))
+                  (str/join " + " (mapv #(get-in % [:rule :name]) (:route tok))))
+          (printf "  %s\n" (:text tok))))))) 
+
+
+(def res 
+(let [{:keys [context tests]} (core/get-corpus corpus)]
+    (for [test tests
+          text (:text test)]
+      (try
+        (let [{:keys [stash winners]} (anlz/analyze text context [] model rules logger)
+              winner-count (count winners)
+              check (first (:checks test)) ; only one test is supported now
+              check-results (map (partial check context) winners)] ; return nil if OK, [expected actual] if not OK
+          (print-stash2 stash model winners)  
+          (if (some #(or (nil? %) (false? %)) check-results)
+            [0 text nil]
+            [1 text [(ffirst check-results) (map second check-results)]]))
+        (catch Exception e
+          [1 text (.getMessage e)])))) 
+  ) 
+
+(require 
+ '[clj-duckling.core :as dcore]
+ )
+
+(def res (dcore/run-lang "ro" :info)) 
+
+(first res)  
+
+(core/apply-tool tool "sub 300 lei" {}) 
+
+(def failed (remove (comp (partial = 0) first) res)) 
+
+(doseq [[[error-count text error-msg] i] (map vector failed (iterate inc line))]
+  (printf "%d FAIL \"%s\"\n    Expected %s\n" i text (first error-msg))
+  (doseq [[[error-count text error-msg] i] (map vector failed (iterate inc line))]
+    (printf "%d FAIL \"%s\"\n    Expected %s\n" i text (first error-msg))
+    (doseq [got (second error-msg)]
+      (printf "    Got      %s\n" got))) 
