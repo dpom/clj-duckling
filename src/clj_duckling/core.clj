@@ -7,7 +7,10 @@
    [integrant.core :as ig]
    [duct.logger :refer [log]] 
    [clojure.test :refer :all]
+   [clojure.spec.test.alpha :as stest]
+   [clojure.spec.gen.alpha :as gen]
    [nlpcore.protocols :as core]
+   [nlpcore.spec :as nsp]
    [clj-duckling.system :as sys]
    [clj-duckling.util.time :as time]
    [clj-duckling.util.learn :as learn]
@@ -16,8 +19,9 @@
    [clj-duckling.engine.edn :as eng]
    [clj-duckling.engine.core :as engcore]
    [clj-duckling.model.classifier :as modl]
-   [clj-duckling.tool.duckling :as tool]
-   ))
+   [clj-duckling.tool.duckling :as tool])
+  (:import
+   [java.io File])) 
 
 
 (defn default-context
@@ -100,7 +104,40 @@
         (catch Exception e
           [1 text (.getMessage e)])))))
 
+(s/def ::error (s/cat :type #{0 1} :text string? :msg #(or (nil? %) (vector? %))))
+(s/def ::ok (s/cat :type #{0} :text string? :msg nil?))
+(s/def ::errors (s/coll-of ::error :min-count 1))
+(s/def ::noerrors (s/coll-of ::ok :min-count 1))
 
+(s/fdef run-lang
+        ;; :args (s/cat :lang #(re-matches #"[a-z]{2}" %) :level #{:debug :info :error})
+        :args (s/cat :lang :nlpcore/language :level #{:debug :info :error})
+        :ret ::noerrors)
+
+(deftest run-lang-test
+  (is (s/valid? ::noerrors (run-lang "ro" :error))))
+
+
+
+
+(defn check-lang [level res lang]
+  (assoc res lang (remove (comp (partial = 0) first) (run-lang lang level))))
+
+(defn run
+  "Run the NLP modules for all languages in resources/languages.
+  
+  Args:
+  level (key): log level
+
+  Returns:
+  (map): a map with languages as keys and the list of errors as values"
+  [level]
+  (let [xf (comp
+            (filter #(.isDirectory ^File %))
+            (map #(.getName ^File %))
+            (filter #(re-matches #"[a-z]{2}" %))
+            )]
+    (transduce xf (completing (partial check-lang level)) {} (file-seq (io/file "resources/languages")))))
 
 
 

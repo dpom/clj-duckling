@@ -960,3 +960,42 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
     (printf "%d FAIL \"%s\"\n    Expected %s\n" i text (first error-msg))
     (doseq [got (second error-msg)]
       (printf "    Got      %s\n" got))) 
+
+
+ (file-seq (io/file "resources/languages")) 
+
+ (import '[java.io File])
+ o
+
+ (defn check-lang [res lang]
+   (assoc res (keyword lang) (remove (comp (partial = 0) first) (dcore/run-lang lang :error))))
+
+(def x 
+ (let [xf (comp
+           (filter #(.isDirectory ^File %))
+           (map #(.getName ^File %))
+           (filter #(re-matches #"[a-z]{2}" %))
+)]
+   (transduce xf (completing check-lang) {} (file-seq (io/file "resources/languages"))))
+  )
+(require '[clj-duckling.core :as dcore]) 
+
+(def y (dcore/run :error)) 
+
+
+(require
+ '[clojure.spec.alpha :as s]
+ '[clojure.spec.gen.alpha :as gen]
+ '[clojure.spec.test.alpha :as stest]
+ '[nlpcore.spec :as nsp])
+
+
+
+(gen/generate (s/gen :nlpcore/language)) 
+
+(gen/generate (s/gen int?)) 
+
+(s/valid? :nlpcore/language "ro") 
+
+
+(stest/check 'run-lang) 
