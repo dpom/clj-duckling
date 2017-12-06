@@ -999,3 +999,43 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
 
 
 (stest/check 'run-lang) 
+
+;; 2017-12-06
+
+(require 
+ '[clojure.string :as str]
+ '[nlpcore.protocols :as core]
+ '[clj-duckling.system :as sys]
+ '[clj-duckling.util.analyze :as anlz]
+ '[clj-duckling.util.learn :as learn]
+ '[clj-duckling.engine.core :as engcore]
+ '[clj-duckling.corpus.edn :as corp]
+ '[clj-duckling.tool.duckling :as tl])  
+
+
+(def tool (get system tl/ukey)) 
+(def model (:model tool)) 
+(def rules (:rules tool)) 
+(def logger @(:logger tool)) 
+
+(def corpus (get system corp/ukey)) 
+(def tests (:tests (core/get-corpus corpus))) 
+(def context (:context (core/get-corpus corpus))) 
+(def test (first tests)) 
+
+(def ret (anlz/analyze "Vreau un cadou sub 300 lei pentru un baiat 5 ani" [] {} (core/get-model model) (engcore/get-rules rules) logger)) 
+(second (:stash ret)) 
+(first (:winners ret)) 
+
+(def classif (core/get-model model)) 
+(def engine (engcore/get-rules rules)) 
+
+(into #{} (mapcat (fn [t]
+                    (->
+                     (anlz/analyze t [] context classif engine logger)
+                     :winners
+                     (#(map :dim %))
+                     (#(filter keyword? %)))) 
+                  (mapcat :text tests))) 
+
+ 

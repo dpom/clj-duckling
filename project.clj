@@ -20,6 +20,7 @@
             [lein-kibit "0.1.6" :exclusions [org.clojure/clojure]]
             [lein-cljfmt "0.5.6" :exclusions [org.clojure/clojure rewrite-clj]]
             [lein-environ "1.1.0"]
+            [lein-cloverage "1.0.10"]
             [lein-codox "0.10.3" :exclusions [org.clojure/clojure]]]
   :repl-options {:init-ns user}
   :deploy-repositories [["clojars" {:creds :gpg}]]

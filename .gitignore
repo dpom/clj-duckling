@@ -21,3 +21,4 @@ dev/src/local.clj
 /tmp.edn
 /tmp
 /err.log
+/test/ro_model.bin

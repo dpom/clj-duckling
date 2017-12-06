@@ -5,7 +5,7 @@
    [clojure.java.io :as io]
    [clojure.string :as str]
    [integrant.core :as ig]
-   [duct.logger :refer [log]] 
+   [duct.logger :refer [log]]
    [clojure.test :refer :all]
    [clojure.spec.test.alpha :as stest]
    [clojure.spec.gen.alpha :as gen]
@@ -21,7 +21,7 @@
    [clj-duckling.model.classifier :as modl]
    [clj-duckling.tool.duckling :as tool])
   (:import
-   [java.io File])) 
+   [java.io File]))
 
 
 (defn default-context
@@ -43,39 +43,41 @@
   (map): the integrant config map"
   [lang level]
   (let [corpus-dir (-> (str "languages/" lang "/corpus" )
-                            io/resource
-                            io/as-file
-                            (.getAbsolutePath))
+                       io/resource
+                       io/as-file
+                       (.getAbsolutePath))
         rules-dir (-> (str "languages/" lang "/rules" )
-                           io/resource
-                           io/as-file
-                           (.getAbsolutePath))]
-  {tool/ukey {:id (str lang "-tool-test")
-                        :language lang
-                        :model (ig/ref modl/ukey)
-                        :rules (ig/ref eng/ukey)
-                        :logger (ig/ref :duct.logger/timbre)}
-             modl/ukey {:id (str lang "-model-test")
-                        :language lang
-                        :loadbin? false
-                        :corpus (ig/ref corp/ukey)
-                        :rules (ig/ref eng/ukey)
-                        :logger (ig/ref :duct.logger/timbre)}
-             corp/ukey {:id (str lang "-corpus-test")
-                        :language lang
-                        :dirpath corpus-dir
-                        :logger (ig/ref :duct.logger/timbre)}
-             eng/ukey {:id (str lang "-engine-test")
+                      io/resource
+                      io/as-file
+                      (.getAbsolutePath))]
+    (merge (sys/make-test-logger level)
+           {tool/ukey {:id (str lang "-tool-test")
                        :language lang
-                       :dirpath rules-dir
+                       :model (ig/ref modl/ukey)
+                       :rules (ig/ref eng/ukey)
                        :logger (ig/ref :duct.logger/timbre)}
-             :duct.logger/timbre {:level  level
-                                  :appenders {:duct.logger.timbre/brief (ig/ref :duct.logger.timbre/brief)}}
-             :duct.logger.timbre/brief {}}))
+            modl/ukey {:id (str lang "-model-test")
+                       :language lang
+                       :loadbin? false
+                       :binfile (str "test/" lang "_model.bin")
+                       :corpus (ig/ref corp/ukey)
+                       :rules (ig/ref eng/ukey)
+                       :logger (ig/ref :duct.logger/timbre)}
+            corp/ukey {:id (str lang "-corpus-test")
+                       :language lang
+                       :dirpath corpus-dir
+                       :logger (ig/ref :duct.logger/timbre)}
+            eng/ukey {:id (str lang "-engine-test")
+                      :language lang
+                      :dirpath rules-dir
+                      :logger (ig/ref :duct.logger/timbre)}
+            })))
+
+;; test corpus
 
 (defn run-lang
   "Run the NLP modules for a specific language.
-  
+
   Args:
   lang (string): language (iso code)
   level (key): log level
@@ -85,7 +87,7 @@
   [lang level]
   (let [config-test (make-config lang level)
         system-test (ig/init (sys/prep config-test))
-        tool (tool/ukey system-test) 
+        tool (tool/ukey system-test)
         model (core/get-model (:model tool))
         rules (engcore/get-rules (:rules tool))
         logger @(:logger tool)
@@ -125,7 +127,7 @@
 
 (defn run
   "Run the NLP modules for all languages in resources/languages.
-  
+
   Args:
   level (key): log level
 
@@ -140,9 +142,23 @@
     (transduce xf (completing (partial check-lang level)) {} (file-seq (io/file "resources/languages")))))
 
 
+;; test classifier 
 
-
-
+(deftest classifier-test
+  (let [config-test1  (dissoc (make-config "ro" :error) tool/ukey)
+        system-test1 (ig/init (sys/prep config-test1))
+        model1 (modl/ukey system-test1)]
+    (is (= #{:email :timezone :cycle :phone-number :number :unit
+                :leven-unit :time :unit-of-duration :leven-product
+                :ordinal :volume :url :amount-of-money :budget :order
+                :gender :distance :quantity :temperature}
+           @(:dims model1)) "test dims")
+    (core/save-model! model1)
+    (let [config-test2  (assoc-in config-test1 [modl/ukey :loadbin? ] true)
+          system-test2 (ig/init config-test2)
+          model2 (modl/ukey system-test2)]
+      (is (= @(:dims model1) @(:dims model2)) "test binloading dims")
+      (is (= @(:classifier model1) @(:classifier model2)) "test binloading classifier"))))
 
 
 
@@ -238,79 +254,6 @@
 ;; ;;      (defn details [n] (print-tokens (nth stash n) (get-classifier module-id)))
 ;; ;;      (defn token [n] (nth stash n)))))
 
-;; ;;--------------------------------------------------------------------------
-;; ;; Configuration loading
-;; ;;--------------------------------------------------------------------------
-
-
-;; ;; (defn- get-dims-for-test
-;; ;;   [context module {:keys [text]}]
-;; ;;   (let [logger (get context :logger (util/get-default-logger))]
-;; ;;     (mapcat (fn [text]
-;; ;;             (try
-;; ;;               (->> (analyze text context module nil nil)
-;; ;;                    :stash
-;; ;;                    (keep :dim))
-;; ;;               (catch Exception e
-;; ;;                 (log logger :warn ::get-dims-fot-test {:module module :context context :text text})
-;; ;;                 [])))
-;; ;;           text)))
-
-;; ;; (defn get-dims
-;; ;;   "Retrieves all available dimensions for module by running its corpus."
-;; ;;   [module {:keys [context tests]}]
-;; ;;   (->> tests
-;; ;;        (pmap (partial get-dims-for-test context module))
-;; ;;        (apply concat)
-;; ;;        distinct
-;; ;;        sort))
-
-
-
-
-
-;; ;;--------------------------------------------------------------------------
-;; ;; Corpus running
-;; ;;--------------------------------------------------------------------------
-
-;; (defn run-corpus
-;;   "Run the corpus given in parameter for the given module.
-;;   Returns a list of vectors [0|1 text error-msg]"
-;;   [{context :context, tests :tests} module]
-;;   (for [test tests
-;;         text (:text test)]
-;;     (try
-;;       (let [{:keys [stash winners]} (analyze text context module nil nil)
-;;             winner-count (count winners)
-;;             check (first (:checks test)) ; only one test is supported now
-;;             check-results (map (partial check context) winners)] ; return nil if OK, [expected actual] if not OK
-;;         (if (some #(or (nil? %) (false? %)) check-results)
-;;           [0 text nil]
-;;           [1 text [(ffirst check-results) (map second check-results)]]))
-;;       (catch Exception e
-;;         [1 text (.getMessage e)]))))
-
-;; (defn run
-;;   "Runs the corpus and prints the results to the terminal."
-;;   ([]
-;;    (run (keys @corpus-map)))
-;;   ([module-id]
-;;    (loop [[md & more] (if (seq? module-id) module-id [module-id])
-;;           line 0
-;;           acc []]
-;;      (if md
-;;        (let [output (run-corpus (md @corpus-map) md)
-;;              failed (remove (comp (partial = 0) first) output)]
-;;          (doseq [[[error-count text error-msg] i] (map vector failed (iterate inc line))]
-;;            (printf "%d FAIL \"%s\"\n    Expected %s\n" i text (first error-msg))
-;;            (doseq [got (second error-msg)]
-;;              (printf "    Got      %s\n" got)))
-;;          (printf "%s: %d examples, %d failed.\n" md (count output) (count failed))
-;;          (recur more (+ line (count failed)) (concat acc (map (fn [[_ t _]] [md t]) failed))))
-;;        (defn c [n]
-;;          (let [[md text] (nth acc n)]
-;;            (printf "(play %s \"%s\")\n" md text)
-;;            (play md text)))))))
 
 
 ;; ;;--------------------------------------------------------------------------

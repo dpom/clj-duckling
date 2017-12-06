@@ -1,7 +1,6 @@
 (ns clj-duckling.system
   (:require
    [clojure.java.io :as io]
-   [taoensso.timbre :as timbre]
    [integrant.core :as ig]))
 
 (def system   nil)
@@ -11,3 +10,13 @@
 
 (defn prep [config]
   (doto config ig/load-namespaces))
+
+
+(defn make-test-logger [level]
+  {
+   :duct.logger/timbre {:level level
+                        :appenders {:duct.logger.timbre/brief (ig/ref :duct.logger.timbre/brief)}},
+   :duct.logger.timbre/brief {:min-level level}
+   }
+  )
+

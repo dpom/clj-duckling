@@ -1,7 +1,9 @@
 (ns clj-duckling.util.analyze
   (:require
-   [duct.logger :refer [log]]
+   [clojure.spec.alpha :as s]
    [plumbing.core :as p]
+   [duct.logger :refer [log]]
+   [nlpcore.spec :as nsp]
    [clj-duckling.util.engine :as engine]
    [clj-duckling.util.learn :as learn]
    [clj-duckling.util.core :as util]))
@@ -101,6 +103,14 @@
     (log logger :debug ::analize {:winners winners})
     {:stash stash :winners winners}))
 
+(s/def ::stash (s/coll-of map? :min-count 1))
+(s/def ::winners (s/coll-of map?))
+
+(s/fdef analyze
+        :args (s/cat :text string? :targets coll? :context :corpus/context :model map? :rules :rule/rules :logger :nlpcore/logger)
+        :ret (s/keys :req-un [::stash ::winners]))
+
+
 (defn parse
   "Parse a sentence, returns a curated list of winners.
 
@@ -122,3 +132,30 @@
        (map (fn [x] (select-keys x [:dim :body :value :start :end :latent])))
        distinct))
 
+
+(defn get-dims
+  "Get all dimensions from a corpus.
+
+  Args:
+  corpus (Corpus): the corpus
+  classif (map): the classification model
+  rules (vector): the rules engine
+  logger (Logger): the current logger
+
+  Returns:
+  (set): the corpus dimensions as keywords"
+  [corpus classif rules logger]
+  (let [{:keys [context tests]} corpus]
+    (into #{} (mapcat (fn [t]
+                        (try
+                          (->> (analyze t [] context classif rules logger)
+                               :stash
+                               (keep :dim))
+                          (catch Exception e
+                            (log logger :warn ::get-dims {:text t})
+                            [])))
+                      (mapcat :text tests)))))
+
+(s/fdef get-dims
+        :args (s/cat :corpus :corpus/corpus :classif map? :rules :rule/rules :logger :nlpcore/logger)
+        :ret (s/coll-of keyword? :kind set?))
