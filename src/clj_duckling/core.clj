@@ -1,5 +1,5 @@
 (ns clj-duckling.core
-  "The main module with public API."
+  "The main unit, contains global tests and examples of library use "
   (:require
    [clojure.spec.alpha :as s]
    [clojure.java.io :as io]

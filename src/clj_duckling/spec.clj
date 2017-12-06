@@ -1,4 +1,5 @@
 (ns clj-duckling.spec
+  "Project spec definitions"
   (:require
    [clojure.spec.alpha :as s]
    [clojure.test :as t]))

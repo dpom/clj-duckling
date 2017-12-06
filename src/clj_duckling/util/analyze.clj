@@ -146,7 +146,7 @@
   (set): the corpus dimensions as keywords"
   [corpus classif rules logger]
   (let [{:keys [context tests]} corpus]
-    (into #{} (mapcat (fn [t]
+    (set (mapcat (fn [t]
                         (try
                           (->> (analyze t [] context classif rules logger)
                                :stash
