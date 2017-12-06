@@ -50,7 +50,25 @@ different features approaches.
 
 
 * Architecture
-  
+
+  Duckling uses [[https://github.com/weavejester/integrant][Integrant micro-framework]]  and implements [[https://github.com/dpom/nlpcore][nlpcore protocols]].
+
+** Sources Files Layout
+
+In the main folder are 3 souces files:
+- core :: the main main unit, contains global tests and examples of library use.
+- spec ::  project spec definitions.
+- system :: Integrant system specific functions.
+and 7 folders:
+- util :: common utils functions
+- dims :: dimensions specific functions
+- ml :: machine learning functions
+- corpus :: corpus protocol implementations
+- model :: model protocol implementations
+- engine :: engine protocol implementations
+- tool :: tool protocol implementations 
+ 
+
 ** Modules Dependency
 
 #+begin_src dot :file img/Modules.png :cmdline -Kdot -Tpng
@@ -67,27 +85,25 @@ digraph G {
 
 
 
-** core
+** corpus
 
-   The main module with public API. The entry points are:
-   - load! :: (Re)loads rules and classifiers for languages or/and config.
-   - parse :: Parses text using given module.
-
-   Global status variables:
-   - corpus-map :: store the corpus map
+   Corpus example:
    #+BEGIN_SRC clojure
-{:ro$core {:context {:reference-time {:start #object[org.joda.time.DateTime 0x398ced02 "2013-02-12T04:30:00.000-02:00"], :grain :second},
+ {:context {:reference-time {:start #object[org.joda.time.DateTime 0x398ced02 "2013-02-12T04:30:00.000-02:00"], :grain :second},
                      :min {:start #object[org.joda.time.DateTime 0x1cb29052 "1900-01-01T00:00:00.000-02:00"], :grain :year},
                      :max {:start #object[org.joda.time.DateTime 0x2bce42dd "2100-01-01T00:00:00.000-02:00"], :grain :year}},
            :tests ({:text ["10 lei" "10 ron" "10 RON"],
                     :checks [#object[clj-duckling.corpus$money$fn__3878 0x11fa9e27 "clj-duckling.corpus$money$fn__3878@11fa9e27"]]}
                    {:text ["50 bani" "50 BANI"],
                     :checks [#object[clj-duckling.corpus$money$fn__3878 0x19c2bc4a "clj-duckling.corpus$money$fn__3878@19c2bc4a"]]}
-                   )}}
+                   )}
    #+END_SRC
-   - rules-map :: store the rules map
+
+** engine
+   
+Engine rules example:
    #+BEGIN_SRC clojure
-{:ro$core ({:name "intersect (X cents)",
+ ({:name "intersect (X cents)",
             :pattern (#object[clj-duckling.engine$pattern_fn$fn__4364 0x802558f "clj-duckling.engine$pattern_fn$fn__4364@802558f"]
                       #object[clj-duckling.engine$pattern_fn$fn__4364 0x6c6d587e "clj-duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
             :production #object[clj-duckling.time.prod$eval6563$fn__6564 0x5fb4773e "clj-duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
@@ -95,33 +111,10 @@ digraph G {
             :pattern (#object[clj-duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "clj-duckling.engine$pattern_fn$fn__4364@7e7e5309"]
                       #object[clj-duckling.engine$pattern_fn$fn__4358 0x79e77776 "clj-duckling.engine$pattern_fn$fn__4358@79e77776"]
                       #object[clj-duckling.engine$pattern_fn$fn__4364 0x52388605 "clj-duckling.engine$pattern_fn$fn__4364@52388605"]),
-            :production #object[clj-duckling.time.prod$eval6578$fn__6579 0x476824ec "clj-duckling.time.prod$eval6578$fn__6579@476824ec"]})}
+            :production #object[clj-duckling.time.prod$eval6578$fn__6579 0x476824ec "clj-duckling.time.prod$eval6578$fn__6579@476824ec"]})
    #+END_SRC
-   - classifiers-map :: store the classifiers map
 
 
-** storage
-
-The persistent layer module. It stores the application's entities:
-- corpus ::
-- rules :: 
-- classifiers ::
-
-*** memory 
-
-The storage implementation in memory (atoms).
-
-*** resource
-
-   Utility functions for resource folder management.
-
-*** corpus
-
-** learn
-
-
-
-** analyze
 
 ** dims
 
@@ -139,46 +132,21 @@ If you create a new dimension you should add a dimension file here implementing 
 
 ** Loading Modules
 
-   Each module has a name (en$core), with which it is referred to when you want
-   to use it at runtime, or reload it.
 
-   Each module refers to a set of corpus files and rules files (more on this in
-   the following sections).
-
-   Each module is run by Duckling in a separate "sandbox", so for example, rules
-   in module A cannot expect to match tokens created by rules in module B.
-   There’s typically one module per language, but nothing prevents you to use
-   several modules for a given language, as long as these modules don’t need to
-   interact with each other.
-
-   Loading module:
+  Duckling uses [[https://github.com/weavejester/integrant][Integrant micro-framework]]:
+1. Edit =dev/resources/dev.edn= for yous specific language.
+2. In REPL:
    #+BEGIN_SRC clojure
-(load!)
-(load! {:languages ["ro" "en"]})
-(load! {:config {:en$numbers {:corpus ["numbers"] :rules ["numbers"]}}})
+   (dev)
+   (go)
    #+END_SRC
+
 
 ** Corpus
 
    Corpus files are located in =resources/languages/<lang>/corpus=. You can
    either edit existing files or create new files. *Once you’ve modified corpus
    files, you must reload to take the changes into account*.
-
-   Here is an example corpus file with two test groups:
-   #+BEGIN_SRC clojure
-(
-  {} ; Context map
-
-  "0"
-  "naught"
-  "zero"
-  (number 0)
-
-  "1"
-  "one"
-  (number 1)
-)
-   #+END_SRC
 
    Each test group is described by one or more strings and a function. To run
    the group Duckling will take each string one by one, analyze it, a call the
@@ -201,7 +169,7 @@ If you create a new dimension you should add a dimension file here implementing 
 
    In practice, we use helpers to generate easy to read test functions. In the
    previous example, we use a helper number defined in
-   =src/duckling/corpus.clj=:
+   =src/clj_duckling/util/corpus.clj=:
    #+BEGIN_SRC clojure
 (defn number
   "check if the token is a number equal to value.
@@ -223,11 +191,11 @@ If you create a new dimension you should add a dimension file here implementing 
 
    Once you’ve added your tests, reload your module (see above) and run the corpus:
    #+BEGIN_SRC clojure
-clj-duckling.core=> (run :en$core)
+dev> (reset)
+dev> (d/run-lang "ro" :error)
 O0 FAIL "nil"
     Expected null
 :en$core: 356 examples, 1 failed.
-#'clj-duckling.core/c
    #+END_SRC
 
    Make sure the tests don’t pass anymore (if they do, either you’re very lucky

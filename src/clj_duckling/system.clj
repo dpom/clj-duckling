@@ -1,4 +1,5 @@
 (ns clj-duckling.system
+  "Integrant system specific functions"
   (:require
    [clojure.java.io :as io]
    [integrant.core :as ig]))
