@@ -1,0 +1,24 @@
+{:context {}
+
+ :tests [{:text ["$10" "10$" "sepuluh dolar"]
+          :checks [#clj-duckling/corpus "(money 10 \"$\")"]}
+         {:text ["$10.000" "10K$" "$10k"]
+          :checks [#clj-duckling/corpus "(money 10000 \"$\")"]}
+         {:text ["USD1,23"]
+          :checks [#clj-duckling/corpus "(money 1.23 \"USD\")"]}
+         {:text ["2 dolar" "dua dolar"]
+          :checks [#clj-duckling/corpus "(money 2 \"$\")"]}
+         {:text ["20€" "20 euros" "20 Euro" "20 Euros" "EUR 20" "dua puluh Euro"]
+          :checks [#clj-duckling/corpus "(money 20 \"EUR\")"]}
+         {:text ["EUR29,99"]
+          :checks [#clj-duckling/corpus "(money 29.99 \"EUR\")"]}
+         {:text ["Rp. 315,00"]
+          :checks [#clj-duckling/corpus "(money 315.0 \"IDR\")"]}
+         {:text ["Rp 20" "20 Rupiah" "20Rp" "Rp20"]
+          :checks [#clj-duckling/corpus "(money 20 \"IDR\")"]}
+         {:text ["IDR33000" "IDR 33.000"]
+          :checks [#clj-duckling/corpus "(money 33000 \"IDR\")"]}
+         {:text ["£9" "sembilan pound"]
+          :checks [#clj-duckling/corpus "(money 9 \"£\")"]}
+         {:text ["GBP3,01" "GBP 3,01"]
+          :checks [#clj-duckling/corpus "(money 3.01 \"GBP\")"]}]}

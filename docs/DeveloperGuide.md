@@ -39,77 +39,87 @@ Feature extraction is used both during learning and runtime. It must be done by 
 Architecture
 ============
 
-core
-----
+Duckling uses [Integrant micro-framework](https://github.com/weavejester/integrant) and implements [nlpcore protocols](https://github.com/dpom/nlpcore).
 
-The main module with public API. The entry points are:
+Sources Files Layout
+--------------------
 
-load!  
-(Re)loads rules and classifiers for languages or/and config.
+In the main folder are 3 souces files:
 
-parse  
-Parses text using given module.
+core  
+the main main unit, contains global tests and examples of library use.
 
-Global status variables:
+spec  
+project spec definitions.
 
-corpus-map  
-store the corpus map
+system  
+Integrant system specific functions.
 
-``` clojure
-{:ro$core {:context {:reference-time {:start #object[org.joda.time.DateTime 0x398ced02 "2013-02-12T04:30:00.000-02:00"], :grain :second},
-                     :min {:start #object[org.joda.time.DateTime 0x1cb29052 "1900-01-01T00:00:00.000-02:00"], :grain :year},
-                     :max {:start #object[org.joda.time.DateTime 0x2bce42dd "2100-01-01T00:00:00.000-02:00"], :grain :year}},
-           :tests ({:text ["10 lei" "10 ron" "10 RON"],
-                    :checks [#object[duckling.corpus$money$fn__3878 0x11fa9e27 "duckling.corpus$money$fn__3878@11fa9e27"]]}
-                   {:text ["50 bani" "50 BANI"],
-                    :checks [#object[duckling.corpus$money$fn__3878 0x19c2bc4a "duckling.corpus$money$fn__3878@19c2bc4a"]]}
-                   )}}
-```
+and 7 folders:
 
-rules-map  
-store the rules map
+util  
+common utils functions
 
-``` clojure
-{:ro$core ({:name "intersect (X cents)",
-            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x802558f "duckling.engine$pattern_fn$fn__4364@802558f"]
-                      #object[duckling.engine$pattern_fn$fn__4364 0x6c6d587e "duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
-            :production #object[duckling.time.prod$eval6563$fn__6564 0x5fb4773e "duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
-           {:name "intersect (and X cents)",
-            :pattern (#object[duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "duckling.engine$pattern_fn$fn__4364@7e7e5309"]
-                      #object[duckling.engine$pattern_fn$fn__4358 0x79e77776 "duckling.engine$pattern_fn$fn__4358@79e77776"]
-                      #object[duckling.engine$pattern_fn$fn__4364 0x52388605 "duckling.engine$pattern_fn$fn__4364@52388605"]),
-            :production #object[duckling.time.prod$eval6578$fn__6579 0x476824ec "duckling.time.prod$eval6578$fn__6579@476824ec"]})}
-```
+dims  
+dimensions specific functions
 
-classifiers-map  
-store the classifiers map
-
-storage
--------
-
-The persistent layer module. It stores the application's entities:
+ml  
+machine learning functions
 
 corpus  
+corpus protocol implementations
 
-rules  
+model  
+model protocol implementations
 
-classifiers  
+engine  
+engine protocol implementations
 
-### memory
+tool  
+tool protocol implementations
 
-The storage implementation in memory (atoms).
+Modules Dependency
+------------------
 
-### resource
+    digraph G {
+        corpus -> classifier;
+        engine -> classifier;
+        classifier -> tool;
+        engine -> tool;
+    }
 
-Utility functions for resource folder management.
+corpus
+------
 
-### corpus
+Corpus example:
 
-learn
------
+``` clojure
+{:context {:reference-time {:start #object[org.joda.time.DateTime 0x398ced02 "2013-02-12T04:30:00.000-02:00"], :grain :second},
+                    :min {:start #object[org.joda.time.DateTime 0x1cb29052 "1900-01-01T00:00:00.000-02:00"], :grain :year},
+                    :max {:start #object[org.joda.time.DateTime 0x2bce42dd "2100-01-01T00:00:00.000-02:00"], :grain :year}},
+          :tests ({:text ["10 lei" "10 ron" "10 RON"],
+                   :checks [#object[clj-duckling.corpus$money$fn__3878 0x11fa9e27 "clj-duckling.corpus$money$fn__3878@11fa9e27"]]}
+                  {:text ["50 bani" "50 BANI"],
+                   :checks [#object[clj-duckling.corpus$money$fn__3878 0x19c2bc4a "clj-duckling.corpus$money$fn__3878@19c2bc4a"]]}
+                  )}
+```
 
-analyze
--------
+engine
+------
+
+Engine rules example:
+
+``` clojure
+({:name "intersect (X cents)",
+           :pattern (#object[clj-duckling.engine$pattern_fn$fn__4364 0x802558f "clj-duckling.engine$pattern_fn$fn__4364@802558f"]
+                     #object[clj-duckling.engine$pattern_fn$fn__4364 0x6c6d587e "clj-duckling.engine$pattern_fn$fn__4364@6c6d587e"]),
+           :production #object[clj-duckling.time.prod$eval6563$fn__6564 0x5fb4773e "clj-duckling.time.prod$eval6563$fn__6564@5fb4773e"]}
+          {:name "intersect (and X cents)",
+           :pattern (#object[clj-duckling.engine$pattern_fn$fn__4364 0x7e7e5309 "clj-duckling.engine$pattern_fn$fn__4364@7e7e5309"]
+                     #object[clj-duckling.engine$pattern_fn$fn__4358 0x79e77776 "clj-duckling.engine$pattern_fn$fn__4358@79e77776"]
+                     #object[clj-duckling.engine$pattern_fn$fn__4364 0x52388605 "clj-duckling.engine$pattern_fn$fn__4364@52388605"]),
+           :production #object[clj-duckling.time.prod$eval6578$fn__6579 0x476824ec "clj-duckling.time.prod$eval6578$fn__6579@476824ec"]})
+```
 
 dims
 ----
@@ -131,41 +141,20 @@ Workflow:
 Loading Modules
 ---------------
 
-Each module has a name (en$core), with which it is referred to when you want to use it at runtime, or reload it.
+Duckling uses [Integrant micro-framework](https://github.com/weavejester/integrant):
 
-Each module refers to a set of corpus files and rules files (more on this in the following sections).
+1.  Edit `dev/resources/dev.edn` for yous specific language.
+2.  In REPL:
 
-Each module is run by Duckling in a separate "sandbox", so for example, rules in module A cannot expect to match tokens created by rules in module B. There’s typically one module per language, but nothing prevents you to use several modules for a given language, as long as these modules don’t need to interact with each other.
-
-Loading module:
-
-``` clojure
-(load!)
-(load! {:languages ["ro" "en"]})
-(load! {:config {:en$numbers {:corpus ["numbers"] :rules ["numbers"]}}})
-```
+    ``` clojure
+    (dev)
+    (go)
+    ```
 
 Corpus
 ------
 
 Corpus files are located in `resources/languages/<lang>/corpus`. You can either edit existing files or create new files. **Once you’ve modified corpus files, you must reload to take the changes into account**.
-
-Here is an example corpus file with two test groups:
-
-``` clojure
-(
-  {} ; Context map
-
-  "0"
-  "naught"
-  "zero"
-  (number 0)
-
-  "1"
-  "one"
-  (number 1)
-)
-```
 
 Each test group is described by one or more strings and a function. To run the group Duckling will take each string one by one, analyze it, a call the function on the output. The test passes if the function returns true (or a truthy value).
 
@@ -180,7 +169,7 @@ For instance, to test that "0", "naught" and "zero" will all produce the output 
 
 For now, the context is just used for date and times, in order to solve relative dates like "tomorrow". You can provide a context map at the beginning of your corpus file, and this map will be provided to the test function. In most cases, you shouldn’t need to use context.
 
-In practice, we use helpers to generate easy to read test functions. In the previous example, we use a helper number defined in `src/duckling/corpus.clj`:
+In practice, we use helpers to generate easy to read test functions. In the previous example, we use a helper number defined in `src/clj_duckling/util/corpus.clj`:
 
 ``` clojure
 (defn number
@@ -202,11 +191,11 @@ Duckling will frequently generate several possible results for a given input. In
 Once you’ve added your tests, reload your module (see above) and run the corpus:
 
 ``` clojure
-duckling.core=> (run :en$core)
+dev> (reset)
+dev> (d/run-lang "ro" :error)
 O0 FAIL "nil"
     Expected null
 :en$core: 356 examples, 1 failed.
-#'duckling.core/c
 ```
 
 Make sure the tests don’t pass anymore (if they do, either you’re very lucky and the existing rules actually cover your new tests, or you did not reload the corpus – usually it’s the latter!). Now you’re ready to write rules.
@@ -229,7 +218,7 @@ When the pattern is matched, the production token is produced. Duckling adds thi
 Here is an illustration of this process, with a stash containing 11 tokens:
 
 ``` clojure
-duckling.core=> (play :en$core "in two hours")
+clj-duckling.core=> (play :en$core "in two hours")
 W ------------  11 | time      | in/after <duration>       | P = -3.4187 |  + <integer> <unit-o
 W    ---        10 | volume    | number as volume          | P = -2.1172 | integer (0..19)
 W    ---         9 | distance  | number as distance        | P = -2.2680 | integer (0..19)
@@ -329,7 +318,7 @@ Debugging
 When a corpus test doesn’t pass and you don’t understand why, you can have a closer look at what happens with play:
 
 ``` clojure
-duckling.core=> (play :en$core "45 degrees")
+clj-duckling.core=> (play :en$core "45 degrees")
 W ----------   7 | temperature | <latent temp> degrees     | P = -1.9331 | number as temp +
 W --           6 | volume    | number as volume          | P = -1.8094 | integer (numeric)
 W --           5 | distance  | number as distance        | P = -1.6120 | integer (numeric)
@@ -357,7 +346,7 @@ Columns:
 If you need more information about a specific token, call the details function with the token index:
 
 ``` clojure
-duckling.core=> (details 7)
+clj-duckling.core=> (details 7)
 <latent temp> degrees (-1.9331200116060705)
 |-- number as temp (-1.9331200116060705)
 |   `-- integer (numeric) (-0.16649651564955764)

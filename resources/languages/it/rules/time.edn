@@ -1,0 +1,142 @@
+[#clj-duckling.engine/rule {:name "two time tokens in a row", :pattern "[(dim :time (fn* [p1__3554#] (not (:latent p1__3554#)))) (dim :time (fn* [p1__3555#] (not (:latent p1__3555#))))]", :production "(intersect %1 %2)"}
+ #clj-duckling.engine/rule {:name "two time tokens separated by `di`", :pattern "[(dim :time (fn* [p1__3556#] (not (:latent p1__3556#)))) #\"(?i)di\" (dim :time (fn* [p1__3557#] (not (:latent p1__3557#))))]", :production "(intersect %1 %3)"}
+ #clj-duckling.engine/rule {:name "in <named-month>", :pattern "[#\"(?i)in|del mese( di)?\" {:form :month}]", :production "%2"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)luned[iì]|lun\\.?\"", :production "(day-of-week 1)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)marted[iì]|mar\\.?\"", :production "(day-of-week 2)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)mercoled[iì]|mer\\.?\"", :production "(day-of-week 3)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)gioved[iì]|gio\\.?\"", :production "(day-of-week 4)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)venerd[iì]|ven\\.?\"", :production "(day-of-week 5)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)sabato|sab\\.?\"", :production "(day-of-week 6)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)domenica|dom\\.?\"", :production "(day-of-week 7)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)gennaio|genn?\\.?\"", :production "(month 1)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)febbraio|febb?\\.?\"", :production "(month 2)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)marzo|mar\\.?\"", :production "(month 3)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)aprile|apr\\.?\"", :production "(month 4)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)maggio|magg?\\.?\"", :production "(month 5)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)giugno|giu\\.?\"", :production "(month 6)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)luglio|lug\\.?\"", :production "(month 7)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)agosto|ago\\.?\"", :production "(month 8)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)settembre|sett?\\.?\"", :production "(month 9)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)ottobre|ott\\.?\"", :production "(month 10)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)novembre|nov\\.?\"", :production "(month 11)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)dicembre|dic\\.?\"", :production "(month 12)"}
+ #clj-duckling.engine/rule {:name "christmas", :pattern "#\"(?i)((il )?giorno di )?natale\"", :production "(month-day 12 25)"}
+ #clj-duckling.engine/rule {:name "christmas eve", :pattern "#\"(?i)((al)?la )?vigig?lia( di natale)?\"", :production "(month-day 12 24)"}
+ #clj-duckling.engine/rule {:name "new year's eve", :pattern "#\"(?i)((la )?vigig?lia di capodanno|san silvestro)\"", :production "(month-day 12 31)"}
+ #clj-duckling.engine/rule {:name "new year's day", :pattern "#\"(?i)(capodanno|primo dell' ?anno)\"", :production "(month-day 1 1)"}
+ #clj-duckling.engine/rule {:name "epifania", :pattern "#\"(?i)(epifania|befana)\"", :production "(month-day 1 6)"}
+ #clj-duckling.engine/rule {:name "valentine's day", :pattern "#\"(?i)s(an|\\.) valentino|festa degli innamorati\"", :production "(month-day 2 14)"}
+ #clj-duckling.engine/rule {:name "festa del papà", :pattern "#\"(?i)festa del pap[aà]|(festa di )?s(an|\\.) giuseppe\"", :production "(month-day 3 19)"}
+ #clj-duckling.engine/rule {:name "festa della liberazione", :pattern "#\"(?i)((festa|anniversario) della|(al)?la) liberazione\"", :production "(month-day 4 25)"}
+ #clj-duckling.engine/rule {:name "festa del lavoro", :pattern "#\"(?i)festa del lavoro|(festa|giorno) dei lavoratori\"", :production "(month-day 5 1)"}
+ #clj-duckling.engine/rule {:name "festa della repubblica", :pattern "#\"(?i)((festa del)?la )?repubblica\"", :production "(month-day 6 2)"}
+ #clj-duckling.engine/rule {:name "ferragosto", :pattern "#\"(?i)ferragosto|assunzione\"", :production "(month-day 8 15)"}
+ #clj-duckling.engine/rule {:name "halloween day", :pattern "#\"(?i)hall?owe?en\"", :production "(month-day 10 31)"}
+ #clj-duckling.engine/rule {:name "ognissanti", :pattern "#\"(?i)(tutti i |ognis|festa dei |([ia]l )?giorno dei )santi\"", :production "(month-day 11 1)"}
+ #clj-duckling.engine/rule {:name "commemorazione dei defunti", :pattern "#\"(?i)((giorno dei|commemorazione dei|ai) )?(morti|defunti)\"", :production "(month-day 11 2)"}
+ #clj-duckling.engine/rule {:name "immacolata concezione", :pattern "#\"(?i)(all')?immacolata( concezione)?\"", :production "(month-day 12 8)"}
+ #clj-duckling.engine/rule {:name "santo stefano", :pattern "#\"(?i)s(anto|\\.) stefano\"", :production "(month-day 12 26)"}
+ #clj-duckling.engine/rule {:name "Mother's Day", :pattern "#\"(?i)festa della mamma\"", :production "(intersect (day-of-week 7) (month 5) (cycle-nth-after :week 1 (month-day 5 1)))"}
+ #clj-duckling.engine/rule {:name "now", :pattern "#\"(?i)subito|(immediata|attual)mente|(proprio )?adesso|(in questo|al) momento|ora\"", :production "(cycle-nth :second 0)"}
+ #clj-duckling.engine/rule {:name "today", :pattern "#\"(?i)(di )?oggi|in giornata\"", :production "(cycle-nth :day 0)"}
+ #clj-duckling.engine/rule {:name "tomorrow", :pattern "#\"(?i)domani\"", :production "(cycle-nth :day 1)"}
+ #clj-duckling.engine/rule {:name "yesterday", :pattern "#\"(?i)ieri\"", :production "(cycle-nth :day -1)"}
+ #clj-duckling.engine/rule {:name "EOM|End of month", :pattern "#\"(?i)fine del mese\"", :production "(cycle-nth :month 1)"}
+ #clj-duckling.engine/rule {:name "EOY|End of year", :pattern "#\"(?i)fine dell' ?anno\"", :production "(cycle-nth :year 1)"}
+ #clj-duckling.engine/rule {:name "the day after tomorrow", :pattern "#\"(?i)(il giorno )?dopo\\s?domani\"", :production "(cycle-nth :day 2)"}
+ #clj-duckling.engine/rule {:name "the day before yesterday", :pattern "#\"(?i)(l')?altro\\s?ieri\"", :production "(cycle-nth :day -2)"}
+ #clj-duckling.engine/rule {:name "this <day-of-week>", :pattern "[#\"(?i)quest[oaie]\" {:form :day-of-week}]", :production "(pred-nth-not-immediate %2 0)"}
+ #clj-duckling.engine/rule {:name "this <time>", :pattern "[#\"(?i)quest[oaie']\" (dim :time)]", :production "(pred-nth %2 0)"}
+ #clj-duckling.engine/rule {:name "next <time>", :pattern "[#\"(?i)prossim[ao]\" (dim :time)]", :production "(pred-nth %2 1)"}
+ #clj-duckling.engine/rule {:name "next <time>", :pattern "[(dim :time) #\"(?i)dopo|prossim[ao]\"]", :production "(pred-nth %1 1)"}
+ #clj-duckling.engine/rule {:name "prossimi <unit-of-duration>", :pattern "[#\"(?i)((([nd]e)?i|([nd]el)?le) )?prossim[ie]\" (dim :unit-of-duration)]", :production "(interval (cycle-nth (:grain %2) 1) (cycle-nth (:grain %2) 3) true)"}
+ #clj-duckling.engine/rule {:name "<time> last", :pattern "[(dim :time) #\"(?i)(ultim|scors|passat)[oaie]\"]", :production "(pred-nth %1 -1)"}
+ #clj-duckling.engine/rule {:name "last <time> ", :pattern "[#\"(?i)(ultim|scors|passat)[oaie]\" (dim :time)]", :production "(pred-nth %2 -1)"}
+ #clj-duckling.engine/rule {:name "last <day-of-week> of <time>", :pattern "[#\"(?i)(l')ultim[oa]\" {:form :day-of-week} #\"(?i)di\" (dim :time)]", :production "(pred-last-of %2 %4)"}
+ #clj-duckling.engine/rule {:name "last <cycle> of <time>", :pattern "[#\"(?i)(l')ultim[oa]\" (dim :cycle) #\"(?i)di|del(l[oa'])\" (dim :time)]", :production "(cycle-last-of %2 %4)"}
+ #clj-duckling.engine/rule {:name "nth <time> of <time>", :pattern "[(dim :ordinal) (dim :time) #\"(?i)di|del(l[oa'])|in\" (dim :time)]", :production "(pred-nth (intersect %4 %2) (dec (:value %1)))"}
+ #clj-duckling.engine/rule {:name "nth <time> of <time>", :pattern "[#\"(?i)il|l'\" (dim :ordinal) (dim :time) #\"(?i)di|del(l[oa'])|in\" (dim :time)]", :production "(pred-nth (intersect %5 %3) (dec (:value %2)))"}
+ #clj-duckling.engine/rule {:name "nth <time> after <time>", :pattern "[(dim :ordinal) (dim :time) #\"(?i)dopo\" (dim :time)]", :production "(pred-nth-after %2 %4 (dec (:value %1)))"}
+ #clj-duckling.engine/rule {:name "nth <time> after <time>", :pattern "[#\"(?i)il|l'\" (dim :ordinal) (dim :time) #\"(?i)dopo\" (dim :time)]", :production "(pred-nth-after %3 %5 (dec (:value %2)))"}
+ #clj-duckling.engine/rule {:name "year (1000-2100 not latent)", :pattern "(integer 1000 2100)", :production "(year (:value %1))"}
+ #clj-duckling.engine/rule {:name "year (latent)", :pattern "(integer -10000 -1)", :production "(assoc (year (:value %1)) :latent true)"}
+ #clj-duckling.engine/rule {:name "year (latent)", :pattern "(integer 2101 10000)", :production "(assoc (year (:value %1)) :latent true)"}
+ #clj-duckling.engine/rule {:name "day of month (1st)", :pattern "[#\"(?i)(primo|1o|1º|1°)\"]", :production "(day-of-month 1)"}
+ #clj-duckling.engine/rule {:name "il <day-of-month>", :pattern "[#\"(?i)il|l'\" (integer 1 31)]", :production "(day-of-month (:value %2))"}
+ #clj-duckling.engine/rule {:name "<day-of-month> <named-month>", :pattern "[(integer 1 31) {:form :month}]", :production "(intersect %2 (day-of-month (:value %1)))"}
+ #clj-duckling.engine/rule {:name "<named-day> <day-of-month>", :pattern "[{:form :day-of-week} (integer 1 31)]", :production "(intersect %1 (day-of-month (:value %2)))"}
+ #clj-duckling.engine/rule {:name "il <day-of-month> <named-month>", :pattern "[#\"(?i)il|l'\" (integer 1 31) {:form :month}]", :production "(intersect %3 (day-of-month (:value %2)))"}
+ #clj-duckling.engine/rule {:name "<integer> (latent time-of-day)", :pattern "(integer 0 24)", :production "(assoc (hour (:value %1) false) :latent true)"}
+ #clj-duckling.engine/rule {:name "le idi di <named-month>", :pattern "[#\"(?i)(le )?idi di\" {:form :month}]", :production "(intersect %2 (day-of-month (if (#{7 3 5 10} (:month %2)) 15 13)))"}
+ #clj-duckling.engine/rule {:name "noon", :pattern "#\"(?i)mezz?ogiorno\"", :production "(hour 12 false)"}
+ #clj-duckling.engine/rule {:name "midnight", :pattern "#\"(?i)mez?zanott?e\"", :production "(hour 0 false)"}
+ #clj-duckling.engine/rule {:name "<time-of-day> ora", :pattern "[#\"(?i)or[ea]\" (fn* [p1__3558#] (:full-hour p1__3558#))]", :production "(dissoc %2 :latent)"}
+ #clj-duckling.engine/rule {:name "at <time-of-day>", :pattern "[#\"(?i)all[e']|l[e']|a\" {:form :time-of-day}]", :production "(dissoc %2 :latent)"}
+ #clj-duckling.engine/rule {:name "hh(:|h)mm (time-of-day)", :pattern "#\"((?:[01]?\\d)|(?:2[0-3]))[:h]([0-5]\\d)\"", :production "(hour-minute (Integer/parseInt (first (:groups %1))) (Integer/parseInt (second (:groups %1))) false)"}
+ #clj-duckling.engine/rule {:name "hh(:|h)mm (time-of-day)", :pattern "#\"(?i)((?:0?\\d)|(?:1[0-2]))[:h]([0-5]\\d) d(i|el(la)?) (pomeriggio|(sta)?(sera|notte))\"", :production "(hour-minute (+ 12 (Integer/parseInt (first (:groups %1)))) (Integer/parseInt (second (:groups %1))) false)"}
+ #clj-duckling.engine/rule {:name "<integer 0 12> del <part of day>", :pattern "[(integer 0 12) #\"(?i)d(i|el(la)?) (pomeriggio|(sta)?(sera|notte))\"]", :production "(hour (+ 12 (:value %1)) false)"}
+ #clj-duckling.engine/rule {:name "hh <relative-minutes> del pomeriggio(time-of-day)", :pattern "[(dim :time :full-hour) (fn* [p1__3559#] (:relative-minutes p1__3559#)) #\"(?i)d(i|el(la)?) (pomeriggio|(sta)?(sera|notte))\"]", :production "(if (< 12 (:full-hour %1)) (dissoc %1 :latent) (hour-relativemin (+ 12 (:full-hour %1)) (:relative-minutes %2) false))"}
+ #clj-duckling.engine/rule {:name "hh <relative-minutes> del pomeriggio(time-of-day)", :pattern "[(dim :time :full-hour) #\"e\" (fn* [p1__3560#] (:relative-minutes p1__3560#)) #\"(?i)d(i|el(la)?)\" #\"(pomeriggio|(sta)?(sera|notte))\"]", :production "(if (< 12 (:full-hour %1)) (dissoc %1 :latent) (hour-relativemin (+ 12 (:full-hour %1)) (:relative-minutes %3) false))"}
+ #clj-duckling.engine/rule {:name "hhmm (military time-of-day)", :pattern "#\"(?i)((?:[01]?\\d)|(?:2[0-3]))([0-5]\\d)\"", :production "(-> (hour-minute (Integer/parseInt (first (:groups %1))) (Integer/parseInt (second (:groups %1))) false) (assoc :latent true))"}
+ #clj-duckling.engine/rule {:name "una", :pattern "#\"(?i)una\"", :production "(assoc (hour 1 true) :latent true)"}
+ #clj-duckling.engine/rule {:name "quarter (relative minutes)", :pattern "#\"(?i)un quarto\"", :production "{:relative-minutes 15}"}
+ #clj-duckling.engine/rule {:name "trois quarts (relative minutes)", :pattern "#\"(?i)(3|tre) quarti?\"", :production "{:relative-minutes 45}"}
+ #clj-duckling.engine/rule {:name "half (relative minutes)", :pattern "#\"mezzo\"", :production "{:relative-minutes 30}"}
+ #clj-duckling.engine/rule {:name "number (as relative minutes)", :pattern "(integer 1 59)", :production "{:relative-minutes (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<integer> minutes (as relative minutes)", :pattern "[(integer 1 59) #\"(?i)min(ut[oi]|\\.)?\"]", :production "{:relative-minutes (:val %1)}"}
+ #clj-duckling.engine/rule {:name "<hour-of-day> <integer> (as relative minutes)", :pattern "[(dim :time :full-hour) (fn* [p1__3561#] (:relative-minutes p1__3561#))]", :production "(hour-relativemin (:full-hour %1) (:relative-minutes %2) (:twelve-hour-clock? %1))"}
+ #clj-duckling.engine/rule {:name "<hour-of-day> minus <integer> (as relative minutes)", :pattern "[(dim :time :full-hour) #\"meno\" (fn* [p1__3562#] (:relative-minutes p1__3562#))]", :production "(hour-relativemin (:full-hour %1) (- (:relative-minutes %3)) (:twelve-hour-clock? %1))"}
+ #clj-duckling.engine/rule {:name "relative minutes to <integer> (as hour-of-day)", :pattern "[(fn* [p1__3563#] (:relative-minutes p1__3563#)) #\"(?i)a\" (dim :time :full-hour)]", :production "(hour-relativemin (:full-hour %3) (- (:relative-minutes %1)) true)"}
+ #clj-duckling.engine/rule {:name "<hour-of-day> and <relative minutes>", :pattern "[(dim :time :full-hour) #\"e\" (fn* [p1__3564#] (:relative-minutes p1__3564#))]", :production "(hour-relativemin (:full-hour %1) (:relative-minutes %3) (:twelve-hour-clock? %1))"}
+ #clj-duckling.engine/rule {:name "dd[/-]mm[/-]yyyy", :pattern "#\"(3[01]|[12]\\d|0?[1-9])[/-](0?[1-9]|1[0-2])[/-](\\d{2,4})\"", :production "(parse-dmy (first (:groups %1)) (second (:groups %1)) (nth (:groups %1) 2) true)"}
+ #clj-duckling.engine/rule {:name "yyyy-mm-dd", :pattern "#\"(\\d{2,4})-(0?[1-9]|1[0-2])-(3[01]|[12]\\d|0?[1-9])\"", :production "(parse-dmy (nth (:groups %1) 2) (second (:groups %1)) (first (:groups %1)) true)"}
+ #clj-duckling.engine/rule {:name "dd[/-]mm", :pattern "#\"(3[01]|[12]\\d|0?[1-9])[/-](0?[1-9]|1[0-2])\"", :production "(parse-dmy (first (:groups %1)) (second (:groups %1)) nil true)"}
+ #clj-duckling.engine/rule {:name "morning", :pattern "#\"(?i)mattin(ata|[aoe])\"", :production "(assoc (interval (hour 4 false) (hour 12 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "lunch", :pattern "#\"(?i)(a )?pranzo\"", :production "(assoc (interval (hour 12 false) (hour 14 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "afternoon", :pattern "#\"(?i)pomeriggio?\"", :production "(assoc (interval (hour 12 false) (hour 19 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "evening", :pattern "#\"(?i)ser(ata|[ae])\"", :production "(assoc (interval (hour 18 false) (hour 0 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "night", :pattern "#\"(?i)nott(e|ata)\"", :production "(assoc (intersect (cycle-nth :day 1) (interval (hour 0 false) (hour 4 false) false)) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "this <part-of-day>", :pattern "[#\"(?i)(que)?st[oa]|in|(al|nel)(la)?|la|il\" {:form :part-of-day}]", :production "(assoc (intersect (cycle-nth :day 0) %2) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "<time> notte", :pattern "[(dim :time) #\"(?i)((in|nella|alla) )?nott(e|ata)\"]", :production "(intersect (cycle-nth-after :day 1 %1) (interval (hour 0 false) (hour 4 false) false))"}
+ #clj-duckling.engine/rule {:name "<time> notte", :pattern "[#\"(?i)((nella|alla) )?nott(e|ata)( d(i|el))\" (dim :time)]", :production "(intersect (cycle-nth-after :day 1 %2) (interval (hour 0 false) (hour 4 false) false))"}
+ #clj-duckling.engine/rule {:name "stamattina", :pattern "[#\"(?i)stamattina\"]", :production "(assoc (intersect (cycle-nth :day 0) (interval (hour 4 false) (hour 12 false) false)) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "stasera", :pattern "[#\"(?i)stasera\"]", :production "(assoc (intersect (cycle-nth :day 0) (interval (hour 18 false) (hour 0 false) false)) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "stanotte", :pattern "[#\"(?i)(sta|nella )notte|(in|nella) nottata\"]", :production "(assoc (intersect (cycle-nth :day 1) (interval (hour 0 false) (hour 4 false) false)) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "domattina", :pattern "[#\"(?i)domattina\"]", :production "(assoc (intersect (cycle-nth :day 1) (interval (hour 4 false) (hour 12 false) false)) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "<dim time> <part-of-day>", :pattern "[(dim :time) {:form :part-of-day}]", :production "(intersect %1 %2)"}
+ #clj-duckling.engine/rule {:name "<part-of-day> of <dim time>", :pattern "[{:form :part-of-day} #\"(?i)d(i|el)\" (dim :time)]", :production "(intersect %1 %3)"}
+ #clj-duckling.engine/rule {:name "in the <part-of-day> of <dim time>", :pattern "[#\"(?i)nel(la)?\" {:form :part-of-day} #\"(?i)d(i|el)\" (dim :time)]", :production "(intersect %2 %4)"}
+ #clj-duckling.engine/rule {:name "<dim time> al <part-of-day>", :pattern "[(dim :time) #\"(?i)al|nel(la)?|in|d(i|el(la)?)\" {:form :part-of-day}]", :production "(intersect %1 %3)"}
+ #clj-duckling.engine/rule {:name "<dim time> del mattino", :pattern "[{:form :time-of-day} #\"del mattino\"]", :production "(intersect %1 (assoc (interval (hour 0 false) (hour 12 false) false) :form :part-of-day :latent true))"}
+ #clj-duckling.engine/rule {:name "week-end", :pattern "#\"(?i)week[ -]?end|fine ?settimana|we\"", :production "(interval (intersect (day-of-week 5) (hour 18 false)) (intersect (day-of-week 1) (hour 0 false)) false)"}
+ #clj-duckling.engine/rule {:name "il week-end del <time>", :pattern "[#\"(?i)il (week[ -]?end|fine ?settimana|we) del\" (dim :time)]", :production "(interval (intersect (intersect (cycle-nth-after :week 0 %2) (day-of-week 5)) (hour 18 false)) (intersect (intersect (cycle-nth-after :week 1 %2) (day-of-week 1)) (hour 0 false)) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)(in )?estate\"", :production "(interval (month-day 6 21) (month-day 9 23) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)(in )?autunno\"", :production "(interval (month-day 9 23) (month-day 12 21) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)(in )?inverno\"", :production "(interval (month-day 12 21) (month-day 3 20) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)(in )?primavera\"", :production "(interval (month-day 3 20) (month-day 6 21) false)"}
+ #clj-duckling.engine/rule {:name "il <time>", :pattern "[#\"(?i)il|l'\" (dim :time (fn* [p1__3565#] (not (:latent p1__3565#))))]", :production "%2"}
+ #clj-duckling.engine/rule {:name "timezone", :pattern "#\"(?i)(YEKT|YEKST|YAPT|YAKT|YAKST|WT|WST|WITA|WIT|WIB|WGT|WGST|WFT|WEZ|WET|WESZ|WEST|WAT|WAST|VUT|VLAT|VLAST|VET|UZT|UYT|UYST|UTC|ULAT|TVT|TMT|TLT|TKT|TJT|TFT|TAHT|SST|SRT|SGT|SCT|SBT|SAST|SAMT|RET|PYT|PYST|PWT|PT|PST|PONT|PMST|PMDT|PKT|PHT|PHOT|PGT|PETT|PETST|PET|PDT|OMST|OMSST|NZST|NZDT|NUT|NST|NPT|NOVT|NOVST|NFT|NDT|NCT|MYT|MVT|MUT|MST|MSK|MSD|MMT|MHT|MEZ|MESZ|MDT|MAWT|MART|MAGT|MAGST|LINT|LHST|LHDT|KUYT|KST|KRAT|KRAST|KGT|JST|IST|IRST|IRKT|IRKST|IRDT|IOT|IDT|ICT|HOVT|HNY|HNT|HNR|HNP|HNE|HNC|HNA|HLV|HKT|HAY|HAT|HAST|HAR|HAP|HAE|HADT|HAC|HAA|GYT|GST|GMT|GILT|GFT|GET|GAMT|GALT|FNT|FKT|FKST|FJT|FJST|ET|EST|EGT|EGST|EET|EEST|EDT|ECT|EAT|EAST|EASST|DAVT|ChST|CXT|CVT|CST|COT|CLT|CLST|CKT|CHAST|CHADT|CET|CEST|CDT|CCT|CAT|CAST|BTT|BST|BRT|BRST|BOT|BNT|AZT|AZST|AZOT|AZOST|AWST|AWDT|AST|ART|AQTT|ANAT|ANAST|AMT|AMST|ALMT|AKST|AKDT|AFT|AEST|AEDT|ADT|ACST|ACDT)\"", :production "{:dim :timezone, :value (-> %1 :groups first clojure.string/upper-case)}"}
+ #clj-duckling.engine/rule {:name "<time> timezone", :pattern "[(dim :time) (dim :timezone)]", :production "(assoc %1 :timezone (:value %2))"}
+ #clj-duckling.engine/rule {:name "<time-of-day> circa", :pattern "[{:form :time-of-day} #\"(?i)circa\"]", :production "(-> %1 (dissoc :latent) (merge {:precision \"approximate\"}))"}
+ #clj-duckling.engine/rule {:name "<time-of-day> precise", :pattern "[{:form :time-of-day} #\"(?i)precise\"]", :production "(-> %1 (dissoc :latent) (merge {:precision \"exact\"}))"}
+ #clj-duckling.engine/rule {:name "circa per le <time-of-day>", :pattern "[#\"(?i)(circa )?per( le)?|circa( alle)?|verso( le)?\" {:form :time-of-day}]", :production "(-> %2 (dissoc :latent) (merge {:precision \"approximate\"}))"}
+ #clj-duckling.engine/rule {:name "verso <part-of-day>", :pattern "[#\"(?i)verso( la| il)?\" {:form :part-of-day}]", :production "(merge %2 {:precision \"approximate\"})"}
+ #clj-duckling.engine/rule {:name "dd-dd <month> (interval)", :pattern "[#\"(3[01]|[12]\\d|0?[1-9])\" #\"\\-\" #\"(3[01]|[12]\\d|0?[1-9])\" {:form :month}]", :production "(interval (intersect %4 (day-of-month (Integer/parseInt (-> %1 :groups first)))) (intersect %4 (day-of-month (Integer/parseInt (-> %3 :groups first)))) true)"}
+ #clj-duckling.engine/rule {:name "dal <integer> al <integer> (interval)", :pattern "[#\"(?i)dal(?:l')?\" (integer 1 31) #\"(?i)([fs]ino )?al(l')?\" (integer 1 31)]", :production "(interval (day-of-month (:value %2)) (day-of-month (:value %4)) true)"}
+ #clj-duckling.engine/rule {:name "tra il <integer> e il <integer> (interval)", :pattern "[#\"(?i)tra( (il|l'))?\" (integer 1 31) #\"(?i)e( (il|l'))?\" (integer 1 31)]", :production "(interval (day-of-month (:value %2)) (day-of-month (:value %4)) true)"}
+ #clj-duckling.engine/rule {:name "<datetime> - <datetime> (interval)", :pattern "[(dim :time (fn* [p1__3566#] (not (:latent p1__3566#)))) #\"\\-|[fs]ino a(l(l[e'])?)?\" (dim :time (fn* [p1__3567#] (not (:latent p1__3567#))))]", :production "(interval %1 %3 true)"}
+ #clj-duckling.engine/rule {:name "fino al <datetime> (interval)", :pattern "[#\"[fs]ino a(l(l[ae'])?)?\" (dim :time (fn* [p1__3568#] (not (:latent p1__3568#))))]", :production "(interval (cycle-nth :second 0) %2 false)"}
+ #clj-duckling.engine/rule {:name "dal <datetime> al <datetime> (interval)", :pattern "[#\"(?i)da(l(l')?)?\" (dim :time (fn* [p1__3569#] (not (:latent p1__3569#)))) #\"([fs]ino )?a(l(l')?)?\" (dim :time (fn* [p1__3570#] (not (:latent p1__3570#))))]", :production "(interval %2 %4 true)"}
+ #clj-duckling.engine/rule {:name "tra il <datetime> e il <datetime> (interval)", :pattern "[#\"(?i)tra( il| l')?\" (dim :time (fn* [p1__3571#] (not (:latent p1__3571#)))) #\"e( il| l')?\" (dim :time (fn* [p1__3572#] (not (:latent p1__3572#))))]", :production "(interval %2 %4 true)"}
+ #clj-duckling.engine/rule {:name "<time-of-day> - <time-of-day> <day-of-month> (interval)", :pattern "[{:form :time-of-day} #\"\\-\" {:form :time-of-day} (dim :time (fn* [p1__3573#] (not (:latent p1__3573#))))]", :production "(interval (intersect %1 %4) (intersect %3 %4) true)"}
+ #clj-duckling.engine/rule {:name "dalle <time-of-day> alle <time-of-day> (interval)", :pattern "[#\"(?i)da(ll[ae'])?\" {:form :time-of-day} #\"\\-|([fs]ino )?a(ll[ae'])?\" {:form :time-of-day}]", :production "(interval %2 %4 true)"}
+ #clj-duckling.engine/rule {:name "in <duration>", :pattern "[#\"(?i)in|per|entro\" (dim :duration)]", :production "(interval (cycle-nth :second 0) (in-duration (:value %2)) false)"}
+ #clj-duckling.engine/rule {:name "entro il <duration>", :pattern "[#\"(?i)(entro|durante|per( tutt[ao])?) (il|l[a'])|in|nel(l[a'])?\" (dim :unit-of-duration)]", :production "(interval (cycle-nth :second 0) (cycle-nth (:grain %2) 1) false)"}
+ #clj-duckling.engine/rule {:name "entro le <time-of-day>", :pattern "[#\"(?i)entro( l[ea'])?|prima d(i|ell['ea])\" {:form :time-of-day}]", :production "(merge %2 {:direction :before})"}
+ #clj-duckling.engine/rule {:name "entro <time>", :pattern "[#\"(?i)entro( la)?|prima d(i|ella)\" (dim :time)]", :production "(merge %2 {:direction :before})"}
+ #clj-duckling.engine/rule {:name "entro il <integer>", :pattern "[#\"(?i)entro il|prima del\" (integer 1 31)]", :production "(merge (day-of-month (:value %2)) {:direction :before})"}
+ #clj-duckling.engine/rule {:name "dopo le <time-of-day>", :pattern "[#\"(?i)dopo( l['ea])?|dal(l['ea])?\" {:form :time-of-day}]", :production "(merge %2 {:direction :after})"}
+ #clj-duckling.engine/rule {:name "dopo <time>", :pattern "[#\"(?i)dopo|dal?\" (dim :time)]", :production "(merge %2 {:direction :after})"}
+ #clj-duckling.engine/rule {:name "dal <integer>", :pattern "[#\"(?i)dal\" (integer 1 31)]", :production "(merge (day-of-month (:value %2)) {:direction :after})"}
+ #clj-duckling.engine/rule {:name "<time> dopo le <time-of-day>", :pattern "[(dim :time) #\"(?i)dopo l[e']|dall['e]\" {:form :time-of-day}]", :production "(merge (intersect %1 %3) {:direction :after})"}
+ #clj-duckling.engine/rule {:name "<time> entro le <time-of-day>", :pattern "[(dim :time) #\"(?i)entro( l[e'])?|prima d(i|ell['e])\" (dim :time)]", :production "(merge (intersect %1 %3) {:direction :before})"}]

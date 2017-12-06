@@ -1,0 +1,6 @@
+[#clj-duckling.engine/rule {:name "phone number", :pattern "#\"(?i)(\\+?[0-9\\(][0-9\\- \\(\\)\\.]{6,16}( ?e?xt?\\.? ?\\d+)?)\"", :production "{:dim :phone-number, :value (-> %1 :groups first)}"}
+ #clj-duckling.engine/rule {:name "phone number given by each number", :pattern "[(integer 0 9) (integer 0 9) (integer 0 9) (integer 0 9) (integer 0 9) (integer 0 9) (integer 0 9) (integer 0 9) (integer 0 9) (integer 0 9)]", :production "{:dim :phone-number, :value (clojure.string/join \"\" [(:value %1) (:value %2) (:value %3) (:value %4) (:value %5) (:value %6) (:value %7) (:value %8) (:value %9) (:value %10)])}"}
+ #clj-duckling.engine/rule {:name "url", :pattern "#\"((https?://)?(\\w+\\.)+[A-z]{2,4}(:\\d+)?[^ ]*)\"", :production "{:dim :url, :value (-> %1 :groups first)}"}
+ #clj-duckling.engine/rule {:name "localhost url", :pattern "#\"((https?://)?localhost(:\\d+)?[^ ]*)\"", :production "{:dim :url, :value (-> %1 :groups first)}"}
+ #clj-duckling.engine/rule {:name "local url", :pattern "#\"((https?://)\\w+(:\\d+)?[^ ]*)\"", :production "{:dim :url, :value (-> %1 :groups first)}"}
+ #clj-duckling.engine/rule {:name "email", :pattern "#\"([\\w\\.\\-_]+@[\\w\\.\\-_]+)\"", :production "{:dim :email, :value (-> %1 :groups first)}"}]

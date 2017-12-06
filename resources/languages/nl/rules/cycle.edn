@@ -1,0 +1,13 @@
+[#clj-duckling.engine/rule {:name "second (cycle)", :pattern "#\"(?i)seconde(n?)?\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (cycle)", :pattern "#\"(?i)minuten|minuut?\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (cycle)", :pattern "#\"(?i)uur?\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (cycle)", :pattern "#\"(?i)dag(en?)?\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (cycle)", :pattern "#\"(?i)week|weken?\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (cycle)", :pattern "#\"(?i)maand(en)?\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "quarter (cycle)", :pattern "#\"(?i)kwart?\"", :production "{:dim :cycle, :grain :quarter}"}
+ #clj-duckling.engine/rule {:name "year (cycle)", :pattern "#\"(?i)jaar?\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "this <cycle>", :pattern "[#\"(?i)deze|dit\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "last <cycle>", :pattern "[#\"(?i)afgelopen|vorig(e)?\" (dim :cycle)]", :production "(cycle-nth (:grain %2) -1)"}
+ #clj-duckling.engine/rule {:name "next <cycle>", :pattern "[#\"(?i)over|volgend(e)?\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "next n <cycle>", :pattern "[#\"(?i)over\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
+ #clj-duckling.engine/rule {:name "last n <cycle>", :pattern "[#\"(?i)laatste|afgelopen|voor\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}]

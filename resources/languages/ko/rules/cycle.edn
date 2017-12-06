@@ -1,0 +1,19 @@
+[#clj-duckling.engine/rule {:name "second (cycle)", :pattern "#\"초\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (cycle)", :pattern "#\"분\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hour (cycle)", :pattern "#\"시간?\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "day (cycle)", :pattern "#\"날|일(간|동안)?\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "week (cycle)", :pattern "#\"주(간|동안)?\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "month (cycle)", :pattern "#\"(달)(간|동안)?\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "quarter (cycle)", :pattern "#\"분기(간|동안)?\"", :production "{:dim :cycle, :grain :quarter}"}
+ #clj-duckling.engine/rule {:name "year (cycle)", :pattern "#\"해|연간|년(간|동안)?\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "this <cycle>", :pattern "[#\"이번|금|올\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "last <cycle>", :pattern "[#\"지난|작|전|저번\" (dim :cycle)]", :production "(cycle-nth (:grain %2) -1)"}
+ #clj-duckling.engine/rule {:name "next <cycle>", :pattern "[#\"다음|오는|차|내\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "<time> 마지막 <cycle> ", :pattern "[(dim :time) #\"마지막\" (dim :cycle)]", :production "(cycle-last-of %3 %1)"}
+ #clj-duckling.engine/rule {:name "<time> <ordinal> <cycle>", :pattern "[(dim :time) (dim :ordinal) (dim :cycle)]", :production "(cycle-nth-after-not-immediate (:grain %3) (dec (:value %2)) %1)"}
+ #clj-duckling.engine/rule {:name "the day after tomorrow - 내일모래", :pattern "#\"(내일)?모래\"", :production "(cycle-nth-after :day 1 (cycle-nth :day 1))"}
+ #clj-duckling.engine/rule {:name "the day before yesterday - 엊그제", :pattern "#\"엊?그[제|재]\"", :production "(cycle-nth-after :day -1 (cycle-nth :day -1))"}
+ #clj-duckling.engine/rule {:name "last n <cycle>", :pattern "[#\"지난\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
+ #clj-duckling.engine/rule {:name "next n <cycle>", :pattern "[#\"다음\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
+ #clj-duckling.engine/rule {:name "<1..4> quarter", :pattern "[(integer 1 4) (dim :cycle (fn* [p1__3547#] (= :quarter (:grain p1__3547#))))]", :production "(cycle-nth-after :quarter (dec (:value %1)) (cycle-nth :year 0))"}
+ #clj-duckling.engine/rule {:name "<year> <1..4>quarter", :pattern "[(dim :time) (integer 1 4) (dim :cycle (fn* [p1__3548#] (= :quarter (:grain p1__3548#))))]", :production "(cycle-nth-after :quarter (dec (:value %2)) %1)"}]

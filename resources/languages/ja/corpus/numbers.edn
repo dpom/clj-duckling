@@ -1,0 +1,40 @@
+{:context {}
+
+ :tests [{:text ["0" "ゼロ" "零"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "一"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["33" "三十三" "0033"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["14" "十四"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["16" "十六"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "十七"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "十八"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["100" "百"]
+          :checks [#clj-duckling/corpus "(number 100)"]}
+         {:text ["101" "百一"]
+          :checks [#clj-duckling/corpus "(number 101)"]}
+         {:text ["200"]
+          :checks [#clj-duckling/corpus "(number 200)"]}
+         {:text ["1.1" "1.10" "01.10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0.77" ".77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100,000" "100000" "100K" "100k"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["3M" "3000K" "3000000" "3,000,000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1,200,000" "1200000" "1.2M" "1200K" ".0012G"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["- 1,200,000" "-1200000" "-1.2M" "-1200K" "-.0012G"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["5千"]
+          :checks [#clj-duckling/corpus "(number 5000)"]}
+         {:text ["2万"]
+          :checks [#clj-duckling/corpus "(number 20000)"]}
+         {:text ["第七"]
+          :checks [#clj-duckling/corpus "(ordinal 7)"]}]}

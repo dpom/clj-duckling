@@ -1,0 +1,18 @@
+[#clj-duckling.engine/rule {:name "segundo (cycle)", :pattern "#\"(?i)segundos?\"", :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minutos (cycle)", :pattern "#\"(?i)minutos?\"", :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "hora (cycle)", :pattern "#\"(?i)horas?\"", :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "dia (cycle)", :pattern "#\"(?i)d(í|i)as?\"", :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "semana (cycle)", :pattern "#\"(?i)semanas?\"", :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "mes (cycle)", :pattern "#\"(?i)m[eê]s(es)?\"", :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "ano (cycle)", :pattern "#\"(?i)anos?\"", :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "este <cycle>", :pattern "[#\"(?i)(n?es[st](es?|as?))\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "<cycle> passado", :pattern "[(dim :cycle) #\"(?i)passad(a|o)s?\"]", :production "(cycle-nth (:grain %1) -1)"}
+ #clj-duckling.engine/rule {:name "<cycle> (que vem)", :pattern "[(dim :cycle) #\"(?i)que vem|seguintes?\"]", :production "(cycle-nth (:grain %1) 1)"}
+ #clj-duckling.engine/rule {:name "proximo <cycle>", :pattern "[#\"(?i)pr(ó|o)xim(o|a)s?\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "<cycle> antes de <time>", :pattern "[(dim :cycle) #\"(?i)antes d[eo]\" (dim :time)]", :production "(cycle-nth-after (:grain %1) -1 %3)"}
+ #clj-duckling.engine/rule {:name "passados n <cycle>", :pattern "[#\"(?i)passad(a|o)s?\" (integer 2 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
+ #clj-duckling.engine/rule {:name "n <cycle> atras", :pattern "[(integer 2 9999) (dim :cycle) #\"(?i)atr[aá]s\"]", :production "(cycle-n-not-immediate (:grain %2) (- (:value %1)))"}
+ #clj-duckling.engine/rule {:name "n passados <cycle>", :pattern "[(integer 2 9999) #\"(?i)passad(a|o)s?\" (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %1)))"}
+ #clj-duckling.engine/rule {:name "proximas n <cycle>", :pattern "[#\"(?i)pr(ó|o)xim(o|a)s?\" (integer 2 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
+ #clj-duckling.engine/rule {:name "n proximas <cycle>", :pattern "[(integer 2 9999) #\"(?i)pr(ó|o)xim(o|a)s?\" (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %1))"}
+ #clj-duckling.engine/rule {:name "n <cycle> (proximo|que vem)", :pattern "[(integer 2 9999) (dim :cycle) #\"(?i)(pr(ó|o)xim(o|a)s?|que vem?|seguintes?)\"]", :production "(cycle-n-not-immediate (:grain %2) (:value %1))"}]

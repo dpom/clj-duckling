@@ -1,0 +1,8 @@
+{:context {}
+
+ :tests [{:text ["37°C" "37° celsiuse kraadi" "37 kraadi Celsiuse järgi" "kolmkümmend seitse celsiust" "37 kraadi celsiust" "37 kraadi C" "kolmkümmend seitse kraadi celsiuse skaalal"]
+          :checks [#clj-duckling/corpus "(temperature 37 \"celsius\")"]}
+         {:text ["70°F" "70° Fahrenheiti kraadi" "70 kraadi F" "seitsekümmend Fahrenheiti"]
+          :checks [#clj-duckling/corpus "(temperature 70 \"fahrenheit\")"]}
+         {:text ["45°" "45 kraadi"]
+          :checks [#clj-duckling/corpus "(temperature 45 \"degree\")"]}]}

@@ -1,0 +1,18 @@
+[#clj-duckling.engine/rule {:name "intersect (X cents)", :pattern "[(dim :amount-of-money) (dim :amount-of-money (fn* [p1__3545#] (= (:unit p1__3545#) \"cent\")))]", :production "(compose-money %1 %2)"}
+ #clj-duckling.engine/rule {:name "₩", :pattern "#\"\\₩|원|(?i)KRW\"", :production "{:dim :unit, :unit \"KRW\"}"}
+ #clj-duckling.engine/rule {:name "$", :pattern "#\"\\$|달러|불\"", :production "{:dim :unit, :unit \"$\"}"}
+ #clj-duckling.engine/rule {:name "cent", :pattern "#\"(?i)cents?|센[트|츠]|c|¢\"", :production "{:dim :unit, :unit \"cent\"}"}
+ #clj-duckling.engine/rule {:name "€", :pattern "#\"€|유로|(?i)EURO?\"", :production "{:dim :unit, :unit \"EUR\"}"}
+ #clj-duckling.engine/rule {:name "£", :pattern "#\"£|파운드|영국파운드\"", :production "{:dim :unit, :unit \"£\"}"}
+ #clj-duckling.engine/rule {:name "GBP", :pattern "#\"(?i)GBP\"", :production "{:dim :unit, :unit \"GBP\"}"}
+ #clj-duckling.engine/rule {:name "AUD", :pattern "#\"(?i)AUD|호주달러\"", :production "{:dim :unit, :unit \"AUD\"}"}
+ #clj-duckling.engine/rule {:name "USD", :pattern "#\"(?i)US[D\\$]\"", :production "{:dim :unit, :unit \"USD\"}"}
+ #clj-duckling.engine/rule {:name "PTS", :pattern "#\"(?i)pta?s?\"", :production "{:dim :unit, :unit \"PTS\"}"}
+ #clj-duckling.engine/rule {:name "INR", :pattern "#\"(?i)INR|Rs(. )?|(R|r)upees?|루피|인도루피\"", :production "{:dim :unit, :unit \"INR\"}"}
+ #clj-duckling.engine/rule {:name "AED", :pattern "#\"(?i)AED|(D|d)irhams?\"", :production "{:dim :unit, :unit \"AED\"}"}
+ #clj-duckling.engine/rule {:name "unnamed currency", :pattern "#\"(?i)(buck|balle|pouloute)s?\"", :production "{:dim :unit}"}
+ #clj-duckling.engine/rule {:name "<unit> <amount>", :pattern "[(dim :unit) (dim :number)]", :production "{:dim :amount-of-money, :value (:value %2), :unit (:unit %1), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "<amount> <unit>", :pattern "[(dim :number) (dim :unit)]", :production "{:dim :amount-of-money, :value (:value %1), :unit (:unit %2), :fields {(:unit %1) (:value %2)}}"}
+ #clj-duckling.engine/rule {:name "about <amount-of-money>", :pattern "[#\"약|대충|얼추\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"approximate\")"}
+ #clj-duckling.engine/rule {:name "<amount-of-money> about", :pattern "[(dim :amount-of-money) #\"정도|쯤\"]", :production "(assoc %1 :precision \"approximate\")"}
+ #clj-duckling.engine/rule {:name "exactly <amount-of-money>", :pattern "[#\"딱|정확히\" (dim :amount-of-money)]", :production "(assoc %2 :precision \"exact\")"}]

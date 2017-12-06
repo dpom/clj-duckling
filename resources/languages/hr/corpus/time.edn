@@ -1,0 +1,346 @@
+{:context {:reference-time #clj-duckling/time "(t -2 2013 2 12 4 30 0)", :min #clj-duckling/time "(t -2 1900)", :max #clj-duckling/time "(t -2 2100)"}
+
+ :tests [{:text ["sad" "sada" "upravo sad" "ovaj tren"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 0)"]}
+         {:text ["danas"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12)"]}
+         {:text ["jucer" "jučer"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11)"]}
+         {:text ["sutra"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13)"]}
+         {:text ["ponedjeljak" "pon." "ovaj ponedjeljak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["ponedjeljak, 18. veljace" "ponedjeljak, 18. veljače"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1 :day 18 :month 2)"]}
+         {:text ["utorak" "utorak 19."]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
+         {:text ["cetvrtak" "četvrtak" "čet" "cet."]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["petak" "pet" "pet."]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15)"]}
+         {:text ["subota" "sub" "sub."]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16)"]}
+         {:text ["nedjelja" "ned" "ned."]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17)"]}
+         {:text ["1. ozujak" "1. ožujak" "prvi ozujka"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 1 :day 1 :month 3)"]}
+         {:text ["treci ozujka" "treci ožujka"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 3 :day 3 :month 3)"]}
+         {:text ["3. ozujka 2015" "treci ozujka 2015" "3/3/2015" "3/3/15" "2015-3-3" "2015-03-03"]
+          :checks [#clj-duckling/corpus "(datetime 2015 3 3 :day 3 :month 3 :year 2015)"]}
+         {:text ["15ti drugi"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15 :day 15)"]}
+         {:text ["15. veljace" "15. veljače" "15/02"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15 :day 15 :month 2)"]}
+         {:text ["8. kolovoza" "8. kolovoz"]
+          :checks [#clj-duckling/corpus "(datetime 2013 8 8 :day 8 :month 8)"]}
+         {:text ["listopad 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 :year 2014 :month 10)"]}
+         {:text ["31/10/1974" "31/10/74" "74-10-31"]
+          :checks [#clj-duckling/corpus "(datetime 1974 10 31 :day 31 :month 10 :year 1974)"]}
+         {:text ["14travanj 2015" "14. travnja, 2015" "14. travanj 15"]
+          :checks [#clj-duckling/corpus "(datetime 2015 4 14 :day 14 :month 4 :years 2015)"]}
+         {:text ["sljedeci utorak" "sljedeceg utorka"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 :day-of-week 2)"]}
+         {:text ["petak nakon sljedeceg"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 22 :day-of-week 2)"]}
+         {:text ["sljedeci ozujak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}
+         {:text ["ozujak nakon sljedeceg"]
+          :checks [#clj-duckling/corpus "(datetime 2014 3)"]}
+         {:text ["nedjelja, 10. veljace" "nedjelja, 10. veljače"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 :day-of-week 7 :day 10 :month 2)"]}
+         {:text ["Sri, 13. velj"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 :day-of-week 3 :day 13 :month 2)"]}
+         {:text ["ponedjeljak, veljaca 18." "Pon, 18. veljace"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1 :day 18 :month 2)"]}
+         {:text ["ovaj tjedan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11 :grain :week)"]}
+         {:text ["prosli tjedan" "prošli tjedan" "prethodni tjedan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 4 :grain :week)"]}
+         {:text ["sljedeci tjedan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :grain :week)"]}
+         {:text ["prethodni mjesec"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1)"]}
+         {:text ["sljedeci mjesec"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}
+         {:text ["ovaj kvartal" "ovo tromjesecje"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1 1 :grain :quarter)"]}
+         {:text ["sljedeci kvartal"]
+          :checks [#clj-duckling/corpus "(datetime 2013 4 1 :grain :quarter)"]}
+         {:text ["treci kvartal" "3. kvartal" "trece tromjesecje" "3. tromjesečje"]
+          :checks [#clj-duckling/corpus "(datetime 2013 7 1 :grain :quarter)"]}
+         {:text ["4. kvartal 2018" "četvrto tromjesečje 2018"]
+          :checks [#clj-duckling/corpus "(datetime 2018 10 1 :grain :quarter)"]}
+         {:text ["prošla godina" "prethodna godina"]
+          :checks [#clj-duckling/corpus "(datetime 2012)"]}
+         {:text ["ova godina"]
+          :checks [#clj-duckling/corpus "(datetime 2013)"]}
+         {:text ["sljedece godina"]
+          :checks [#clj-duckling/corpus "(datetime 2014)"]}
+         {:text ["prosle nedjelje" "prosli tjedan u nedjelju"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 :day-of-week 7)"]}
+         {:text ["prosli utorak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5 :day-of-week 2)"]}
+         {:text ["sljedeci utorak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 :day-of-week 2)"]}
+         {:text ["sljedecu srijedu"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 :day-of-week 3)"]}
+         {:text ["sljedeci tjedan u srijedu" "srijeda sljedeci tjedan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 20 :day-of-week 3)"]}
+         {:text ["sljedeci petak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15 :day-of-week 5)"]}
+         {:text ["ovaj tjedan u ponedjeljak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11 :day-of-week 1)"]}
+         {:text ["ovaj utorak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 :day-of-week 2)"]}
+         {:text ["ova srijeda" "ovaj tjedan u srijedu"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 :day-of-week 3)"]}
+         {:text ["prekosutra"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["prekosutra u 5 popodne" "prekosutra u 17"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14 17)"]}
+         {:text ["prekjucer" "prekjučer"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10)"]}
+         {:text ["prekjučer u 8" "prekjučer u 8 sati"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 8)"]}
+         {:text ["zadnji ponedjeljak u ozujku"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 25 :day-of-week 1)"]}
+         {:text ["zadnja nedjelja u ozujku 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 3 30 :day-of-week 7)"]}
+         {:text ["treci dan u listopadu"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 3)"]}
+         {:text ["prvi tjedan u listopadu 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 6 :grain :week)"]}
+         {:text ["zadnji dan u listopadu 2015"]
+          :checks [#clj-duckling/corpus "(datetime 2015 10 31)"]}
+         {:text ["zadnji tjedan u rujnu 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 9 22 :grain :week)"]}
+         {:text ["prvi utorak u listopadu"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 1)"]}
+         {:text ["treci utorak u rujnu 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 9 16)"]}
+         {:text ["prva srijeda u listopadu 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 1)"]}
+         {:text ["druga srijeda u listopadu 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 8)"]}
+         {:text ["treci utorak poslije Bozica 2014"]
+          :checks [#clj-duckling/corpus "(datetime 2015 1 13)"]}
+         {:text ["3 u noci" "u 3 ujutro" "u tri sata u noci"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 3)"]}
+         {:text ["3:18 rano"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 3 18)"]}
+         {:text ["u 3 poslijepodne" "@ 15" "15" "15 sati poslijepodne"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 :hour 3 :meridiem :pm)"]}
+         {:text ["oko 3 poslijepodne" "otprilike u 3 poslijepodne" "cca 3 poslijepodne" "cca 15"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 :hour 3 :meridiem :pm)"]}
+         {:text ["15 i 15" "3:15 poslijepodne" "15:15"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 15 :hour 3 :minute 15 :meridiem :pm)"]}
+         {:text ["cetvrt nakon 3 poslijepodne"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 15 :hour 3 :minute 15 :meridiem :pm :grain :second)"]}
+         {:text ["3 i 20 popodne" "3:20 poslijepodne" "3:20 popodne" "dvadeset nakon 3 popodne" "15:20"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 20 :hour 3 :minute 20 :meridiem :pm)"]}
+         {:text ["tri i po popodne" "pola 4 popodne" "15:30" "pola cetiri popodne"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 30 :hour 3 :minute 30)"]}
+         {:text ["15:23:24"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 23 24 :hour 15 :minute 23 :second 24)"]}
+         {:text ["petnaest do podne" "11:45" "četvrt do podneva"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 11 45 :hour 11 :minute 45)"]}
+         {:text ["8 navecer" "osam sati navecer" "danas 8 navecer"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 20)"]}
+         {:text ["u 7:30 popodne u pet, 20. rujna"]
+          :checks [#clj-duckling/corpus "(datetime 2013 9 20 19 30 :hour 7 :minute 30 :meridiem :pm)"]}
+         {:text ["9 ujutro u subotu" "u subotu u 9 sati ujutro"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16 9 :day-of-week 6 :hour 9 :meridiem :am)"]}
+         {:text ["pet, srp 18., 2014, 19:00" "pet, srp 18., 2014 u 19:00"]
+          :checks [#clj-duckling/corpus "(datetime 2014 7 18 19 0 :day-of-week 5 :hour 7 :meridiem :pm)"]}
+         {:text ["za jednu sekundu"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 1)"]}
+         {:text ["za jednu minutu"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 31 0)"]}
+         {:text ["za 2 minute" "za jos 2 minute" "2 minute od sad"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 32 0)"]}
+         {:text ["za 60 minuta"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 30 0)"]}
+         {:text ["oko cetvrt sata" "oko 1/4h" "oko 1/4 h" "oko 1/4 sata"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 45 0)"]}
+         {:text ["za pola sata" "za pol sata" "za 1/2h" "za 1/2 h" "za 1/2 sata"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 0 0)"]}
+         {:text ["za tri-cetvrt sata" "za 3/4h" "za 3/4 h" "za 3/4 sata"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 15 0)"]}
+         {:text ["za 2.5 sata"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 7 0 0)"]}
+         {:text ["za jedan sat" "za 1h"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 30)"]}
+         {:text ["za par sati"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 6 30)"]}
+         {:text ["za nekoliko sati"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 7 30)"]}
+         {:text ["za 24 sata" "za 24h"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 4 30)"]}
+         {:text ["za 1 dan" "za jedan dan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 4)"]}
+         {:text ["3 godine od danasnjeg dana"]
+          :checks [#clj-duckling/corpus "(datetime 2016 2)"]}
+         {:text ["za 7 dana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 4)"]}
+         {:text ["za 1 tjedan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
+         {:text ["za oko pola sata"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 0 0)"]}
+         {:text ["prije 7 dana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5 4)"]}
+         {:text ["prije 14 dana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1 29 4)"]}
+         {:text ["prije jedan tjedan" "prije jednog tjedna"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5)"]}
+         {:text ["prije tri tjedna"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1 22)"]}
+         {:text ["prije tri mjeseca"]
+          :checks [#clj-duckling/corpus "(datetime 2012 11 12)"]}
+         {:text ["prije dvije godine"]
+          :checks [#clj-duckling/corpus "(datetime 2011 2)"]}
+         {:text ["1954"]
+          :checks [#clj-duckling/corpus "(datetime 1954)"]}
+         {:text ["za 7 dana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 4)"]}
+         {:text ["za 14 dana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 26 4)"]}
+         {:text ["za jedan tjedan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
+         {:text ["za tri tjedna"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 5)"]}
+         {:text ["za tri mjeseca"]
+          :checks [#clj-duckling/corpus "(datetime 2013 5 12)"]}
+         {:text ["za dvije godine"]
+          :checks [#clj-duckling/corpus "(datetime 2015 2)"]}
+         {:text ["jednu godinu poslije Bozica"]
+          :checks [#clj-duckling/corpus "(datetime 2013 12)"]}
+         {:text ["ovog ljeta" "ovo ljeto" "ljetos"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 6 21] [2013 9 24])"]}
+         {:text ["ove zime" "zimus"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2012 12 21] [2013 3 21])"]}
+         {:text ["Bozic" "zicbo"]
+          :checks [#clj-duckling/corpus "(datetime 2013 12 25)"]}
+         {:text ["stara godina"]
+          :checks [#clj-duckling/corpus "(datetime 2013 12 31)"]}
+         {:text ["nova godina"]
+          :checks [#clj-duckling/corpus "(datetime 2014 1 1)"]}
+         {:text ["valentinovo"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["majcin dan"]
+          :checks [#clj-duckling/corpus "(datetime 2013 5 12)"]}
+         {:text ["dan oceva"]
+          :checks [#clj-duckling/corpus "(datetime 2013 6 16)"]}
+         {:text ["noc vjestica"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 31)"]}
+         {:text ["veceras" "ove veceri" "danas navecer"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 18] [2013 2 13 0])"]}
+         {:text ["prosli vikend"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 8 18] [2013 2 11 0])"]}
+         {:text ["sutra navecer"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13 18] [2013 2 14 0])"]}
+         {:text ["sutra rucak"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13 12] [2013 2 13 14])"]}
+         {:text ["jucer navecer" "prethodne veceri"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 11 18] [2013 2 12 0])"]}
+         {:text ["ovaj vikend" "ovog vikenda"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 15 18] [2013 2 18 0])"]}
+         {:text ["ponedjeljak ujutro"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 4] [2013 2 18 12])"]}
+         {:text ["ponedjeljak rano ujutro" "ponedjeljak rano" "ponedjeljak u rane jutarnje sate"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 3] [2013 2 18 9])"]}
+         {:text ["15. veljace ujutro"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 15 4] [2013 2 15 12])"]}
+         {:text ["prosle 2 sekunde" "prethodne dvije sekunde"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 29 58] [2013 2 12 4 30 0])"]}
+         {:text ["sljedece 3 sekunde" "sljedece tri sekunde"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 1] [2013 2 12 4 30 4])"]}
+         {:text ["prosle 2 minute" "prethodne dvije minute"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 28] [2013 2 12 4 30])"]}
+         {:text ["sljedece 3 minute" "sljedece tri minute"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 31] [2013 2 12 4 34])"]}
+         {:text ["prethodni jedan sat"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 3] [2013 2 12 4])"]}
+         {:text ["prethodna 24 sata" "prethodna dvadeset i cetiri sata" "prethodna dvadeset i cetiri sata" "prethodna 24h"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 11 4] [2013 2 12 4])"]}
+         {:text ["sljedeca 3 sata" "sljedeca tri sata"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 5] [2013 2 12 8])"]}
+         {:text ["prethodna dva dana" "prethodna 2 dana" "prosla 2 dana"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 10] [2013 2 12])"]}
+         {:text ["sljedeca 3 dana" "sljedeca tri dana"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13] [2013 2 16])"]}
+         {:text ["sljedecih nekoliko dana"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13] [2013 2 16])"]}
+         {:text ["prethodna 2 tjedna" "prethodna dva tjedna" "prosla 2 tjedna"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 1 28 :grain :week] [2013 2 11 :grain :week])"]}
+         {:text ["sljedeca 3 tjedna" "sljedeca tri tjedna"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 :grain :week] [2013 3 11 :grain :week])"]}
+         {:text ["prethodna 2 mjeseca" "prethodna dva mjeseca"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2012 12] [2013 2])"]}
+         {:text ["sljedeca 3 mjeseca" "sljedeca tri mjeseca"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 3] [2013 6])"]}
+         {:text ["prethodne 2 godine" "prethodne dvije godine"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2011] [2013])"]}
+         {:text ["sljedece 3 godine" "sljedece tri godine"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2014] [2017])"]}
+         {:text ["srpanj 13-15" "srpanj 13 do 15" "srpanj 13 - srpanj 15"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 7 13] [2013 7 16])"]}
+         {:text ["kol 8 - kol 12"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 8 8] [2013 8 13])"]}
+         {:text ["9:30 - 11:00"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 9 30] [2013 2 12 11 1])"]}
+         {:text ["od 9:30 - 11:00 u cetvrtak" "između 9:30 i 11:00 u cetvrtak" "9:30 - 11:00 u cetvrtak" "izmedju 9:30 i 11:00 u cetvrtak" "cetvrtak od 9:30 do 11:00" "od 9:30 do 11:00 u cetvrtak" "cetvrtak od 9:30 do 11:00"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 14 9 30] [2013 2 14 11 1])"]}
+         {:text ["cetvrtak od 9 do 11 ujutro"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 14 9] [2013 2 14 12])"]}
+         {:text ["11:30-1:30" "11:30-1:30" "11:30-1:30" "11:30-1:30" "11:30-1:30" "11:30-1:30" "11:30-1:30"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 11 30] [2013 2 12 13 31])"]}
+         {:text ["1:30 poslijepodne u sub, ruj 21."]
+          :checks [#clj-duckling/corpus "(datetime 2013 9 21 13 30)"]}
+         {:text ["sljedeca 2 tjedna"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 :grain :week] [2013 3 4 :grain :week])"]}
+         {:text ["do 2 poslijepodne"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 14 :direction :before)"]}
+         {:text ["do kraja ovog dana"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 0] [2013 2 13 0])"]}
+         {:text ["do kraja dana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 0)"]}
+         {:text ["do kraja ovog mjeseca"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 0] [2013 3 1 0])"]}
+         {:text ["do kraja sljedeceg mjeseca"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 0] [2013 4 1 0])"]}
+         {:text ["4 poslijepodne CET"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 16 :hour 4 :meridiem :pm :timezone \"CET\")"]}
+         {:text ["cetvrtak 8:00 GMT"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14 8 0 :timezone \"GMT\")"]}
+         {:text ["danas u 14" "u 2 poslijepodne"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 14)"]}
+         {:text ["25/4 U 16 sati"]
+          :checks [#clj-duckling/corpus "(datetime 2013 4 25 16)"]}
+         {:text ["15 sati sutra"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 15)"]}
+         {:text ["nakon 5 dana"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17 4 :direction :after)"]}
+         {:text ["prije 11"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 11 :direction :before)"]}
+         {:text ["poslijepodne" "popodne"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 12] [2013 2 12 20])"]}
+         {:text ["u 13:30" "13:30"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 13 30)"]}
+         {:text ["za 15 minuta"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 45 0)"]}
+         {:text ["poslije rucka"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 13] [2013 2 12 17])"]}
+         {:text ["10:30"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 10 30)"]}
+         {:text ["jutro"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4] [2013 2 12 12])"]}
+         {:text ["sljedeci ponedjeljak"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["u 12" "u podne"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 12)"]}
+         {:text ["u 12 u noci" "u ponoc"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 0)"]}
+         {:text ["ozujak" "u ozujku"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}]}

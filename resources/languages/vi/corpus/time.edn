@@ -1,0 +1,178 @@
+{:context {:reference-time #clj-duckling/time "(t -2 2017 2 2 3 55 0)", :min #clj-duckling/time "(t -2 1900)", :max #clj-duckling/time "(t -2 2100)"}
+
+ :tests [{:text ["bây giờ" "ngay bây giờ" "ngay lúc này"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 3 55 0)"]}
+         {:text ["hôm nay" "ngày hôm nay" "bữa nay"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2)"]}
+         {:text ["hôm qua" "ngày hôm qua"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 1)"]}
+         {:text ["ngày mai"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 3)"]}
+         {:text ["hôm kia" "ngày hôm kia"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 31)"]}
+         {:text ["thứ 2" "thứ hai"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 6 :day-of-week 1)"]}
+         {:text ["thứ 2 ngày 6 tháng 2" "thứ 2 mồng 6 tháng 2" "thứ hai ngày 6 tháng 2"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 6 :day-of-week 1 :day 6 :month 2)"]}
+         {:text ["thứ 3" "thứ ba"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 7)"]}
+         {:text ["chủ nhật"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 5)"]}
+         {:text ["tháng 6" "tháng sáu"]
+          :checks [#clj-duckling/corpus "(datetime 2017 6)"]}
+         {:text ["ngày đầu tiên của tháng ba" "ngày đầu tiên của tháng 3"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3 1 :day 1 :month 3)"]}
+         {:text ["mồng 3 tháng ba" "mồng 3 tháng 3"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3 3 :day 3 :month 3)"]}
+         {:text ["ngày mồng 3 tháng 3 năm 2017" "ngày 3 tháng 3 năm 2017" "3/3/2017" "3/3/17" "03/03/2017"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3 3 :day 3 :month 3 :year 2017)"]}
+         {:text ["ngày mồng 7 tháng 3" "ngày 7 tháng ba" "7/3" "07/03"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3 7 :day 7 :month 3)"]}
+         {:text ["tháng 10 năm 2017" "tháng mười năm 2017"]
+          :checks [#clj-duckling/corpus "(datetime 2017 10 :year 2017 :month 10)"]}
+         {:text ["03/09/1991" "3/9/91" "3/9/1991"]
+          :checks [#clj-duckling/corpus "(datetime 1991 9 3 :day 3 :month 9 :year 1991)"]}
+         {:text ["12 tháng 10 năm 2017" "ngày 12 tháng 10 năm 2017"]
+          :checks [#clj-duckling/corpus "(datetime 2017 10 12 :day 12 :month 10 :year 2017)"]}
+         {:text ["thứ năm tuần tới" "thứ 5 tuần sau"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 9 :day-of-week 4)"]}
+         {:text ["tháng 3 tới"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3)"]}
+         {:text ["chủ nhật ngày mồng 9 tháng 4" "chủ nhật ngày 9 tháng 4"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4 9 :day-of-week 7 :day 9 :month 4)"]}
+         {:text ["thứ 2 ngày 6 tháng 2" "thứ 2 ngày mồng 6 tháng 2" "thứ hai ngày mồng 6 tháng 2"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 6 :day-of-week 1 :day 6 :month 2)"]}
+         {:text ["thứ 3 ngày 3 tháng 4 năm 2018"]
+          :checks [#clj-duckling/corpus "(datetime 2018 4 3 :day-of-week 2 :day 3 :month 4 :year 2018)"]}
+         {:text ["tuần này"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 30 :grain :week)"]}
+         {:text ["tuần trước"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 23 :grain :week)"]}
+         {:text ["tuần sau"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 6 :grain :week)"]}
+         {:text ["tháng trước"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1)"]}
+         {:text ["tháng sau"]
+          :checks [#clj-duckling/corpus "(datetime 2017 3)"]}
+         {:text ["quý này"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 1 :grain :quarter)"]}
+         {:text ["quý sau"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4 1 :grain :quarter)"]}
+         {:text ["quý 3" "quý ba"]
+          :checks [#clj-duckling/corpus "(datetime 2017 7 1 :grain :quarter)"]}
+         {:text ["quý 4 năm 2018"]
+          :checks [#clj-duckling/corpus "(datetime 2018 10 1 :grain :quarter)"]}
+         {:text ["năm trước" "năm ngoái"]
+          :checks [#clj-duckling/corpus "(datetime 2016)"]}
+         {:text ["năm nay"]
+          :checks [#clj-duckling/corpus "(datetime 2017)"]}
+         {:text ["năm sau"]
+          :checks [#clj-duckling/corpus "(datetime 2018)"]}
+         {:text ["quý này" "quý nay" "quý hiện tại"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 1 :grain :quarter)"]}
+         {:text ["quý tới" "quý tiếp"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4 1 :grain :quarter)"]}
+         {:text ["quý ba" "quý 3"]
+          :checks [#clj-duckling/corpus "(datetime 2017 7 1 :grain :quarter)"]}
+         {:text ["quý 4 của năm 2018"]
+          :checks [#clj-duckling/corpus "(datetime 2018 10 1 :grain :quarter)"]}
+         {:text ["năm ngoái" "năm trước"]
+          :checks [#clj-duckling/corpus "(datetime 2016)"]}
+         {:text ["năm nay"]
+          :checks [#clj-duckling/corpus "(datetime 2017)"]}
+         {:text ["năm tiếp theo" "năm kế tiếp" "năm tới"]
+          :checks [#clj-duckling/corpus "(datetime 2018)"]}
+         {:text ["thứ ba vừa rồi"]
+          :checks [#clj-duckling/corpus "(datetime 2017 1 31 :day-of-week 2)"]}
+         {:text ["thứ ba tới"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 7 :day-of-week 2)"]}
+         {:text ["thứ sáu tới"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 3 :day-of-week 5)"]}
+         {:text ["thứ tư tuần tới" "thứ tư của tuần tới"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 8 :day-of-week 3)"]}
+         {:text ["thứ sáu tuần này" "thứ 6 tuần này" "thứ 6 của tuần này"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 3 :day-of-week 5)"]}
+         {:text ["thứ năm tuần này" "thứ 5 của tuần này"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 :day-of-week 4)"]}
+         {:text ["tuần đầu tiên của tháng 9 năm 2017"]
+          :checks [#clj-duckling/corpus "(datetime 2017 9 4 :grain :week)"]}
+         {:text ["vào lúc 2 giờ sáng" "lúc 2 giờ sáng"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 3 2)"]}
+         {:text ["1:18 sáng"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 1 18)"]}
+         {:text ["lúc 3 giờ tối" "vào lúc 3 giờ chiều" "vào đúng 3 giờ chiều"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 15 :hour 3 :meridiem :pm)"]}
+         {:text ["vào khoảng 3 giờ chiều" "khoảng 3 giờ chiều"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 15 :hour 3 :meridiem :pm)"]}
+         {:text ["3 giờ rưỡi chiều" "3:30 chiều" "ba giờ rưỡi chiều"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 15 30 :hour 3 :minute 30 :meridiem :pm)"]}
+         {:text ["2:30" "hai giờ rưỡi"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 14 30 :hour 2 :minute 30)"]}
+         {:text ["15:23:24"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 15 23 24 :hour 15 :minute 23 :second 24)"]}
+         {:text ["11 giờ kém 15" "10 giờ 45 phút" "10:45" "10 giờ 45" "10h45" "10g45"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 10 45 :hour 10 :minute 45)"]}
+         {:text ["8 giờ tối nay"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 20)"]}
+         {:text ["vào lúc 7:30 chiều ngày 20 tháng 4 năm 2017" "7:30 chiều ngày 20/4/2017"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4 20 19 30 :hour 7 :minute 30 :meridiem :pm)"]}
+         {:text ["mùa hè này" "mùa hè năm nay"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 6 21] [2017 9 24])"]}
+         {:text ["mùa đông này"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2016 12 21] [2017 3 21])"]}
+         {:text ["tối nay" "tối hôm nay"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 18] [2017 2 3 0])"]}
+         {:text ["tối mai" "tối ngày mai"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 3 18] [2017 2 4 0])"]}
+         {:text ["trưa mai" "trưa ngày mai"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 3 12] [2017 2 3 14])"]}
+         {:text ["tối qua" "tối hôm qua"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 1 18] [2017 2 2 0])"]}
+         {:text ["sáng chủ nhật"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 5 4] [2017 2 5 12])"]}
+         {:text ["2 giây vừa rồi"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 3 54 58] [2017 2 2 3 55 0])"]}
+         {:text ["3 giây tới" "3 giây tiếp theo" "3 s tiếp theo"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 3 55 1] [2017 2 2 3 55 4])"]}
+         {:text ["2 phút vừa rồi"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 3 53] [2017 2 2 3 55])"]}
+         {:text ["3 phút tới" "3 phút tiếp theo"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 3 56] [2017 2 2 3 59])"]}
+         {:text ["một tiếng vừa rồi" "1 giờ vừa qua"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 2] [2017 2 2 3])"]}
+         {:text ["3 tiếng tiếp theo" "3 giờ tới"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 4] [2017 2 2 7])"]}
+         {:text ["2 ngày vừa rồi" "2 ngày vừa qua"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 1 31] [2017 2 2])"]}
+         {:text ["3 ngày tới" "3 ngày tiếp theo"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 3] [2017 2 6])"]}
+         {:text ["2 tháng vừa rồi" "2 tháng qua"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2016 12] [2017 2])"]}
+         {:text ["3 tháng tới" "ba tháng tiếp theo"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 3] [2017 6])"]}
+         {:text ["2 năm vừa rồi"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2015] [2017])"]}
+         {:text ["3 năm tới" "3 năm tiếp theo"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2018] [2021])"]}
+         {:text ["4pm CET"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 16 :hour 4 :meridiem :pm :timezone \"CET\")"]}
+         {:text ["hôm nay lúc 2 giờ chiều" "lúc 2 giờ chiều"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 14)"]}
+         {:text ["lúc 4:00 chiều ngày 23/4"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4 23 16 0)"]}
+         {:text ["lúc 4 giờ chiều ngày 23 tháng 4"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4 23 16)"]}
+         {:text ["3 giờ chiều ngày mai"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 3 15)"]}
+         {:text ["lúc 1:30 chiều" "lúc 1 giờ 30 chiều"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 13 30)"]}
+         {:text ["sau bữa trưa"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 13] [2017 2 2 17])"]}
+         {:text ["10:30"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 2 10 30)"]}
+         {:text ["buổi sáng"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2017 2 2 4] [2017 2 2 12])"]}
+         {:text ["thứ hai tới" "thứ 2 tới"]
+          :checks [#clj-duckling/corpus "(datetime 2017 2 6 :day-of-week 1)"]}
+         {:text ["tháng 4" "tháng tư"]
+          :checks [#clj-duckling/corpus "(datetime 2017 4)"]}]}

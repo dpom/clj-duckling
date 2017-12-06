@@ -1,0 +1,52 @@
+[#clj-duckling.engine/rule {:name "intersect", :pattern "[(dim :time (fn* [p1__3551#] (not (:latent p1__3551#)))) (dim :time (fn* [p1__3552#] (not (:latent p1__3552#))))]", :production "(intersect %1 %2)"}
+ #clj-duckling.engine/rule {:name "intersect by \",\"", :pattern "[(dim :time (fn* [p1__3553#] (not (:latent p1__3553#)))) #\",\" (dim :time (fn* [p1__3554#] (not (:latent p1__3554#))))]", :production "(intersect %1 %3)"}
+ #clj-duckling.engine/rule {:name "ar <date>", :pattern "[#\"(?i)ar\" (dim :time)]", :production "%2"}
+ #clj-duckling.engine/rule {:name "on a named-day", :pattern "[#\"(?i)ar an\" {:form :day-of-week}]", :production "%2"}
+ #clj-duckling.engine/rule {:name "dé named-day", :pattern "[#\"(?i)d[ée]\" {:form :day-of-week}]", :production "%2"}
+ #clj-duckling.engine/rule {:name "an named-day", :pattern "[#\"(?i)an\" {:form :day-of-week}]", :production "%2"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)luai?n|lu\\.?\"", :production "(day-of-week 1)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)mh?[áa]irt|m[áa]?\\.?\"", :production "(day-of-week 2)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)ch?[ée]adaoin|c[ée]\\.?\"", :production "(day-of-week 3)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)d[ée]ardaoin|d[ée]?\\.?\"", :production "(day-of-week 4)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)h?aoine|ao\\.?\"", :production "(day-of-week 5)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)sathai?rn|sa\\.?\"", :production "(day-of-week 6)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"(?i)domhnai?[cg]h|do\\.?\"", :production "(day-of-week 7)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(an )?t?ean[áa]ir|ean\\.?\"", :production "(month 1)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(na )?feabhra|fea\\.?\"", :production "(month 2)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(an )?mh?[áa]rta|m[áa]r\\.?\"", :production "(month 3)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(an )?t?aibre[áa]i?n|abr\\.?\"", :production "(month 4)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(na )?bh?ealtaine|bea\\.?\"", :production "(month 5)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(an )?mh?eith(ea|i)mh|mei\\.?\"", :production "(month 6)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?i[úu]il|i[úu]i\\.?\"", :production "(month 7)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(na )?l[úu]nasa|l[úu]n\\.?\"", :production "(month 8)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?mh?e[áa]n f[óo]mhair|mef?\\.?\"", :production "(month 9)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?dh?eireadh f[óo]mhair|def?\\.?\"", :production "(month 10)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(na )?samh(ain|na)|sam\\.?\"", :production "(month 11)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"(?i)(mh?[íi] )?(na )?nollai?g|nol\\.?\"", :production "(month 12)"}
+ #clj-duckling.engine/rule {:name "An Nollaig", :pattern "[#\"(?i)(l[áa] |an )?(nollai?g)\"]", :production "(month-day 12 25)"}
+ #clj-duckling.engine/rule {:name "Nollaig na mBan", :pattern "[#\"(?i)(l[áa] |an )?nollaig (bheag|na mban)\"]", :production "(month-day 1 6)"}
+ #clj-duckling.engine/rule {:name "Lá Fhéile Vailintín", :pattern "[#\"(?i)(l[áa] )?(fh[eé]ile|'?le) vailint[íi]n\"]", :production "(month-day 2 14)"}
+ #clj-duckling.engine/rule {:name "Lá Fhéile Pádraig", :pattern "[#\"(?i)(l[áa] )?(fh[eé]ile|'?le) ph?[áa]draig\"]", :production "(month-day 3 17)"}
+ #clj-duckling.engine/rule {:name "Lá Fhéile Bríde", :pattern "[#\"(?i)(l[áa] )?(fh[eé]ile|'?le) bh?r[íi]de\"]", :production "(month-day 2 1)"}
+ #clj-duckling.engine/rule {:name "Lá na nAithreacha", :pattern "[#\"(?i)l[áa] na naithreacha\"]", :production "(intersect (day-of-week 7) (month 6) (cycle-nth-after :week 2 (month-day 6 1)))"}
+ #clj-duckling.engine/rule {:name "absorption of , after named day", :pattern "[{:form :day-of-week} #\",\"]", :production "%1"}
+ #clj-duckling.engine/rule {:name "anois", :pattern "#\"(?i)anois|(ag an (t-?)?am seo)\"", :production "(cycle-nth :second 0)"}
+ #clj-duckling.engine/rule {:name "inniu", :pattern "#\"(?i)inniu\"", :production "(cycle-nth :day 0)"}
+ #clj-duckling.engine/rule {:name "amárach", :pattern "#\"(?i)am[áa]rach\"", :production "(cycle-nth :day 1)"}
+ #clj-duckling.engine/rule {:name "arú amárach", :pattern "#\"(?i)ar[úu] am[áa]rach\"", :production "(cycle-nth :day 2)"}
+ #clj-duckling.engine/rule {:name "inné", :pattern "#\"(?i)inn[ée]\"", :production "(cycle-nth :day -1)"}
+ #clj-duckling.engine/rule {:name "arú inné", :pattern "#\"(?i)ar[úu] inn[ée]\"", :production "(cycle-nth :day -2)"}
+ #clj-duckling.engine/rule {:name "<time> seo chugainn", :pattern "[(dim :time (fn* [p1__3555#] (not (:latent p1__3555#)))) #\"(?i)seo (chugainn|at[aá] ag teacht)\"]", :production "(pred-nth-not-immediate %1 0)"}
+ #clj-duckling.engine/rule {:name "<time> seo chaite", :pattern "[(dim :time) #\"(?i)seo ch?aite\"]", :production "(pred-nth %1 -1)"}
+ #clj-duckling.engine/rule {:name "<time> seo", :pattern "[(dim :time) #\"(?i)seo\"]", :production "(pred-nth %1 0)"}
+ #clj-duckling.engine/rule {:name "year", :pattern "(integer 1000 2100)", :production "(year (:value %1))"}
+ #clj-duckling.engine/rule {:name "year (latent)", :pattern "(integer -10000 999)", :production "(assoc (year (:value %1)) :latent true)"}
+ #clj-duckling.engine/rule {:name "year (latent)", :pattern "(integer 2101 10000)", :production "(assoc (year (:value %1)) :latent true)"}
+ #clj-duckling.engine/rule {:name "an <day-of-month> (ordinal)", :pattern "[#\"(?i)an|na\" (dim :ordinal (fn* [p1__3556#] (<= 1 (:value p1__3556#) 31)))]", :production "(day-of-month (:value %2))"}
+ #clj-duckling.engine/rule {:name "<day-of-month> (ordinal)", :pattern "[(dim :ordinal (fn* [p1__3557#] (<= 1 (:value p1__3557#) 31)))]", :production "(assoc (day-of-month (:value %1)) :latent true)"}
+ #clj-duckling.engine/rule {:name "an <day-of-month> (non ordinal)", :pattern "[#\"(?i)an|na\" (integer 1 31)]", :production "(assoc (day-of-month (:value %2)) :latent true)"}
+ #clj-duckling.engine/rule {:name "<day-of-month>(ordinal) <named-month>", :pattern "[(dim :ordinal (fn* [p1__3558#] (<= 1 (:value p1__3558#) 31))) {:form :month}]", :production "(intersect %2 (day-of-month (:value %1)))"}
+ #clj-duckling.engine/rule {:name "<day-of-month>(ordinal) <named-month> year", :pattern "[(dim :ordinal (fn* [p1__3559#] (<= 1 (:value p1__3559#) 31))) {:form :month} #\"(\\d{2,4})\"]", :production "(intersect %2 (day-of-month (:value %1)) (year (Integer/parseInt (first (:groups %3)))))"}
+ #clj-duckling.engine/rule {:name "dd/mm/yyyy", :pattern "#\"(3[01]|[12]\\d|0?[1-9])[-/](0?[1-9]|1[0-2])[/-](\\d{2,4})\"", :production "(parse-dmy (first (:groups %1)) (second (:groups %1)) (nth (:groups %1) 2) true)"}
+ #clj-duckling.engine/rule {:name "yyyy-mm-dd", :pattern "#\"(\\d{2,4})-(0?[1-9]|1[0-2])-(3[01]|[12]\\d|0?[1-9])\"", :production "(parse-dmy (nth (:groups %1) 2) (second (:groups %1)) (first (:groups %1)) true)"}
+ #clj-duckling.engine/rule {:name "dd/mm", :pattern "#\"(3[01]|[12]\\d|0?[1-9])/(0?[1-9]|1[0-2])\"", :production "(parse-dmy (first (:groups %1)) (second (:groups %1)) nil true)"}]

@@ -1,0 +1,296 @@
+{:context {:reference-time #clj-duckling/time "(t -2 2013 2 12 4 30 0)", :min #clj-duckling/time "(t -2 1900)", :max #clj-duckling/time "(t -2 2100)"}
+
+ :tests [{:text ["방금" "지금"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 0)"]}
+         {:text ["오늘"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12)"]}
+         {:text ["어제"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11)"]}
+         {:text ["내일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13)"]}
+         {:text ["월요일" "이번주 월요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["2월18일 월요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1 :day 18 :month 2)"]}
+         {:text ["화요일" "19일 화요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
+         {:text ["목요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["금요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15)"]}
+         {:text ["토요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16)"]}
+         {:text ["일요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17)"]}
+         {:text ["3월 1일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 1 :day 1 :month 3)"]}
+         {:text ["3월 3일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 3 :day 3 :month 3)"]}
+         {:text ["2015년 3월 3일" "이천십오년 삼월 삼일" "2015/3/3" "2015-3-3" "2015-03-03"]
+          :checks [#clj-duckling/corpus "(datetime 2015 3 3 :day 3 :month 3 :year 2015)"]}
+         {:text ["15일에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15 :day 15)"]}
+         {:text ["2월 15일" "2/15"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 15 :day 15 :month 2)"]}
+         {:text ["8월 8일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 8 8 :day 8 :month 8)"]}
+         {:text ["2014년 10월"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 :year 2014 :month 10)"]}
+         {:text ["1974/10/31" "74/10/31"]
+          :checks [#clj-duckling/corpus "(datetime 1974 10 31 :day 31 :month 10 :year 1974)"]}
+         {:text ["2015년 4월 14일"]
+          :checks [#clj-duckling/corpus "(datetime 2015 4 14 :day 14 :month 4 :years 2015)"]}
+         {:text ["다음주 화요일" "다음 화요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 :day-of-week 2)"]}
+         {:text ["다음 3월"]
+          :checks [#clj-duckling/corpus "(datetime 2014 3)"]}
+         {:text ["2월 18일 월요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1 :day 18 :month 2)"]}
+         {:text ["이번주" "금주"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 11 :grain :week)"]}
+         {:text ["저번주" "전주"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 4 :grain :week)"]}
+         {:text ["다음주" "오는주"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :grain :week)"]}
+         {:text ["저번달"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1)"]}
+         {:text ["다음달"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}
+         {:text ["이번분기"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1 1 :grain :quarter)"]}
+         {:text ["다음분기"]
+          :checks [#clj-duckling/corpus "(datetime 2013 4 1 :grain :quarter)"]}
+         {:text ["삼분기"]
+          :checks [#clj-duckling/corpus "(datetime 2013 7 1 :grain :quarter)"]}
+         {:text ["2018년 4분기"]
+          :checks [#clj-duckling/corpus "(datetime 2018 10 1 :grain :quarter)"]}
+         {:text ["작년"]
+          :checks [#clj-duckling/corpus "(datetime 2012)"]}
+         {:text ["올해"]
+          :checks [#clj-duckling/corpus "(datetime 2013)"]}
+         {:text ["내년"]
+          :checks [#clj-duckling/corpus "(datetime 2014)"]}
+         {:text ["저번주 일요일" "지난주 일요일" "지난 일요일" "저번 일요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 :day-of-week 7)"]}
+         {:text ["저번주 화요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5 :day-of-week 2)"]}
+         {:text ["다음주 화요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 :day-of-week 2)"]}
+         {:text ["다음주 수요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 20 :day-of-week 3)"]}
+         {:text ["다음주 금요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 22 :day-of-week 5)"]}
+         {:text ["이번주 월요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 18 :day-of-week 1)"]}
+         {:text ["이번주 화요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 :day-of-week 2)"]}
+         {:text ["이번주 수요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 :day-of-week 3)"]}
+         {:text ["내일모래" "모래"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14)"]}
+         {:text ["내일 저녁다섯시"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 17)"]}
+         {:text ["엊그제" "그제"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10)"]}
+         {:text ["엊그제 아침8시" "엊그제 오전8시"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 10 8)"]}
+         {:text ["3월 마지막 월요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 25 :day-of-week 1)"]}
+         {:text ["2014년 3월 마지막일요일"]
+          :checks [#clj-duckling/corpus "(datetime 2014 3 30 :day-of-week 7)"]}
+         {:text ["10월 3일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 3)"]}
+         {:text ["2014년 10월 첫번째주"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 6 :grain :week)"]}
+         {:text ["2015년 10월 마지막날"]
+          :checks [#clj-duckling/corpus "(datetime 2015 10 31)"]}
+         {:text ["2014년 9월 마지막주"]
+          :checks [#clj-duckling/corpus "(datetime 2014 9 22 :grain :week)"]}
+         {:text ["10월 첫째화요일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 1)"]}
+         {:text ["2014년 9월 셋째화요일" "2014년 9월 세번째화요일"]
+          :checks [#clj-duckling/corpus "(datetime 2014 9 16)"]}
+         {:text ["2014년 10월 첫번째 수요일" "2014년 10월 첫째 수요일"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 1)"]}
+         {:text ["2014년 10월 두번째 수요일" "2014년 10월 둘째 수요일"]
+          :checks [#clj-duckling/corpus "(datetime 2014 10 8)"]}
+         {:text ["아침 3시" "오전 세시" "3AM"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 3)"]}
+         {:text ["3:18am" "3:18a"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 3 18)"]}
+         {:text ["오후 세시" "3PM"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 :hour 3 :meridiem :pm)"]}
+         {:text ["오후세시이십분" "3:20p" "15:20" "3:20pm" "3:20PM"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 20 :hour 3 :minute 20 :meridiem :pm)"]}
+         {:text ["오후세시반" "15:30" "3:30pm" "3:30PM"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 30 :hour 3 :minute 30 :meridiem :pm)"]}
+         {:text ["네시십오분전"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 45 :hour 3 :minute 45)"]}
+         {:text ["3:30" "세시반"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 30 :hour 3 :minute 30)"]}
+         {:text ["15:23:24" "세시이십삼분이십사초"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 15 23 24 :hour 15 :minute 23 :second 24)"]}
+         {:text ["오늘밤 8시" "저녁 8시"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 20)"]}
+         {:text ["9월 20일 저녁 7시 30분"]
+          :checks [#clj-duckling/corpus "(datetime 2013 9 20 19 30 :hour 7 :minute 30 :meridiem :pm)"]}
+         {:text ["토요일 9시"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 16 9 :day-of-week 7 :hour 9 :meridiem :am)"]}
+         {:text ["2014년 7월 18일 금요일 오후 7시"]
+          :checks [#clj-duckling/corpus "(datetime 2014 7 18 19 :day-of-week 5 :hour 7 :meridiem :pm)"]}
+         {:text ["1초안에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 30 1)"]}
+         {:text ["일분안에" "일분내에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 31 0)"]}
+         {:text ["이분안에" "이분내에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 32 0)"]}
+         {:text ["한시간안에" "한시간내"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 5 30)"]}
+         {:text ["한시간반안" "한시간반내"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 6 0 0)"]}
+         {:text ["두시간반안" "두시간반내"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 7 0 0)"]}
+         {:text ["몇시간안" "몇시간내" "몇시간후" "몇시간이후"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 7 30)"]}
+         {:text ["24시간안에" "24시간내"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 4 30)"]}
+         {:text ["하루안에" "하루내"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 4)"]}
+         {:text ["삼년안에" "삼년내"]
+          :checks [#clj-duckling/corpus "(datetime 2016 2)"]}
+         {:text ["7일안에" "7일내"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19 4)"]}
+         {:text ["1주일안에" "1주일내"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 19)"]}
+         {:text ["약 한시간반 안에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 6 0 0)"]}
+         {:text ["7일전"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 5 4)"]}
+         {:text ["14일전" "14일전에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1 29 4)"]}
+         {:text ["3주전" "3주이전"]
+          :checks [#clj-duckling/corpus "(datetime 2013 1 22)"]}
+         {:text ["2년전" "2년이전"]
+          :checks [#clj-duckling/corpus "(datetime 2011 2)"]}
+         {:text ["1954"]
+          :checks [#clj-duckling/corpus "(datetime 1954)"]}
+         {:text ["이번여름"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 6 21] [2013 9 24])"]}
+         {:text ["이번겨울"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2012 12 21] [2013 3 21])"]}
+         {:text ["크리스마스"]
+          :checks [#clj-duckling/corpus "(datetime 2013 12 25)"]}
+         {:text ["크리스마스이브"]
+          :checks [#clj-duckling/corpus "(datetime 2013 12 24)"]}
+         {:text ["신정" "설날"]
+          :checks [#clj-duckling/corpus "(datetime 2014 1 1)"]}
+         {:text ["삼일절"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3 1)"]}
+         {:text ["어린이날"]
+          :checks [#clj-duckling/corpus "(datetime 2013 5 5)"]}
+         {:text ["현충일"]
+          :checks [#clj-duckling/corpus "(datetime 2013 6 6)"]}
+         {:text ["제헌절"]
+          :checks [#clj-duckling/corpus "(datetime 2013 6 17)"]}
+         {:text ["광복절"]
+          :checks [#clj-duckling/corpus "(datetime 2013 8 15)"]}
+         {:text ["개천절"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 3)"]}
+         {:text ["한글날"]
+          :checks [#clj-duckling/corpus "(datetime 2013 10 9)"]}
+         {:text ["오늘저녁" "오늘밤"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 18] [2013 2 13 0])"]}
+         {:text ["저번주말" "지난주말"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 8 18] [2013 2 11 0])"]}
+         {:text ["내일저녁" "내일밤"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13 18] [2013 2 14 0])"]}
+         {:text ["내일점심"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13 12] [2013 2 13 14])"]}
+         {:text ["어제저녁"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 11 18] [2013 2 12 0])"]}
+         {:text ["이번주말"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 15 18] [2013 2 18 0])"]}
+         {:text ["월요일 아침"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 4] [2013 2 18 12])"]}
+         {:text ["2월 15일 아침"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 15 4] [2013 2 15 12])"]}
+         {:text ["지난 2초" "지난 이초"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 29 58] [2013 2 12 4 30 0])"]}
+         {:text ["다음 3초" "다음 삼초"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 1] [2013 2 12 4 30 4])"]}
+         {:text ["지난 2분" "지난 이분"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 28] [2013 2 12 4 30])"]}
+         {:text ["다음 3분" "다음 삼분"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 31] [2013 2 12 4 34])"]}
+         {:text ["지난 1시간" "지난 한시간"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 3] [2013 2 12 4])"]}
+         {:text ["지난 24시간" "지난 스물네시간"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 11 4] [2013 2 12 4])"]}
+         {:text ["다음 3시간"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 5] [2013 2 12 8])"]}
+         {:text ["지난 2일"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 10] [2013 2 12])"]}
+         {:text ["다음 3일"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13] [2013 2 16])"]}
+         {:text ["다음 몇일"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 13] [2013 2 16])"]}
+         {:text ["지난 2주" "지난 이주"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 1 28 :grain :week] [2013 2 11 :grain :week])"]}
+         {:text ["다음 3주" "다음 삼주"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 18 :grain :week] [2013 3 11 :grain :week])"]}
+         {:text ["지난 2달" "지난 두달"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2012 12] [2013 2])"]}
+         {:text ["다음 3달" "다음 세달"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 3] [2013 6])"]}
+         {:text ["지난 2년" "지난 이년"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2011] [2013])"]}
+         {:text ["다음 3년" "다음 삼년"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2014] [2017])"]}
+         {:text ["7월 13일 - 15일" "7월 13일 부터 15일"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 7 13] [2013 7 16])"]}
+         {:text ["8월 8일 - 8월 13일" "8월 8일부터 8월 13일"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 8 8] [2013 8 14])"]}
+         {:text ["9:30 부터 11:00" "9:30 ~ 11:00"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 9 30] [2013 2 12 11 1])"]}
+         {:text ["목요일 9:30 부터 11:00" "목요일 9:30 ~ 11:00"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 14 9 30] [2013 2 14 11 1])"]}
+         {:text ["목요일 오전9시 부터 오전11시"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 14 9] [2013 2 14 12])"]}
+         {:text ["11:30-1:30"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 11 30] [2013 2 12 13 31])"]}
+         {:text ["2주 이내에"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 0] [2013 2 26])"]}
+         {:text ["오후 2시까지"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4 30 0] [2013 2 12 14])"]}
+         {:text ["4pm CET"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 16 :hour 4 :meridiem :pm :timezone \"CET\")"]}
+         {:text ["목요일 8:00 GMT"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 14 8 0 :timezone \"GMT\")"]}
+         {:text ["오늘 오후두시에" "오후두시에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 14)"]}
+         {:text ["4/25 오후4시에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 4 25 16)"]}
+         {:text ["내일 3pm"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 15)"]}
+         {:text ["오후2시 이후"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 14 :direction :after)"]}
+         {:text ["5일 후"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 17 4 :direction :after)"]}
+         {:text ["오전11시 전" "오전11시 이전"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 11 :direction :before)"]}
+         {:text ["오후에"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 12] [2013 2 12 19])"]}
+         {:text ["15분안"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 4 45 0)"]}
+         {:text ["점심이후"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 12] [2013 2 12 14])"]}
+         {:text ["10:30"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 10 30)"]}
+         {:text ["아침"]
+          :checks [#clj-duckling/corpus "(datetime-interval [2013 2 12 4] [2013 2 12 12])"]}
+         {:text ["오후12시" "정오"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 12 12)"]}
+         {:text ["오전12시" "자정"]
+          :checks [#clj-duckling/corpus "(datetime 2013 2 13 0)"]}
+         {:text ["3월" "3월에"]
+          :checks [#clj-duckling/corpus "(datetime 2013 3)"]}]}

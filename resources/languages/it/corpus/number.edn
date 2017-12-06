@@ -1,0 +1,78 @@
+{:context {}
+
+ :tests [{:text ["0" "nulla" "zero"]
+          :checks [#clj-duckling/corpus "(number 0)"]}
+         {:text ["1" "uno" "un"]
+          :checks [#clj-duckling/corpus "(number 1)"]}
+         {:text ["2" "due"]
+          :checks [#clj-duckling/corpus "(number 2)"]}
+         {:text ["3" "tre"]
+          :checks [#clj-duckling/corpus "(number 3)"]}
+         {:text ["4" "quattro"]
+          :checks [#clj-duckling/corpus "(number 4)"]}
+         {:text ["5" "cinque"]
+          :checks [#clj-duckling/corpus "(number 5)"]}
+         {:text ["6" "sei"]
+          :checks [#clj-duckling/corpus "(number 6)"]}
+         {:text ["7" "sette"]
+          :checks [#clj-duckling/corpus "(number 7)"]}
+         {:text ["8" "otto"]
+          :checks [#clj-duckling/corpus "(number 8)"]}
+         {:text ["9" "nove"]
+          :checks [#clj-duckling/corpus "(number 9)"]}
+         {:text ["10" "dieci"]
+          :checks [#clj-duckling/corpus "(number 10)"]}
+         {:text ["33" "trentatré" "0033"]
+          :checks [#clj-duckling/corpus "(number 33)"]}
+         {:text ["11" "undici"]
+          :checks [#clj-duckling/corpus "(number 11)"]}
+         {:text ["12" "dodici"]
+          :checks [#clj-duckling/corpus "(number 12)"]}
+         {:text ["13" "tredici"]
+          :checks [#clj-duckling/corpus "(number 13)"]}
+         {:text ["14" "quattordici"]
+          :checks [#clj-duckling/corpus "(number 14)"]}
+         {:text ["15" "quindici"]
+          :checks [#clj-duckling/corpus "(number 15)"]}
+         {:text ["16" "sedici"]
+          :checks [#clj-duckling/corpus "(number 16)"]}
+         {:text ["17" "diciassette"]
+          :checks [#clj-duckling/corpus "(number 17)"]}
+         {:text ["18" "diciotto"]
+          :checks [#clj-duckling/corpus "(number 18)"]}
+         {:text ["19" "diciannove"]
+          :checks [#clj-duckling/corpus "(number 19)"]}
+         {:text ["20" "venti"]
+          :checks [#clj-duckling/corpus "(number 20)"]}
+         {:text ["1,1" "1,10" "01,10"]
+          :checks [#clj-duckling/corpus "(number 1.1)"]}
+         {:text ["0,77" ",77"]
+          :checks [#clj-duckling/corpus "(number 0.77)"]}
+         {:text ["100.000" "100000" "100K" "100k"]
+          :checks [#clj-duckling/corpus "(number 100000)"]}
+         {:text ["3M" "3000K" "3000000" "3.000.000"]
+          :checks [#clj-duckling/corpus "(number 3000000)"]}
+         {:text ["1.200.000" "1200000" "1,2M" "1200K" ",0012G"]
+          :checks [#clj-duckling/corpus "(number 1200000)"]}
+         {:text ["- 1.200.000" "-1200000" "meno 1.200.000" "negativo 1200000" "-1,2M" "-1200K" "-,0012G"]
+          :checks [#clj-duckling/corpus "(number -1200000)"]}
+         {:text ["primo" "prima" "1°" "1ª"]
+          :checks [#clj-duckling/corpus "(ordinal 1)"]}
+         {:text ["secondo" "seconda" "2°" "2ª"]
+          :checks [#clj-duckling/corpus "(ordinal 2)"]}
+         {:text ["terzo" "terza" "3°" "3ª"]
+          :checks [#clj-duckling/corpus "(ordinal 3)"]}
+         {:text ["quarto" "quarta" "4°" "4ª"]
+          :checks [#clj-duckling/corpus "(ordinal 4)"]}
+         {:text ["quinto" "quinta" "5°" "5ª"]
+          :checks [#clj-duckling/corpus "(ordinal 5)"]}
+         {:text ["sesto" "sesta" "6°" "6ª"]
+          :checks [#clj-duckling/corpus "(ordinal 6)"]}
+         {:text ["settimo" "settima" "7°" "7ª"]
+          :checks [#clj-duckling/corpus "(ordinal 7)"]}
+         {:text ["ottavo" "ottava" "8°" "8ª"]
+          :checks [#clj-duckling/corpus "(ordinal 8)"]}
+         {:text ["nono" "nona" "9°" "9ª"]
+          :checks [#clj-duckling/corpus "(ordinal 9)"]}
+         {:text ["decimo" "decima" "10°" "10ª"]
+          :checks [#clj-duckling/corpus "(ordinal 10)"]}]}

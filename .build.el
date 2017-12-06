@@ -31,6 +31,8 @@
 
 (task 'tests '() "run tests" '(lambda (&optional x) "lein test"))
 
+(task 'cov '() "coverage" '(lambda (&optional x) "lein cloverage"))
+
 (task 'libupdate () "update project libraries" '(lambda (&optional x) "lein ancient :no-colors"))
 
 (task 'package '() "package the library" '(lambda (&optional x) "lein do clean, uberjar"))

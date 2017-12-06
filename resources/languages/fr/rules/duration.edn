@@ -1,0 +1,17 @@
+[#clj-duckling.engine/rule {:name "seconde (unit-of-duration)", :pattern "#\"(?i)sec(onde)?s?\"", :production "{:dim :unit-of-duration, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (unit-of-duration)", :pattern "#\"(?i)min(ute)?s?\"", :production "{:dim :unit-of-duration, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "heure (unit-of-duration)", :pattern "#\"(?i)h(eure)?s?\"", :production "{:dim :unit-of-duration, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "jour (unit-of-duration)", :pattern "#\"(?i)jour(n[ée]e?)?s?\"", :production "{:dim :unit-of-duration, :grain :day}"}
+ #clj-duckling.engine/rule {:name "semaine (unit-of-duration)", :pattern "#\"(?i)semaines?\"", :production "{:dim :unit-of-duration, :grain :week}"}
+ #clj-duckling.engine/rule {:name "mois (unit-of-duration)", :pattern "#\"(?i)mois?\"", :production "{:dim :unit-of-duration, :grain :month}"}
+ #clj-duckling.engine/rule {:name "année (unit-of-duration)", :pattern "#\"(?i)an(n[ée]e?)?s?\"", :production "{:dim :unit-of-duration, :grain :year}"}
+ #clj-duckling.engine/rule {:name "un quart heure", :pattern "[#\"(?i)(1/4\\s?h(eure)?|(un|1) quart d'heure)\"]", :production "{:dim :duration, :value (duration :minute 15)}"}
+ #clj-duckling.engine/rule {:name "une demi heure", :pattern "[#\"(?i)(1/2\\s?h(eure)?|(1|une) demi(e)?(\\s|-)heure)\"]", :production "{:dim :duration, :value (duration :minute 30)}"}
+ #clj-duckling.engine/rule {:name "trois quarts d'heure", :pattern "[#\"(?i)(3/4\\s?h(eure)?|(3|trois) quart(s)? d'heure)\"]", :production "{:dim :duration, :value (duration :minute 45)}"}
+ #clj-duckling.engine/rule {:name "<integer> <unit-of-duration>", :pattern "[(integer 0) (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) (:value %1))}"}
+ #clj-duckling.engine/rule {:name "une <unit-of-duration>", :pattern "[#\"(?i)une|la|le?\" (dim :unit-of-duration)]", :production "{:dim :duration, :value (duration (:grain %2) 1)}"}
+ #clj-duckling.engine/rule {:name "dans <duration>", :pattern "[#\"(?i)dans\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "environ <duration>", :pattern "[#\"(?i)environ\" (dim :duration)]", :production "(in-duration (:value %2))"}
+ #clj-duckling.engine/rule {:name "il y a <duration>", :pattern "[#\"(?i)il y a\" (dim :duration)]", :production "(duration-ago (:value %2))"}
+ #clj-duckling.engine/rule {:name "<duration> apres <time>", :pattern "[(dim :duration) #\"(?i)apr[eè]s\" (dim :time)]", :production "(duration-after (:value %1) %3)"}
+ #clj-duckling.engine/rule {:name "<duration> avant <time>", :pattern "[(dim :duration) #\"(?i)avant\" (dim :time)]", :production "(duration-before (:value %1) %3)"}]

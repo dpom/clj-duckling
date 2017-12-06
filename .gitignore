@@ -18,3 +18,7 @@ resources/export.json
 dev/resources/local.edn
 dev/src/local.clj
 /logs
+/tmp.edn
+/tmp
+/err.log
+/test/ro_model.bin

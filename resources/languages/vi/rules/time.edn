@@ -1,0 +1,87 @@
+[#clj-duckling.engine/rule {:name "intersect", :pattern "[(dim :time (fn* [p1__3563#] (not (:latent p1__3563#)))) (dim :time (fn* [p1__3564#] (not (:latent p1__3564#))))]", :production "(intersect %2 %1)"}
+ #clj-duckling.engine/rule {:name "intersect by \"of\", \"from\", \"'s\"", :pattern "[(dim :time (fn* [p1__3565#] (not (:latent p1__3565#)))) #\"(?i)của|trong\" (dim :time (fn* [p1__3566#] (not (:latent p1__3566#))))]", :production "(intersect %3 %1)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"thứ 2|thứ hai\"", :production "(day-of-week 1)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"thứ 3|thứ ba\"", :production "(day-of-week 2)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"thứ 4|thứ bốn|thứ tư\"", :production "(day-of-week 3)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"thứ 5|thứ năm\"", :production "(day-of-week 4)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"thứ 6|thứ sáu\"", :production "(day-of-week 5)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"thứ 7|thứ bảy|thứ bẩy\"", :production "(day-of-week 6)"}
+ #clj-duckling.engine/rule {:name "named-day", :pattern "#\"chủ nhật\"", :production "(day-of-week 7)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng giêng|tháng một\"", :production "(month 1)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng hai\"", :production "(month 2)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng ba\"", :production "(month 3)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng tư|tháng bốn\"", :production "(month 4)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng năm\"", :production "(month 5)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng sáu\"", :production "(month 6)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng bảy\"", :production "(month 7)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng tám\"", :production "(month 8)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng chín\"", :production "(month 9)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng mười\"", :production "(month 10)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng mười một\"", :production "(month 11)"}
+ #clj-duckling.engine/rule {:name "named-month", :pattern "#\"tháng mười hai\"", :production "(month 12)"}
+ #clj-duckling.engine/rule {:name "giáng sinh", :pattern "#\"(?i)(ngày )(xmas|christmas|giáng sinh)?\"", :production "(month-day 12 25)"}
+ #clj-duckling.engine/rule {:name "tết dương", :pattern "#\"(?i)(tết dương)(lịch)?\"", :production "(month-day 1 1)"}
+ #clj-duckling.engine/rule {:name "lễ tình nhân", :pattern "#\"(?i)(ngày )?(lễ)? tình nhân\"", :production "(month-day 2 14)"}
+ #clj-duckling.engine/rule {:name "quốc khánh", :pattern "#\"(?i)quốc khánh\"", :production "(month-day 9 3)"}
+ #clj-duckling.engine/rule {:name "cách mạng tháng 8", :pattern "#\"(?i)cách mạng tháng (8|tám)\"", :production "(month-day 8 19)"}
+ #clj-duckling.engine/rule {:name "quốc tế lao động", :pattern "#\"(?i)(ngày )?quốc tế lao đông\"", :production "(month-day 5 1)"}
+ #clj-duckling.engine/rule {:name "bây giờ", :pattern "#\"(?i)(ngay )?(bây giờ|lúc này)\"", :production "(cycle-nth :second 0)"}
+ #clj-duckling.engine/rule {:name "hôm nay", :pattern "#\"(?i)(hôm nay|bữa nay|ngay hôm nay)\"", :production "(cycle-nth :day 0)"}
+ #clj-duckling.engine/rule {:name "ngày mai", :pattern "#\"(?i)ngày mai|mai\"", :production "(cycle-nth :day 1)"}
+ #clj-duckling.engine/rule {:name "ngày hôm qua", :pattern "#\"(?i)(ngày )?(hôm qua|qua)\"", :production "(cycle-nth :day -1)"}
+ #clj-duckling.engine/rule {:name "ngày hôm kia", :pattern "#\"(?i)(ngày )?hôm kia\"", :production "(cycle-nth :day -2)"}
+ #clj-duckling.engine/rule {:name "cuối tháng", :pattern "#\"(?i)cuối tháng\"", :production "(cycle-nth :month 1)"}
+ #clj-duckling.engine/rule {:name "cuối năm", :pattern "#\"(?i)cuối năm\"", :production "(cycle-nth :year 1)"}
+ #clj-duckling.engine/rule {:name "<day-of-week> tới", :pattern "[{:form :day-of-week} #\"(?i)tới\"]", :production "(pred-nth-not-immediate %1 0)"}
+ #clj-duckling.engine/rule {:name "<time> này", :pattern "[(dim :time) #\"(?i)này|nay\"]", :production "(pred-nth %1 0)"}
+ #clj-duckling.engine/rule {:name "<time> tới", :pattern "[(dim :time (fn* [p1__3567#] (not (:latent p1__3567#)))) #\"(?i)tới\"]", :production "(pred-nth-not-immediate %1 0)"}
+ #clj-duckling.engine/rule {:name "<time> trước", :pattern "[(dim :time) #\"(?i)trước|vừa rồi\"]", :production "(pred-nth %1 -1)"}
+ #clj-duckling.engine/rule {:name "<day-of-week> cuối cùng của <time>", :pattern "[{:form :day-of-week} #\"(?i)cuối cùng|cuối\" #\"(?i)của|trong|vào\" (dim :time)]", :production "(pred-last-of %1 %4)"}
+ #clj-duckling.engine/rule {:name "<cycle> cuối cùng của <time>", :pattern "[(dim :cycle) #\"(?i)cuối cùng|cuối\" #\"(?i)của|trong|vào\" (dim :time)]", :production "(cycle-last-of %1 %4)"}
+ #clj-duckling.engine/rule {:name "day of month (numeric with day symbol)", :pattern "[#\"(ngày|mồng)( mồng)?\" (dim :number)]", :production "(assoc (day-of-month (:value %2)) :form :day-of-month)"}
+ #clj-duckling.engine/rule {:name "month (numeric with month symbol)", :pattern "[#\"tháng\" (integer 1 12)]", :production "(assoc (month (:value %2)) :form :named-month)"}
+ #clj-duckling.engine/rule {:name "year (numeric with year symbol)", :pattern "[#\"năm\" (integer 1000 9999)]", :production "(year (:value %2))"}
+ #clj-duckling.engine/rule {:name "<day-of-month> <named-month>", :pattern "[{:form :day-of-month} {:form :named-month}]", :production "(intersect %2 %1)"}
+ #clj-duckling.engine/rule {:name "<day-of-month> <named-month>", :pattern "[(dim :number) {:form :named-month}]", :production "(intersect %2 (day-of-month (:value %1)))"}
+ #clj-duckling.engine/rule {:name "time-of-day (latent)", :pattern "(integer 0 23)", :production "(assoc (hour (:value %1) true) :latent true)"}
+ #clj-duckling.engine/rule {:name "time-of-day (latent)", :pattern "[#\"(?i)(lúc|vào)( lúc)?\" (integer 0 23)]", :production "(assoc (hour (:value %2) true) :latent true)"}
+ #clj-duckling.engine/rule {:name "time-of-day giờ", :pattern "[{:form :time-of-day} #\"(?i)giờ\"]", :production "(dissoc %1 :latent)"}
+ #clj-duckling.engine/rule {:name "<time-of-day> giờ đúng", :pattern "[{:form :time-of-day} #\"(?i)giờ đúng\"]", :production "(dissoc %1 :latent)"}
+ #clj-duckling.engine/rule {:name "hh:mm", :pattern "#\"(?i)((?:[01]?\\d)|(?:2[0-3]))[:.hg]([0-5]\\d)\"", :production "(hour-minute (Integer/parseInt (first (:groups %1))) (Integer/parseInt (second (:groups %1))) true)"}
+ #clj-duckling.engine/rule {:name "at hh:mm", :pattern "[#\"(?i)(lúc|vào)( lúc)?\" #\"(?i)((?:[01]?\\d)|(?:2[0-3]))[:.hg]([0-5]\\d)\"]", :production "(hour-minute (Integer/parseInt (first (:groups %2))) (Integer/parseInt (second (:groups %2))) true)"}
+ #clj-duckling.engine/rule {:name "hh:mm:ss", :pattern "#\"(?i)((?:[01]?\\d)|(?:2[0-3]))[:.]([0-5]\\d)[:.]([0-5]\\d)\"", :production "(hour-minute-second (Integer/parseInt (first (:groups %1))) (Integer/parseInt (second (:groups %1))) (Integer/parseInt (second (next (:groups %1)))) true)"}
+ #clj-duckling.engine/rule {:name "hhmm (military) am|pm", :pattern "[#\"(?i)((?:1[012]|0?\\d))([0-5]\\d)\" #\"(?i)([ap])\\.?m?\\.?\"]", :production "(let [[p meridiem] (if (= \"a\" (-> %2 :groups first clojure.string/lower-case)) [[(hour 0) (hour 12) false] :am] [[(hour 12) (hour 0) false] :pm])] (-> (intersect (hour-minute (Integer/parseInt (first (:groups %1))) (Integer/parseInt (second (:groups %1))) true) (apply interval p)) (assoc :form :time-of-day)))"}
+ #clj-duckling.engine/rule {:name "hhmm (military) sáng|chiều|tối", :pattern "[#\"(?i)((?:1[012]|0?\\d))([0-5]\\d)\" #\"(?i)(sáng|chiều|tối)\"]", :production "(let [[p meridiem] (if (= \"sáng\" (-> %2 :groups first clojure.string/lower-case)) [[(hour 0) (hour 12) false] :am] [[(hour 12) (hour 0) false] :pm])] (-> (intersect (hour-minute (Integer/parseInt (first (:groups %1))) (Integer/parseInt (second (:groups %1))) true) (apply interval p)) (assoc :form :time-of-day)))"}
+ #clj-duckling.engine/rule {:name "<time-of-day> am|pm", :pattern "[{:form :time-of-day} #\"(?i)(in the )?([ap])(\\s|\\.)?m?\\.?\"]", :production "(let [[p meridiem] (if (= \"a\" (-> %2 :groups second clojure.string/lower-case)) [[(hour 0) (hour 12) false] :am] [[(hour 12) (hour 0) false] :pm])] (-> (intersect %1 (apply interval p)) (assoc :form :time-of-day)))"}
+ #clj-duckling.engine/rule {:name "<time-of-day> sáng|chiều|tối", :pattern "[{:form :time-of-day} #\"(?i)(sáng|chiều|tối)\"]", :production "(let [[p meridiem] (if (= \"sáng\" (-> %2 :groups first clojure.string/lower-case)) [[(hour 0) (hour 12) false] :am] [[(hour 12) (hour 0) false] :pm])] (-> (intersect %1 (apply interval p)) (assoc :form :time-of-day)))"}
+ #clj-duckling.engine/rule {:name "noon", :pattern "#\"(?i)(buổi )?(tối|đêm)\"", :production "(hour 12 false)"}
+ #clj-duckling.engine/rule {:name "(hour-of-day) half (relative minutes)", :pattern "[(dim :time :full-hour) #\"rưỡi\"]", :production "(hour-relativemin (:full-hour %1) 30 true)"}
+ #clj-duckling.engine/rule {:name "(hour-of-day) quarter (relative minutes)", :pattern "[(dim :time :full-hour) #\"(?i)kém\" (dim :number)]", :production "(hour-relativemin (:full-hour %1) (- (:value %3)) true)"}
+ #clj-duckling.engine/rule {:name "number (as relative minutes)", :pattern "(integer 1 59)", :production "{:relative-minutes (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<hour-of-day> <integer> (as relative minutes)", :pattern "[(dim :time :full-hour) (fn* [p1__3568#] (:relative-minutes p1__3568#))]", :production "(hour-relativemin (:full-hour %1) (:relative-minutes %2) true)"}
+ #clj-duckling.engine/rule {:name "<hour-of-day> <integer> (as relative minutes) phút", :pattern "[(dim :time :full-hour) (fn* [p1__3569#] (:relative-minutes p1__3569#)) #\"(?i)phút\"]", :production "(hour-relativemin (:full-hour %1) (:relative-minutes %2) true)"}
+ #clj-duckling.engine/rule {:name "dd/mm/yyyy", :pattern "#\"(3[01]|[12]\\d|0?[1-9])[-/](0?[1-9]|1[0-2])[/-](\\d{2,4})\"", :production "(parse-dmy (first (:groups %1)) (second (:groups %1)) (nth (:groups %1) 2) true)"}
+ #clj-duckling.engine/rule {:name "ngày dd/mm/yyyy", :pattern "[#\"(?i)ngày\" #\"(3[01]|[12]\\d|0?[1-9])[-/](0?[1-9]|1[0-2])[/-](\\d{2,4})\"]", :production "(parse-dmy (first (:groups %2)) (second (:groups %2)) (nth (:groups %2) 2) true)"}
+ #clj-duckling.engine/rule {:name "yyyy-mm-dd", :pattern "#\"(\\d{2,4})-(0?[1-9]|1[0-2])-(3[01]|[12]\\d|0?[1-9])\"", :production "(parse-dmy (nth (:groups %1) 2) (second (:groups %1)) (first (:groups %1)) true)"}
+ #clj-duckling.engine/rule {:name "dd/mm", :pattern "#\"(3[01]|[12]\\d|0?[1-9])/(0?[1-9]|1[0-2])\"", :production "(parse-dmy (first (:groups %1)) (second (:groups %1)) nil true)"}
+ #clj-duckling.engine/rule {:name "ngày dd/mm", :pattern "[#\"(?i)ngày\" #\"(3[01]|[12]\\d|0?[1-9])/(0?[1-9]|1[0-2])\"]", :production "(parse-dmy (first (:groups %2)) (second (:groups %2)) nil true)"}
+ #clj-duckling.engine/rule {:name "morning", :pattern "[#\"(?i)(buổi )?sáng\"]", :production "(assoc (interval (hour 4 false) (hour 12 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "afternoon", :pattern "[#\"(?i)(buổi )?chiều\"]", :production "(assoc (interval (hour 12 false) (hour 19 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "noon", :pattern "[#\"(?i)(buổi )?(tối|đêm)\"]", :production "(assoc (interval (hour 18 false) (hour 0 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "lunch", :pattern "[#\"(?i)(buổi )?trưa\"]", :production "(assoc (interval (hour 12 false) (hour 14 false) false) :form :part-of-day :latent true)"}
+ #clj-duckling.engine/rule {:name "<part-of-day> (hôm )?nay", :pattern "[#\"(?i)this\" {:form :part-of-day}]", :production "(assoc (intersect (cycle-nth :day 0) %1) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "tonight", :pattern "#\"(?i)(tối|đêm)( hôm)? nay\"", :production "(assoc (intersect (cycle-nth :day 0) (interval (hour 18 false) (hour 0 false) false)) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "after lunch", :pattern "#\"(?i)(sau|qua) (buổi |bữa )?trưa\"", :production "(assoc (intersect (cycle-nth :day 0) (interval (hour 13 false) (hour 17 false) false)) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "after work", :pattern "#\"(?i)(sau giờ làm|sau giờ tan tầm|lúc tan tầm)\"", :production "(assoc (intersect (cycle-nth :day 0) (interval (hour 17 false) (hour 21 false) false)) :form :part-of-day)"}
+ #clj-duckling.engine/rule {:name "<part-of-day> <time>", :pattern "[{:form :part-of-day} (dim :time)]", :production "(intersect %1 %2)"}
+ #clj-duckling.engine/rule {:name "week-end", :pattern "#\"(?i)(cuối|hết) tuần\"", :production "(interval (intersect (day-of-week 5) (hour 18 false)) (intersect (day-of-week 1) (hour 0 false)) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)mùa? (hè|hạ)\"", :production "(interval (month-day 6 21) (month-day 9 23) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)mùa? thu\"", :production "(interval (month-day 9 23) (month-day 12 21) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)mùa? đông\"", :production "(interval (month-day 12 21) (month-day 3 20) false)"}
+ #clj-duckling.engine/rule {:name "season", :pattern "#\"(?i)mùa? xuân\"", :production "(interval (month-day 3 20) (month-day 6 21) false)"}
+ #clj-duckling.engine/rule {:name "timezone", :pattern "#\"(?i)\\b(YEKT|YEKST|YAPT|YAKT|YAKST|WT|WST|WITA|WIT|WIB|WGT|WGST|WFT|WEZ|WET|WESZ|WEST|WAT|WAST|VUT|VLAT|VLAST|VET|UZT|UYT|UYST|UTC|ULAT|TVT|TMT|TLT|TKT|TJT|TFT|TAHT|SST|SRT|SGT|SCT|SBT|SAST|SAMT|RET|PYT|PYST|PWT|PT|PST|PONT|PMST|PMDT|PKT|PHT|PHOT|PGT|PETT|PETST|PET|PDT|OMST|OMSST|NZST|NZDT|NUT|NST|NPT|NOVT|NOVST|NFT|NDT|NCT|MYT|MVT|MUT|MST|MSK|MSD|MMT|MHT|MEZ|MESZ|MDT|MAWT|MART|MAGT|MAGST|LINT|LHST|LHDT|KUYT|KST|KRAT|KRAST|KGT|JST|IST|IRST|IRKT|IRKST|IRDT|IOT|IDT|ICT|HOVT|HNY|HNT|HNR|HNP|HNE|HNC|HNA|HLV|HKT|HAY|HAT|HAST|HAR|HAP|HAE|HADT|HAC|HAA|GYT|GST|GMT|GILT|GFT|GET|GAMT|GALT|FNT|FKT|FKST|FJT|FJST|ET|EST|EGT|EGST|EET|EEST|EDT|ECT|EAT|EAST|EASST|DAVT|ChST|CXT|CVT|CST|COT|CLT|CLST|CKT|CHAST|CHADT|CET|CEST|CDT|CCT|CAT|CAST|BTT|BST|BRT|BRST|BOT|BNT|AZT|AZST|AZOT|AZOST|AWST|AWDT|AST|ART|AQTT|ANAT|ANAST|AMT|AMST|ALMT|AKST|AKDT|AFT|AEST|AEDT|ADT|ACST|ACDT)\\b\"", :production "{:dim :timezone, :value (-> %1 :groups first clojure.string/upper-case)}"}
+ #clj-duckling.engine/rule {:name "<time> timezone", :pattern "[(dim :time) (dim :timezone)]", :production "(set-timezone %1 (:value %2))"}
+ #clj-duckling.engine/rule {:name "<time-of-day> approximately", :pattern "[{:form :time-of-day} #\"(?i)gần\"]", :production "(-> %1 (dissoc :latent) (merge {:precision \"approximate\"}))"}
+ #clj-duckling.engine/rule {:name "<time-of-day> sharp", :pattern "[{:form :time-of-day} #\"(?i)đúng\"]", :production "(-> %1 (dissoc :latent) (merge {:precision \"exact\"}))"}
+ #clj-duckling.engine/rule {:name "about <time-of-day>", :pattern "[#\"(?i)(vào )?khoảng\" {:form :time-of-day}]", :production "(-> %2 (dissoc :latent) (merge {:precision \"approximate\"}))"}
+ #clj-duckling.engine/rule {:name "exactly <time-of-day>", :pattern "[#\"(?i)(vào )?đúng\" {:form :time-of-day}]", :production "(-> %2 (dissoc :latent) (merge {:precision \"exact\"}))"}]
