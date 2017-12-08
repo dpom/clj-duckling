@@ -21,11 +21,12 @@
 (defrecord ClassifierModel [id classifier dims language rules corpus binfile logger]
   core/Model
     (load-model! [this]
-      (log @logger :error ::load-model {:file binfile :id id})
+      (log @logger :debug ::load-model {:file binfile :id id})
       (let [model (nippy/thaw-from-file binfile)]
         (reset! classifier (:classifier model))
         (reset! dims (:dims model))))
     (train-model! [this]
+      (log @logger :debug ::train-model {:id id :corpus (core/get-id corpus) :rules (core/get-id rules)})
       (let [corp (core/get-corpus corpus)
             engine (eng/get-rules rules)]
         (reset! classifier (learn/train-classifiers
@@ -35,7 +36,7 @@
                             @logger))
         (reset! dims (anlz/get-dims corp @classifier engine @logger))))
     (save-model! [this]
-      (log @logger :error ::save-model {:file binfile :id id})
+      (log @logger :debug ::save-model {:file binfile :id id})
       (nippy/freeze-to-file binfile {:classifier @classifier :dims @dims}))
     (get-model [this] @classifier))
 
@@ -59,7 +60,7 @@
 (defmethod ig/init-key ukey [_ spec]
   (let [{:keys [id language rules corpus logger loadbin? binfile] :or {loadbin? false}} spec
         classifier (->ClassifierModel id (atom nil) (atom nil) language rules corpus binfile (atom nil))]
-    (log logger :info ::init {:id id :lang language :rules (core/get-id rules) :corpus (core/get-id corpus)})
+    (log logger :info ::init {:id id :lang language :loadbin? loadbin?})
     (core/set-logger! classifier logger)
     (if loadbin?
       (core/load-model! classifier)
