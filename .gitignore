@@ -22,3 +22,4 @@ dev/src/local.clj
 /tmp
 /err.log
 /test/ro_model.bin
+/test/tmp.bin
