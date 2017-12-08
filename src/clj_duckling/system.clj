@@ -21,3 +21,12 @@
    }
   )
 
+(defn get-test-module
+  [configfile ukey]
+  (-> configfile
+      io/file
+      slurp
+      ig/read-string
+      prep
+      ig/init
+      ukey))
