@@ -1,0 +1,33 @@
+{
+ :clj-duckling.tool/duckling {:id "test-tool"
+                              :model #ig/ref :clj-duckling.model/classifier
+                              :rules #ig/ref :clj-duckling.engine/edn
+                              :logger   #ig/ref :duct.logger/timbre}
+
+
+ :clj-duckling.model/classifier {:id "test-classifier"
+                                 :language "ro"
+                                 :loadbin? false
+                                 :corpus #ig/ref :clj-duckling.corpus/edn
+                                 :rules #ig/ref :clj-duckling.engine/edn
+                                 :logger   #ig/ref :duct.logger/timbre}
+
+
+ :clj-duckling.corpus/edn {:id "test-corpus-edn"
+                           :language "ro"
+                           :dirpath "resources/languages/ro/corpus"
+                           :logger   #ig/ref :duct.logger/timbre}
+
+ :clj-duckling.engine/edn {:id "test-rules-edn"
+                           :language "ro"
+                           :dirpath "resources/languages/ro/rules"
+                           :logger   #ig/ref :duct.logger/timbre}
+
+
+ :duct.logger/timbre {:level    :error
+                      :set-root-config? true
+                      :appenders {:duct.logger.timbre/brief #ig/ref :duct.logger.timbre/brief}},
+
+
+ :duct.logger.timbre/brief {:min-level :report},
+ }

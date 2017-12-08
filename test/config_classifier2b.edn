@@ -1,0 +1,14 @@
+{
+ :clj-duckling.model/classifier {:id "test-classifier"
+                                 :language "ro"
+                                 :binfile "test/tmp.bin"
+                                 :loadbin? true
+                                 :logger   #ig/ref :duct.logger/timbre}
+
+ :duct.logger/timbre {:level    :error
+                      :set-root-config? true
+                      :appenders {:duct.logger.timbre/brief #ig/ref :duct.logger.timbre/brief}},
+
+
+ :duct.logger.timbre/brief {:min-level :report},
+ }
