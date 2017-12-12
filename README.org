@@ -12,7 +12,7 @@ project so I forked it in this new project.
 Duckling is a Clojure library that parses text into structured data:
 
 #+BEGIN_EXAMPLE
-   "the car is 2 meters long and costs 3000$." => [{:dim :amount-of-money, :body "3000$", :value {:type "value", :value 3000, :unit "$"}, :start 35, :end 40}
+   "the car is 2 meters long and costs 3000$." => [{:dim :amount-of-money, :body "3000$", :value {:type "value", :value 3000, :unit "USD"}, :start 35, :end 40}
                                                    {:dim :distance, :body "2 meters", :value {:type "value", :value 2, :unit "metre"}, :start 11, :end 19}]
 #+END_EXAMPLE
 
@@ -23,6 +23,6 @@ Duckling is a Clojure library that parses text into structured data:
 For lein add to your project.clj:
 [[https://clojars.org/dpom/clj-duckling][https://img.shields.io/clojars/v/dpom/clj-duckling.svg]]
 
-In =core= source file you can find some examples of how to use the library.
+In =core= source file you can find some examples of how to use the library. My [[https://github.com/dpom/nluserv][nluserv]] project use also clj-duckling.
 
 See the [[https://dpom.github.io/clj-duckling/][documentation]]  and [[https://dpom.github.io/clj-duckling/api/index.html][API]] for more information.
