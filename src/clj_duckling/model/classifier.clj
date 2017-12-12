@@ -46,7 +46,8 @@
 
 (extend ClassifierModel
   core/Module
-  core/default-module-impl)
+  (merge core/default-module-impl
+         {:get-features (fn [{:keys [dims language]}] {:entities @dims :language language})}))
 
 
 (s/def ::loadbin? boolean?)
@@ -74,12 +75,13 @@
 
 
 (deftest classifier-test
-  (testing "dims"
-    (is (= #{:email :timezone :cycle :phone-number :number :unit
-             :leven-unit :time :unit-of-duration :leven-product
-             :ordinal :volume :url :amount-of-money :budget :order
-             :gender :distance :quantity :temperature}
-           @(:dims (sys/get-test-module "test/config_classifier1.edn" ukey)))))
+  (testing "get-features"
+    (is (= {:entities #{:email :timezone :cycle :phone-number :number :unit
+                        :leven-unit :time :unit-of-duration :leven-product
+                        :duration :ordinal :volume :url :amount-of-money :budget
+                        :order :gender :distance :quantity :temperature}
+            :language "ro"}
+           (core/get-features (sys/get-test-module "test/config_classifier1.edn" ukey)))))
   (testing "save/load"
     (let [model1 (sys/get-test-module "test/config_classifier2.edn" ukey)]
       (core/save-model! model1)

@@ -142,31 +142,6 @@
     (transduce xf (completing (partial check-lang level)) {} (file-seq (io/file "resources/languages")))))
 
 
-;; test classifier 
-
-(deftest classifier-test
-  (let [config-test1  (dissoc (make-config "ro" :error) tool/ukey)
-        system-test1 (ig/init (sys/prep config-test1))
-        model1 (modl/ukey system-test1)]
-    (is (= #{:email :timezone :cycle :phone-number :number :unit
-                :leven-unit :time :unit-of-duration :leven-product
-                :ordinal :volume :url :amount-of-money :budget :order
-                :gender :distance :quantity :temperature}
-           @(:dims model1)) "test dims")
-    (core/save-model! model1)
-    (let [config-test2  (assoc-in config-test1 [modl/ukey :loadbin? ] true)
-          system-test2 (ig/init config-test2)
-          model2 (modl/ukey system-test2)]
-      (is (= @(:dims model1) @(:dims model2)) "test binloading dims")
-      (is (= @(:classifier model1) @(:classifier model2)) "test binloading classifier"))))
-
-
-
-
-
-
-
-
 ;;--------------------------------------------------------------------------
 ;; REPL utilities
 ;;--------------------------------------------------------------------------

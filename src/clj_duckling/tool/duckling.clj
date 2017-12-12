@@ -11,7 +11,7 @@
    [clj-duckling.system :as sys]
    [clj-duckling.engine.core :as eng]
    [clj-duckling.util.analyze :as anlz])
-)
+  )
 
 (def ukey
   "this unit key"
@@ -27,7 +27,10 @@
 
 (extend DucklingTool
   core/Module
-  core/default-module-impl)
+  (merge core/default-module-impl
+         {:get-features (fn [{:keys [model rules]}] (merge (core/get-features model)
+                                                           (core/get-features rules)
+                                                           {:type :entity-extractor}))}))
 
 (defmethod ig/pre-init-spec ukey [_]
   (nsp/known-keys :req-un [:nlpcore/id
@@ -44,30 +47,38 @@
 
 (deftest tool-test
   (let [tool (sys/get-test-module "test/config_tool.edn" ukey)]
-  (testing "apply-tool with dims"
-    (is (= [{:dim :gender,
-              :body "baiat",
-              :value {:value :male},
-              :start 37,
-              :end 42}
-             {:dim :duration,
-              :body "5 ani",
-              :value
-              {:year 5,
-               :value 5,
-               :unit :year,
-               :normalized {:value 157766400, :unit "second"}},
-              :start 43,
-              :end 48}
-             {:dim :budget,
-              :body "sub 300 lei",
-              :value
-              {:type "value", :value 300, :unit "RON", :level :max},
-              :start 15,
-              :end 26}]
-           (core/apply-tool tool "vreau un cadou sub 300 lei pentru un baiat 5 ani" {:dims [:gender :duration :budget]}))))
-  (testing "apply-tool without dims"
-    (is (= [{:dim :phone-number,
+    (testing "get-features"
+      (is (=  {:entities #{:email :timezone :cycle :phone-number :number :unit
+                           :leven-unit :time :unit-of-duration :leven-product
+                           :duration :ordinal :volume :url :amount-of-money :budget
+                           :order :gender :distance :quantity :temperature},
+               :language "ro",
+               :type :entity-extractor}
+             (core/get-features tool))))
+    (testing "apply-tool with dims"
+      (is (= [{:dim :gender,
+               :body "baiat",
+               :value {:value :male},
+               :start 37,
+               :end 42}
+              {:dim :duration,
+               :body "5 ani",
+               :value
+               {:year 5,
+                :value 5,
+                :unit :year,
+                :normalized {:value 157766400, :unit "second"}},
+               :start 43,
+               :end 48}
+              {:dim :budget,
+               :body "sub 300 lei",
+               :value
+               {:type "value", :value 300, :unit "RON", :level :max},
+               :start 15,
+               :end 26}]
+             (core/apply-tool tool "vreau un cadou sub 300 lei pentru un baiat 5 ani" {:dims [:gender :duration :budget]}))))
+    (testing "apply-tool without dims"
+      (is (= [{:dim :phone-number,
             :body "123456789",
             :value {:value "123456789"},
             :start 26,
@@ -100,5 +111,6 @@
             :value {:value 123456789},
             :start 18,
             :end 35}]
-           (core/apply-tool tool "informatii despre comanda 123456789" {:dims []}))))
-  ))
+
+             (core/apply-tool tool "informatii despre comanda 123456789" {:dims []}))))
+    ))

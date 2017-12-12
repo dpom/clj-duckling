@@ -1,0 +1,4 @@
+{:context {}
+
+ :tests [{:text ["5 ani"]
+          :checks [#clj-duckling/corpus "(fn [token _] (and (= :duration (:dim token)) (= {:year 5 :value 5 :unit :year :normalized {:value 157766400, :unit \"second\"}} (:value token))))"]}]}
