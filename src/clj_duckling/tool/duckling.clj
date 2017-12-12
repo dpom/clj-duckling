@@ -78,38 +78,39 @@
                :end 26}]
              (core/apply-tool tool "vreau un cadou sub 300 lei pentru un baiat 5 ani" {:dims [:gender :duration :budget]}))))
     (testing "apply-tool without dims"
-      (is (= [{:dim :number,
-               :body "123456789",
-               :value {:type "value", :value 123456789, :unit nil},
-               :start 26,
-               :end 35}
-              {:dim :phone-number,
-               :body "123456789",
-               :value {:value "123456789"},
-               :start 26,
-               :end 35}
-              {:dim :order,
-               :body "comanda 123456789",
-               :value {:value 123456789},
-               :start 18,
-               :end 35}
-              {:dim :temperature,
-               :body "123456789",
-               :value {:type "value", :value 123456789, :unit nil},
-               :start 26,
-               :end 35,
-               :latent true}
-              {:dim :distance,
-               :body "123456789",
-               :value {:type "value", :value 123456789, :unit nil},
-               :start 26,
-               :end 35,
-               :latent true}
-              {:dim :volume,
-               :body "123456789",
-               :value {:type "value", :value 123456789, :unit nil},
-               :start 26,
-               :end 35,
-               :latent true}]
+      (is (= [{:dim :phone-number,
+            :body "123456789",
+            :value {:value "123456789"},
+            :start 26,
+            :end 35}
+           {:dim :number,
+            :body "123456789",
+            :value {:type "value", :value 123456789, :unit nil},
+            :start 26,
+            :end 35}
+           {:dim :temperature,
+            :body "123456789",
+            :value {:type "value", :value 123456789, :unit nil},
+            :start 26,
+            :end 35,
+            :latent true}
+           {:dim :distance,
+            :body "123456789",
+            :value {:type "value", :value 123456789, :unit nil},
+            :start 26,
+            :end 35,
+            :latent true}
+           {:dim :volume,
+            :body "123456789",
+            :value {:type "value", :value 123456789, :unit nil},
+            :start 26,
+            :end 35,
+            :latent true}
+           {:dim :order,
+            :body "comanda 123456789",
+            :value {:value 123456789},
+            :start 18,
+            :end 35}]
+
              (core/apply-tool tool "informatii despre comanda 123456789" {:dims []}))))
     ))
