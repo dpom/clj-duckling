@@ -1,4 +1,4 @@
-(defproject dpom/clj-duckling "0.8.0"
+(defproject dpom/clj-duckling "0.8.1"
   :description "A Clojure library that parses text into structured data"
   :license {:url "https://github.com/wit-ai/duckling"
             :comments "see LICENSE"}

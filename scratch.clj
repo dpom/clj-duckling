@@ -1038,4 +1038,52 @@ token: {:dim :ordinal, :value 2, :text "al doilea", :pos 0, :end 9, :rule {:name
                      (#(filter keyword? %)))) 
                   (mapcat :text tests))) 
 
- 
+;; 2017-12-13
+
+(require 
+ '[clojure.string :as str]
+ '[nlpcore.protocols :as core]
+ '[clj-duckling.system :as sys]
+ '[clj-duckling.util.analyze :as anlz]
+ '[clj-duckling.util.learn :as learn]
+ '[clj-duckling.util.engine :as engutl]
+ '[clj-duckling.engine.core :as engcore]
+ '[clj-duckling.corpus.edn :as corp]
+ '[clj-duckling.tool.duckling :as tl])  
+
+(def tool (get system tl/ukey)) 
+
+(defn play
+  [this text dims context]
+  (let [tool (get system tl/ukey) 
+        model (core/get-model (:model tool)) 
+        rules (engcore/get-rules (:rules tool)) 
+        logger (core/get-logger tool) 
+        {:keys [stash winners]} (anlz/analyze text dims context model rules logger)]
+    ;; 1. print stash
+    (d/print-stash stash model winners)
+    ;; 2. print winners
+    (printf "\n%d winners:\n" (count winners))
+    (doseq [winner winners]
+      (printf "%-25s %s %s\n" (str (name (:dim winner))
+                                   (if (:latent winner) " (latent)" ""))
+              (engutl/export-value winner {:date-fn str})
+              (dissoc winner :value :route :rule :pos :text :end :index
+                      :dim :start :latent :body :pred :timezone :values)))
+
+    ;; 3. ask for details
+    (printf "For further info: (details idx) where 1 <= idx <= %d\n" (dec (count stash)))
+    (defn details [n] (d/print-tokens (nth stash n) model))
+    (defn token [n] (nth stash n))))
+
+
+
+(def t "Vreau un cadou sub 300 lei pentru un baiat 5 ani 3 luni si 2 zile")
+
+(core/apply-tool tool t {:dims [:duration] }) 
+(play tool t [] {})
+
+;; 2017-12-14
+
+
+(d/play tool t [] {}) 
