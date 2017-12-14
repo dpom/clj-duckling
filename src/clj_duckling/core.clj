@@ -53,10 +53,10 @@
                       (.getAbsolutePath))]
     (merge (sys/make-test-logger level)
            {tl/ukey {:id (str lang "-tool-test")
-                       :language lang
-                       :model (ig/ref modl/ukey)
-                       :rules (ig/ref eng/ukey)
-                       :logger (ig/ref :duct.logger/timbre)}
+                     :language lang
+                     :model (ig/ref modl/ukey)
+                     :rules (ig/ref eng/ukey)
+                     :logger (ig/ref :duct.logger/timbre)}
             modl/ukey {:id (str lang "-model-test")
                        :language lang
                        :loadbin? false
@@ -121,10 +121,9 @@
   (is (s/valid? ::noerrors (run-lang "ro" :error))))
 
 
-
-
-(defn check-lang [level res lang]
-  (assoc res lang (remove (comp (partial = 0) first) (run-lang lang level))))
+(defn check-lang
+  ([lang] (check-lang :error {} lang))
+  ([level res lang] (assoc res lang (remove (comp (partial = 0) first) (run-lang lang level)))))
 
 (defn run
   "Run the NLP modules for all languages in resources/languages.
@@ -205,9 +204,9 @@
 (defn play
   "Show processing details for one sentence. Defines a 'details' function."
   [tool text dims context]
-  (let [model (core/get-model (:model tool)) 
-        rules (engcore/get-rules (:rules tool)) 
-        logger (core/get-logger tool) 
+  (let [model (core/get-model (:model tool))
+        rules (engcore/get-rules (:rules tool))
+        logger (core/get-logger tool)
         {:keys [stash winners]} (anlz/analyze text dims context model rules logger)]
     ;; 1. print stash
     (print-stash stash model winners)
