@@ -1,22 +1,68 @@
-[#clj-duckling.engine/rule {:name "number as distance", :pattern "(dim :number)", :production "{:dim :distance, :latent true, :value (:value %1)}"}
- #clj-duckling.engine/rule {:name "<latent dist> km", :pattern "[(dim :distance) #\"(?i)(kilometr[iu]|km)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"kilometru\", :normalized {:value (* 1000 (-> %1 :value)), :unit \"metru\"}}))"}
- #clj-duckling.engine/rule {:name "<latent dist> picioare", :pattern "[(dim :distance) #\"(?i)(picio(are|r))\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"foot\", :normalized {:value (* 0.3048 (-> %1 :value)), :unit \"metru\"}}))"}
- #clj-duckling.engine/rule {:name "<latent dist> inch", :pattern "[(dim :distance) #\"(?i)(inch|inci|inchi)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"inch\", :normalized {:value (* 0.0254 (-> %1 :value)), :unit \"metru\"}}))"}
- #clj-duckling.engine/rule {:name "<latent dist> yarzi", :pattern "[(dim :distance) #\"(?i)y(ar)?(zi|d)?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"yard\", :normalized {:value (* 0.9144 (-> %1 :value)), :unit \"metru\"}}))"}
- #clj-duckling.engine/rule {:name "<dist> meters", :pattern "[(dim :distance) #\"(?i)(metr[ui]|m)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"metru\"}))"}
- #clj-duckling.engine/rule {:name "<dist> centimeters", :pattern "[(dim :distance) #\"(?i)(centimetr[iu]|cm)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"centimetru\", :normalized {:value (* 0.01 (-> %1 :value)), :unit \"metru\"}}))"}
- #clj-duckling.engine/rule {:name "<dist> miles", :pattern "[(dim :distance) #\"(?i)mil[eaă]\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"mile\", :normalized {:value (* 1609 (-> %1 :value)), :unit \"metru\"}}))"}
- #clj-duckling.engine/rule {:name "number as volume", :pattern "(dim :number)", :production "{:dim :volume, :latent true, :value (:value %1)}"}
- #clj-duckling.engine/rule {:name "<latent vol> ml", :pattern "[(dim :volume) #\"(?i)m(ililit(ri|ri)|l)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"millilitre\", :normalized {:value (* 0.001 (-> %1 :value)), :unit \"litre\"}}))"}
- #clj-duckling.engine/rule {:name "<vol> hectoliters", :pattern "[(dim :volume) #\"(?i)hectolit(ru|ri)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"hectolitre\", :normalized {:value (* 100 (-> %1 :value)), :unit \"litre\"}}))"}
- #clj-duckling.engine/rule {:name "<vol> liters", :pattern "[(dim :volume) #\"(?i)l(it(ru|ri))?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"litre\"}))"}
- #clj-duckling.engine/rule {:name "half liter", :pattern "[#\"(?i)jum[aă]tate de lit(ru|ri)\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"litre\", :value 0.5}))"}
- #clj-duckling.engine/rule {:name "<latent vol> galon", :pattern "[(dim :volume) #\"(?i)gal(oane|on)?\"]", :production "(-> %1 (dissoc :latent) (merge {:unit \"gallon\", :normalized {:value (* 3.785 (-> %1 :value)), :unit \"litre\"}}))"}
- #clj-duckling.engine/rule {:name "<number> <units>", :pattern "[(dim :number) (dim :leven-unit)]", :production "{:dim :quantity, :value (:value %1), :unit (:value %2), :form :no-product}"}
- #clj-duckling.engine/rule {:name "<quantity> of product", :pattern "[(dim :quantity (fn* [p1__3552#] (= :no-product (:form p1__3552#)))) #\"(?i)de\" (dim :leven-product)]", :production "(-> %1 (assoc :product (:value %3)) (dissoc :form))"}
- #clj-duckling.engine/rule {:name "<number> product", :pattern "[(dim :number) (dim :leven-product)]", :production "{:dim :quantity, :value (:value %1), :product (:value %2)}"}
- #clj-duckling.engine/rule {:name "<product>", :pattern "[(dim :leven-product)]", :production "{:dim :quantity, :value 1, :product (:value %1)}"}
- #clj-duckling.engine/rule {:name "pounds", :pattern "#\"(livr[aăe])\"", :production "{:dim :leven-unit, :value \"pound\"}"}
- #clj-duckling.engine/rule {:name "carne", :pattern "#\"carne\"", :production "{:dim :leven-product, :value \"carne\"}"}
- #clj-duckling.engine/rule {:name "cana", :pattern "#\"can[aă]?\"", :production "{:dim :leven-unit, :value \"cana\"}"}
- #clj-duckling.engine/rule {:name "sugar", :pattern "#\"zah[aă]r\"", :production "{:dim :leven-product, :value \"zahar\"}"}]
+[
+ #clj-duckling.engine/rule {:name "number as distance",
+                            :pattern "(dim :number)",
+                            :production "{:dim :distance, :latent true, :value (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<latent dist> km",
+                            :pattern "[(dim :distance) #\"(?i)(kilometr[iu]|km)\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"kilometru\", :normalized {:value (* 1000 (-> %1 :value)), :unit \"metru\"}}))"}
+ #clj-duckling.engine/rule {:name "<latent dist> picioare",
+                            :pattern "[(dim :distance) #\"(?i)(picio(are|r))\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"foot\", :normalized {:value (* 0.3048 (-> %1 :value)), :unit \"metru\"}}))"}
+ #clj-duckling.engine/rule {:name "<latent dist> inch",
+                            :pattern "[(dim :distance) #\"(?i)(inch|inci|inchi)\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"inch\", :normalized {:value (* 0.0254 (-> %1 :value)), :unit \"metru\"}}))"}
+ #clj-duckling.engine/rule {:name "<latent dist> yarzi",
+                            :pattern "[(dim :distance) #\"(?i)y(ar)?(zi|d)?\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"yard\", :normalized {:value (* 0.9144 (-> %1 :value)), :unit \"metru\"}}))"}
+ #clj-duckling.engine/rule {:name "<dist> meters",
+                            :pattern "[(dim :distance) #\"(?i)(metr[ui]|m)\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"metru\"}))"}
+ #clj-duckling.engine/rule {:name "<dist> centimeters",
+                            :pattern "[(dim :distance) #\"(?i)(centimetr[iu]|cm)\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"centimetru\", :normalized {:value (* 0.01 (-> %1 :value)), :unit \"metru\"}}))"}
+ #clj-duckling.engine/rule {:name "<dist> miles",
+                            :pattern "[(dim :distance) #\"(?i)mil[eaă]\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"mile\", :normalized {:value (* 1609 (-> %1 :value)), :unit \"metru\"}}))"}
+ #clj-duckling.engine/rule {:name "number as volume",
+                            :pattern "(dim :number)",
+                            :production "{:dim :volume, :latent true, :value (:value %1)}"}
+ #clj-duckling.engine/rule {:name "<latent vol> ml",
+                            :pattern "[(dim :volume) #\"(?i)m(ililit(ri|ri)|l)\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"millilitre\", :normalized {:value (* 0.001 (-> %1 :value)), :unit \"litre\"}}))"}
+ #clj-duckling.engine/rule {:name "<vol> hectoliters",
+                            :pattern "[(dim :volume) #\"(?i)hectolit(ru|ri)\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"hectolitre\", :normalized {:value (* 100 (-> %1 :value)), :unit \"litre\"}}))"}
+ #clj-duckling.engine/rule {:name "<vol> liters",
+                            :pattern "[(dim :volume) #\"(?i)l(it(ru|ri))?\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"litre\"}))"}
+ #clj-duckling.engine/rule {:name "half liter",
+                            :pattern "[#\"(?i)jum[aă]tate de lit(ru|ri)\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"litre\", :value 0.5}))"}
+ #clj-duckling.engine/rule {:name "<latent vol> galon",
+                            :pattern "[(dim :volume) #\"(?i)gal(oane|on)?\"]",
+                            :production "(-> %1 (dissoc :latent) (merge {:unit \"gallon\", :normalized {:value (* 3.785 (-> %1 :value)), :unit \"litre\"}}))"}
+ #clj-duckling.engine/rule {:name "<number> <units>",
+                            :pattern "[(dim :number) (dim :leven-unit)]",
+                            :production "{:dim :quantity, :value (:value %1), :unit (:value %2), :form :no-product}"}
+ #clj-duckling.engine/rule {:name "<quantity> of product",
+                            :pattern "[(dim :quantity #(= :no-product (:form %))) #\"(?i)de\" (dim :leven-product)]",
+                            :production "(-> %1 (assoc :product (:value %3)) (dissoc :form))"}
+ #clj-duckling.engine/rule {:name "<number> product",
+                            :pattern "[(dim :number) (dim :leven-product)]",
+                            :production "{:dim :quantity, :value (:value %1), :product (:value %2)}"}
+ #clj-duckling.engine/rule {:name "<product>"
+                            :pattern "[(dim :leven-product)]",
+                            :production "{:dim :quantity, :value 1, :product (:value %1)}"}
+ #clj-duckling.engine/rule {:name "pounds",
+                            :pattern "#\"(livr[aăe])\"",
+                            :production "{:dim :leven-unit, :value \"pound\"}"}
+ #clj-duckling.engine/rule {:name "carne",
+                            :pattern "#\"carne\"",
+                            :production "{:dim :leven-product, :value \"carne\"}"}
+ #clj-duckling.engine/rule {:name "cana",
+                            :pattern "#\"can[aă]?\"",
+                            :production "{:dim :leven-unit, :value \"cana\"}"}
+ #clj-duckling.engine/rule {:name "sugar",
+                            :pattern "#\"zah[aă]r\"",
+                            :production "{:dim :leven-product, :value \"zahar\"}"}
+ ]

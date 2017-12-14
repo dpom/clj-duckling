@@ -1,2 +1,6 @@
-[#clj-duckling.engine/rule {:name "last order", :pattern "#\"(?i)ultima( mea)? comand[aă]\"", :production "{:dim :order, :value -1}"}
- #clj-duckling.engine/rule {:name "order", :pattern "[#\"(?i)comand[aă]\" (integer 0)]", :production "{:dim :order, :value (:value %2)}"}]
+[#clj-duckling.engine/rule {:name "last order"
+                            :pattern "#\"(?i)ultima( mea)? comand[aă]\""
+                            :production "{:dim :order, :value -1}"}
+ #clj-duckling.engine/rule {:name "order"
+                            :pattern "[#\"(?i)comand[aă]\" (integer 0)]"
+                            :production "{:dim :order, :value (:value %2)}"}]

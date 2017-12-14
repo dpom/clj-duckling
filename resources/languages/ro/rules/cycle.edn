@@ -1,19 +1,57 @@
-[#clj-duckling.engine/rule {:name "secunde (cycle)", :pattern "#\"(?i)secund[aăe]\"", :production "{:dim :cycle, :grain :second}"}
- #clj-duckling.engine/rule {:name "minute (cycle)", :pattern "#\"(?i)minut(e|ul)?\"", :production "{:dim :cycle, :grain :minute}"}
- #clj-duckling.engine/rule {:name "ore (cycle)", :pattern "#\"(?i)or[aăe]\"", :production "{:dim :cycle, :grain :hour}"}
- #clj-duckling.engine/rule {:name "zile (cycle)", :pattern "#\"(?i)zi(le|ua)?\"", :production "{:dim :cycle, :grain :day}"}
- #clj-duckling.engine/rule {:name "saptamani (cycle)", :pattern "#\"(?i)sapt[aă]m[aâ]n(ile|a|ă|i)\"", :production "{:dim :cycle, :grain :week}"}
- #clj-duckling.engine/rule {:name "luni (cycle)", :pattern "#\"(?i)lun(ile|a|ă|i)\"", :production "{:dim :cycle, :grain :month}"}
- #clj-duckling.engine/rule {:name "trimestru (cycle)", :pattern "#\"(?i)trimestr(ele|ul|u|e)\"", :production "{:dim :cycle, :grain :quarter}"}
- #clj-duckling.engine/rule {:name "ani (cycle)", :pattern "#\"(?i)an(ii|i)?\"", :production "{:dim :cycle, :grain :year}"}
- #clj-duckling.engine/rule {:name "<cycle> acesta", :pattern "[#\"(?i)aceasta|acest|asta|[aă]sta\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 0)"}
- #clj-duckling.engine/rule {:name "<cycle> acesta", :pattern "[(dim :cycle) #\"(?i)aceasta|acest|asta|[aă]sta|curent[aă]\"]", :production "(cycle-nth (:grain %1) 0)"}
- #clj-duckling.engine/rule {:name "ultima <cycle>", :pattern "[#\"(?i)ultim(a|ul)\" (dim :cycle)]", :production "(cycle-nth (:grain %2) -1)"}
- #clj-duckling.engine/rule {:name "<cycle> trecut", :pattern "[(dim :cycle) #\"(?i)trecut(a|ă)?\"]", :production "(cycle-nth (:grain %1) -1)"}
- #clj-duckling.engine/rule {:name "urmatoarea <cycle>", :pattern "[#\"(?i)(urm[aă]to(area|rul)|viito(are|r))\" (dim :cycle)]", :production "(cycle-nth (:grain %2) 1)"}
- #clj-duckling.engine/rule {:name "<cycle> urmatoare", :pattern "[(dim :cycle) #\"(?i)(urm[aă]to(are|r)|viito(are|r))\"]", :production "(cycle-nth (:grain %2) 1)"}
- #clj-duckling.engine/rule {:name "ultimele n <cycle>", :pattern "[#\"(?i)ultim(ele|ii|a)\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
- #clj-duckling.engine/rule {:name "urmatoarele n <cycle>", :pattern "[#\"(?i)urm[aă]to(arele|rii|area)\" (integer 1 9999) (dim :cycle)]", :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
- #clj-duckling.engine/rule {:name "<ordinal> trimestru", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3549#] (= :quarter (:grain p1__3549#))))]", :production "(cycle-nth-after :quarter (dec (:value %1)) (cycle-nth :year 0))"}
- #clj-duckling.engine/rule {:name "<ordinal> trimestru <year>", :pattern "[(dim :ordinal) (dim :cycle (fn* [p1__3550#] (= :quarter (:grain p1__3550#)))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}
- #clj-duckling.engine/rule {:name "trimestru <number> <year>", :pattern "[(dim :cycle) (dim :number) (fn* [p1__3551#] (= :quarter (:grain p1__3551#))) (dim :time)]", :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}]
+[#clj-duckling.engine/rule {:name "secunde (cycle)",
+                            :pattern "#\"(?i)secund[aăe]\"",
+                            :production "{:dim :cycle, :grain :second}"}
+ #clj-duckling.engine/rule {:name "minute (cycle)",
+                            :pattern "#\"(?i)minut(e|ul)?\"",
+                            :production "{:dim :cycle, :grain :minute}"}
+ #clj-duckling.engine/rule {:name "ore (cycle)",
+                            :pattern "#\"(?i)or[aăe]\"",
+                            :production "{:dim :cycle, :grain :hour}"}
+ #clj-duckling.engine/rule {:name "zile (cycle)",
+                            :pattern "#\"(?i)zi(le|ua)?\"",
+                            :production "{:dim :cycle, :grain :day}"}
+ #clj-duckling.engine/rule {:name "saptamani (cycle)",
+                            :pattern "#\"(?i)sapt[aă]m[aâ]n(ile|a|ă|i)\"",
+                            :production "{:dim :cycle, :grain :week}"}
+ #clj-duckling.engine/rule {:name "luni (cycle)",
+                            :pattern "#\"(?i)lun(ile|a|ă|i)\"",
+                            :production "{:dim :cycle, :grain :month}"}
+ #clj-duckling.engine/rule {:name "trimestru (cycle)",
+                            :pattern "#\"(?i)trimestr(ele|ul|u|e)\"",
+                            :production "{:dim :cycle, :grain :quarter}"}
+ #clj-duckling.engine/rule {:name "ani (cycle)",
+                            :pattern "#\"(?i)an(ii|i)?\"",
+                            :production "{:dim :cycle, :grain :year}"}
+ #clj-duckling.engine/rule {:name "<cycle> acesta",
+                            :pattern "[#\"(?i)aceasta|acest|asta|[aă]sta\" (dim :cycle)]",
+                            :production "(cycle-nth (:grain %2) 0)"}
+ #clj-duckling.engine/rule {:name "<cycle> acesta",
+                            :pattern "[(dim :cycle) #\"(?i)aceasta|acest|asta|[aă]sta|curent[aă]\"]",
+                            :production "(cycle-nth (:grain %1) 0)"}
+ #clj-duckling.engine/rule {:name "ultima <cycle>",
+                            :pattern "[#\"(?i)ultim(a|ul)\" (dim :cycle)]",
+                            :production "(cycle-nth (:grain %2) -1)"}
+ #clj-duckling.engine/rule {:name "<cycle> trecut",
+                            :pattern "[(dim :cycle) #\"(?i)trecut(a|ă)?\"]",
+                            :production "(cycle-nth (:grain %1) -1)"}
+ #clj-duckling.engine/rule {:name "urmatoarea <cycle>",
+                            :pattern "[#\"(?i)(urm[aă]to(area|rul)|viito(are|r))\" (dim :cycle)]",
+                            :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "<cycle> urmatoare",
+                            :pattern "[(dim :cycle) #\"(?i)(urm[aă]to(are|r)|viito(are|r))\"]",
+                            :production "(cycle-nth (:grain %2) 1)"}
+ #clj-duckling.engine/rule {:name "ultimele n <cycle>",
+                            :pattern "[#\"(?i)ultim(ele|ii|a)\" (integer 1 9999) (dim :cycle)]",
+                            :production "(cycle-n-not-immediate (:grain %3) (- (:value %2)))"}
+ #clj-duckling.engine/rule {:name "urmatoarele n <cycle>",
+                            :pattern "[#\"(?i)urm[aă]to(arele|rii|area)\" (integer 1 9999) (dim :cycle)]",
+                            :production "(cycle-n-not-immediate (:grain %3) (:value %2))"}
+ #clj-duckling.engine/rule {:name "<ordinal> trimestru",
+                            :pattern "[(dim :ordinal) (dim :cycle #(= :quarter (:grain %)))]",
+                            :production "(cycle-nth-after :quarter (dec (:value %1)) (cycle-nth :year 0))"}
+ #clj-duckling.engine/rule {:name "<ordinal> trimestru <year>",
+                            :pattern "[(dim :ordinal) (dim :cycle #(= :quarter (:grain %))) (dim :time)]",
+                            :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}
+ #clj-duckling.engine/rule {:name "trimestru <number> <year>",
+                            :pattern "[(dim :cycle) (dim :number) #(= :quarter (:grain %)) (dim :time)]",
+                            :production "(cycle-nth-after :quarter (dec (:value %1)) %3)"}]

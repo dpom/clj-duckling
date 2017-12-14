@@ -1,2 +1,6 @@
-[#clj-duckling.engine/rule {:name "max budget", :pattern "[#\"(?i)sub|max(\\.|im)?\" (dim :amount-of-money)]", :production "{:dim :budget, :value (:value %2), :unit (:unit %2), :level :max}"}
- #clj-duckling.engine/rule {:name "min budget", :pattern "[#\"(?i)peste|min(\\.|im)?\" (dim :amount-of-money)]", :production "{:dim :budget, :value (:value %2), :unit (:unit %2), :level :min}"}]
+[#clj-duckling.engine/rule {:name "max budget",
+                            :pattern "[#\"(?i)sub|max(\\.|im)?\" (dim :amount-of-money)]",
+                            :production "{:dim :budget, :value (:value %2), :unit (:unit %2), :level :max}"}
+ #clj-duckling.engine/rule {:name "min budget",
+                            :pattern "[#\"(?i)peste|min(\\.|im)?\" (dim :amount-of-money)]",
+                            :production "{:dim :budget, :value (:value %2), :unit (:unit %2), :level :min}"}]
